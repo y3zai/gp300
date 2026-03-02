@@ -565,8 +565,8 @@ Backtest produces its own output files for validation and diagnostics:
   {
     "timestamp": "2025-01-14T00:00:00Z",
     "event": "reconstitution",
-    "added": ["contract_id_1", "contract_id_2"],
-    "removed": ["contract_id_3"],
+    "added_count": 2,
+    "removed_count": 1,
     "divisor_before": 0.000695,
     "divisor_after": 0.000688,
     "index_before": 1023.4,
@@ -576,8 +576,8 @@ Backtest produces its own output files for validation and diagnostics:
   {
     "timestamp": "2025-01-20T12:00:00Z",
     "event": "expiration_removal",
-    "removed": ["contract_id_4"],
-    "reason": "expired or resolved",
+    "removed_ids": ["contract_id_4"],
+    "removed_count": 1,
     "divisor_before": 0.000688,
     "divisor_after": 0.000685,
     "index_before": 1031.2,

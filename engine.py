@@ -616,6 +616,20 @@ def run_full_pipeline(
             # Redistribute weights pro-rata
             selected = redistribute_weights(selected)
 
+            # All constituents removed — return proper removal state
+            if not selected:
+                pre_val = _pre_adjustment_value(current_state, universe_map)
+                return IndexState(
+                    value=0.0,
+                    divisor=current_state.divisor,
+                    weighted_entropy=0.0,
+                    num_constituents=0,
+                    timestamp=now,
+                    constituents=[],
+                    removed_constituents=removed,
+                    pre_adjustment_value=pre_val,
+                )
+
     # Build relaxed universe map for pre-adjustment value computation.
     # Needed so adjust_divisor anchors to the true current index value
     # rather than the stale state.value from the previous step.
