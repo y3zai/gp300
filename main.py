@@ -319,7 +319,7 @@ def main():
                 "timestamp": ts,
                 "divisor_before": prev_state.divisor,
                 "divisor_after": state.divisor,
-                "index_before": round(prev_state.value, 2),
+                "index_before": round(state.pre_adjustment_value, 2) if state.pre_adjustment_value is not None else round(prev_state.value, 2),
                 "index_after": round(state.value, 2),
                 "num_constituents": state.num_constituents,
                 "added_ids": added_ids,
@@ -337,7 +337,7 @@ def main():
                 "timestamp": ts,
                 "divisor_before": prev_state.divisor,
                 "divisor_after": state.divisor,
-                "index_before": round(prev_state.value, 2),
+                "index_before": round(state.pre_adjustment_value, 2) if state.pre_adjustment_value is not None else round(prev_state.value, 2),
                 "index_after": round(state.value, 2),
                 "num_constituents": state.num_constituents,
                 "weight_max": round(max(weights), 6),
@@ -355,9 +355,10 @@ def main():
                 "removed_count": len(removed_ids),
                 "divisor_before": prev_state.divisor,
                 "divisor_after": state.divisor,
-                "index_before": round(prev_state.value, 2),
+                "index_before": round(state.pre_adjustment_value, 2) if state.pre_adjustment_value is not None else round(prev_state.value, 2),
                 "index_after": round(state.value, 2),
                 "num_constituents": state.num_constituents,
+                "constituents": make_constituent_snapshot(state.constituents),
             })
             print("  → adjustments.jsonl (expiration_removal)")
 

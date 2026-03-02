@@ -442,6 +442,7 @@ class IndexState:
     timestamp: datetime
     constituents: list[Constituent]
     removed_constituents: list[Constituent] = field(default_factory=list)
+    pre_adjustment_value: Optional[float] = None
 
 
 def compute_weighted_entropy(constituents: list[Constituent]) -> float:
@@ -662,6 +663,7 @@ def run_full_pipeline(
             num_constituents=len(selected),
             timestamp=now,
             constituents=selected,
+            pre_adjustment_value=pre_val,
         )
     else:
         # Step 5c: Regular update (prices only, possibly with removal)
@@ -680,6 +682,7 @@ def run_full_pipeline(
                 timestamp=now,
                 constituents=selected,
                 removed_constituents=removed,
+                pre_adjustment_value=pre_val,
             )
         else:
             return update_index_value(current_state, selected, now)

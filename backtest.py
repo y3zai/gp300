@@ -754,13 +754,15 @@ def main():
     ranked_items = []  # (volume_1mo, set_of_market_ids)
     for event in events:
         if event.neg_risk:
-            vol = sum(m.volume_1mo for m in event.markets)
-            mids = {m.id for m in event.markets if m.clob_token_ids}
+            eligible = [m for m in event.markets
+                        if m.clob_token_ids and (m.start_date is None or m.start_date <= end_dt)]
+            vol = sum(m.volume_1mo for m in eligible)
+            mids = {m.id for m in eligible}
             if mids:
                 ranked_items.append((vol, mids))
         else:
             for m in event.markets:
-                if m.clob_token_ids:
+                if m.clob_token_ids and (m.start_date is None or m.start_date <= end_dt):
                     ranked_items.append((m.volume_1mo, {m.id}))
 
     ranked_items.sort(key=lambda x: x[0], reverse=True)

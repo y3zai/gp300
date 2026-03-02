@@ -461,7 +461,7 @@ Event types:
 - `initialization` — First run. Fields: `timestamp`, `num_constituents`, `index_value`, `divisor`, `weighted_entropy`, `constituents` (full snapshot).
 - `reconstitution` — Biweekly constituent re-selection. Fields: `timestamp`, `divisor_before/after`, `index_before/after`, `num_constituents`, `added_ids`, `removed_ids`, `added_count`, `removed_count`, `constituents`.
 - `rebalance` — Weekly weight recomputation. Fields: `timestamp`, `divisor_before/after`, `index_before/after`, `num_constituents`, `weight_max`, `weight_sum`, `constituents`.
-- `expiration_removal` — Mid-cycle contract expiry. Fields: `timestamp`, `removed_ids`, `removed_count`, `divisor_before/after`, `index_before/after`, `num_constituents`.
+- `expiration_removal` — Mid-cycle contract expiry. Fields: `timestamp`, `removed_ids`, `removed_count`, `divisor_before/after`, `index_before/after`, `num_constituents`, `constituents`.
 
 Each `constituents` snapshot is a compact array: `{id, label, source_type, weight, rank, normalized_entropy, volume_1mo}`.
 
