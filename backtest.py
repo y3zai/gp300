@@ -37,7 +37,7 @@ from engine import (
     compute_weights, compute_entropy_all, compute_weighted_entropy,
     initialize_index, update_index_value, adjust_divisor,
     remove_dropped_constituents, redistribute_weights,
-    normalized_entropy, DEFAULT_CONFIG,
+    normalized_entropy, DEFAULT_CONFIG, _pre_adjustment_value,
 )
 
 
@@ -362,9 +362,14 @@ def run_backtest(
                     "weighted_entropy": round(state.weighted_entropy, 6),
                 })
             else:
-                index_before = state.value
+                # Build relaxed universe for true pre-adjustment value
+                relaxed = build_constituent_universe(hist_events, current_dt, config, eligibility_filter=False)
+                relaxed_map = {c.id: c for c in relaxed}
+                pre_val = _pre_adjustment_value(state, relaxed_map)
+
+                index_before = pre_val
                 divisor_before = state.divisor
-                new_divisor = adjust_divisor(state, selected)
+                new_divisor = adjust_divisor(state, selected, pre_adj_value=pre_val)
                 we = compute_weighted_entropy(selected)
                 value = we / new_divisor if new_divisor > 0 else 0.0
 
@@ -419,11 +424,14 @@ def run_backtest(
             # Detect mid-cycle removals before rebalance
             selected, removed = remove_dropped_constituents(state.constituents, universe_map)
 
+            # Compute true pre-adjustment value at current prices
+            pre_val = _pre_adjustment_value(state, universe_map)
+
             if removed:
                 # Log expiration removals
                 selected = redistribute_weights(selected)
                 selected = compute_entropy_all(selected)
-                removal_divisor = adjust_divisor(state, selected)
+                removal_divisor = adjust_divisor(state, selected, pre_adj_value=pre_val)
                 removal_we = compute_weighted_entropy(selected)
                 removal_value = removal_we / removal_divisor if removal_divisor > 0 else 0.0
 
@@ -434,20 +442,20 @@ def run_backtest(
                     "removed_count": len(removed),
                     "divisor_before": state.divisor,
                     "divisor_after": removal_divisor,
-                    "index_before": round(state.value, 4),
+                    "index_before": round(pre_val, 4),
                     "index_after": round(removal_value, 4),
                     "num_constituents": len(selected),
                 })
                 val["total_expirations_removed"] += len(removed)
 
                 # Check continuity for removal
-                if abs(state.value - removal_value) > 0.01:
+                if abs(pre_val - removal_value) > 0.01:
                     val["continuity_violations"].append({
                         "timestamp": current_dt.isoformat(),
                         "event": "expiration_removal",
-                        "before": round(state.value, 6),
+                        "before": round(pre_val, 6),
                         "after": round(removal_value, 6),
-                        "diff": round(removal_value - state.value, 6),
+                        "diff": round(removal_value - pre_val, 6),
                     })
 
                 # Update state before rebalance
@@ -469,9 +477,11 @@ def run_backtest(
             selected = compute_weights(selected, config)
             selected = compute_entropy_all(selected)
 
-            index_before = state.value
+            # After removal, state.value is correct; otherwise use pre_val
+            rebalance_anchor = None if removed else pre_val
+            index_before = state.value if removed else pre_val
             divisor_before = state.divisor
-            new_divisor = adjust_divisor(state, selected)
+            new_divisor = adjust_divisor(state, selected, pre_adj_value=rebalance_anchor)
             we = compute_weighted_entropy(selected)
             value = we / new_divisor if new_divisor > 0 else 0.0
 
@@ -520,11 +530,14 @@ def run_backtest(
             # Detect mid-cycle removals (expired/closed)
             selected, removed = remove_dropped_constituents(state.constituents, universe_map)
 
+            # Compute true pre-adjustment value at current prices
+            pre_val = _pre_adjustment_value(state, universe_map)
+
             if removed:
                 # Redistribute weights and adjust divisor
                 selected = redistribute_weights(selected)
                 selected = compute_entropy_all(selected)
-                new_divisor = adjust_divisor(state, selected)
+                new_divisor = adjust_divisor(state, selected, pre_adj_value=pre_val)
                 we = compute_weighted_entropy(selected)
                 value = we / new_divisor if new_divisor > 0 else 0.0
 
@@ -535,20 +548,20 @@ def run_backtest(
                     "removed_count": len(removed),
                     "divisor_before": state.divisor,
                     "divisor_after": new_divisor,
-                    "index_before": round(state.value, 4),
+                    "index_before": round(pre_val, 4),
                     "index_after": round(value, 4),
                     "num_constituents": len(selected),
                 })
                 val["total_expirations_removed"] += len(removed)
 
                 # Check continuity
-                if abs(state.value - value) > 0.01:
+                if abs(pre_val - value) > 0.01:
                     val["continuity_violations"].append({
                         "timestamp": current_dt.isoformat(),
                         "event": "expiration_removal",
-                        "before": round(state.value, 6),
+                        "before": round(pre_val, 6),
                         "after": round(value, 6),
-                        "diff": round(value - state.value, 6),
+                        "diff": round(value - pre_val, 6),
                     })
 
                 state = IndexState(
@@ -736,16 +749,24 @@ def main():
     total_markets = sum(len(e.markets) for e in events)
     print(f"  → {len(events)} events ({len(open_events)} open + {len(closed_events)} closed, deduped), {total_markets} markets")
 
-    # Pre-select: build universe and identify relevant tokens only
-    # We need tokens for buffer_bottom range (360) + some margin
-    universe = build_constituent_universe(events, start_dt, config=DEFAULT_CONFIG, eligibility_filter=False)
-    ranked = sorted(universe, key=lambda c: c.volume_1mo, reverse=True)
-    # Keep top buffer_bottom + 50 for safety margin
-    keep_ids = {c.id for c in ranked[:DEFAULT_CONFIG.buffer_bottom + 50]}
-    # Also keep source_market_ids
+    # Pre-select: rank all events/markets by volume, ignoring active/closed status.
+    # Closed-now markets may have valid historical data needed for backtest.
+    ranked_items = []  # (volume_1mo, set_of_market_ids)
+    for event in events:
+        if event.neg_risk:
+            vol = sum(m.volume_1mo for m in event.markets)
+            mids = {m.id for m in event.markets if m.clob_token_ids}
+            if mids:
+                ranked_items.append((vol, mids))
+        else:
+            for m in event.markets:
+                if m.clob_token_ids:
+                    ranked_items.append((m.volume_1mo, {m.id}))
+
+    ranked_items.sort(key=lambda x: x[0], reverse=True)
     keep_market_ids = set()
-    for c in ranked[:DEFAULT_CONFIG.buffer_bottom + 50]:
-        keep_market_ids.update(c.source_market_ids)
+    for vol, mids in ranked_items[:DEFAULT_CONFIG.buffer_bottom + 50]:
+        keep_market_ids.update(mids)
 
     # Step 2: Collect tokens only for relevant markets
     print(f"\n[2/3] Fetching price histories...")

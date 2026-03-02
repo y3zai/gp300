@@ -509,6 +509,7 @@ def update_index_value(
 def adjust_divisor(
     state: IndexState,
     new_constituents: list[Constituent],
+    pre_adj_value: Optional[float] = None,
 ) -> float:
     """
     Compute new divisor after a composition/weight change.
@@ -517,12 +518,37 @@ def adjust_divisor(
 
     This ensures zero discontinuity: the index value is the same
     immediately before and after the change.
+
+    Args:
+        pre_adj_value: If provided, use this as the anchor value instead of
+            state.value. Needed when state.value is stale (from previous step).
     """
-    if state.value <= 0:
+    anchor = pre_adj_value if pre_adj_value is not None else state.value
+    if anchor <= 0:
         return state.divisor
 
     new_we = compute_weighted_entropy(new_constituents)
-    return new_we / state.value
+    return new_we / anchor
+
+
+def _pre_adjustment_value(
+    state: IndexState,
+    universe_map: dict[str, Constituent],
+) -> float:
+    """Compute index value at current prices using old weights/divisor.
+
+    Looks up each old constituent's current probabilities from universe_map,
+    computes normalized_entropy at current prices, then applies old weights.
+    Falls back to last-known entropy for constituents not in universe_map.
+    """
+    we = 0.0
+    for c in state.constituents:
+        if c.id in universe_map:
+            h = normalized_entropy(universe_map[c.id].probabilities)
+        else:
+            h = c.normalized_entropy
+        we += c.weight * h
+    return we / state.divisor if state.divisor > 0 else state.value
 
 
 # ──────────────────────────────────────────────
@@ -589,6 +615,19 @@ def run_full_pipeline(
             # Redistribute weights pro-rata
             selected = redistribute_weights(selected)
 
+    # Build relaxed universe map for pre-adjustment value computation.
+    # Needed so adjust_divisor anchors to the true current index value
+    # rather than the stale state.value from the previous step.
+    relaxed_map = None
+    if not is_first_run:
+        if rebalance or not reconstitute:
+            # rebalance and regular already built relaxed universe → reuse
+            relaxed_map = universe_map  # already {c.id: c}
+        else:
+            # reconstitute: build relaxed universe for pre-adj value
+            relaxed = build_constituent_universe(events, now, config, eligibility_filter=False)
+            relaxed_map = {c.id: c for c in relaxed}
+
     if not selected:
         # Degenerate case
         return IndexState(
@@ -612,7 +651,8 @@ def run_full_pipeline(
         return initialize_index(selected, now, config)
     elif rebalance or reconstitute:
         # Step 5b: Adjust divisor, then compute
-        new_divisor = adjust_divisor(current_state, selected)
+        pre_val = _pre_adjustment_value(current_state, relaxed_map)
+        new_divisor = adjust_divisor(current_state, selected, pre_adj_value=pre_val)
         we = compute_weighted_entropy(selected)
         value = we / new_divisor if new_divisor > 0 else 0.0
         return IndexState(
@@ -628,7 +668,8 @@ def run_full_pipeline(
         if removed:
             # Removals happened — adjust divisor to maintain continuity
             selected = compute_entropy_all(selected)  # already done above, but be safe
-            new_divisor = adjust_divisor(current_state, selected)
+            pre_val = _pre_adjustment_value(current_state, relaxed_map)
+            new_divisor = adjust_divisor(current_state, selected, pre_adj_value=pre_val)
             we = compute_weighted_entropy(selected)
             value = we / new_divisor if new_divisor > 0 else 0.0
             return IndexState(

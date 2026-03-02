@@ -546,7 +546,7 @@ The backtest output should be inspected for:
 
 ### 7.5 Output Files
 
-Backtest produces the same JSON files as live mode, plus a diagnostic log:
+Backtest produces its own output files for validation and diagnostics:
 
 **`data/backtest_log.json`**:
 ```json
@@ -616,7 +616,7 @@ The key invariant to verify: **`index_before == index_after`** for every adjustm
 - [x] Parameter adjustment: expiry filters removed entirely (no min/max expiry window)
 
 ### Phase 3: Backtest & Validation
-- [ ] Implement backtest mode (`python backtest.py --start --end`)
+- [x] Implement backtest mode (`python backtest.py --start --end`)
 - [ ] Run backtest over a 2–3 month historical window
 - [ ] Verify continuity at all adjustment events (index_before == index_after)
 - [ ] Verify weight sums, caps, entropy ranges, constituent counts
