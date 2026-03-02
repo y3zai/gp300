@@ -451,7 +451,7 @@ GitHub Pages (static hosting)
 {"timestamp": "2025-03-15T14:00:00Z", "value": 1042.7, "num_constituents": 300, "weighted_entropy": 0.731205, "divisor": 0.000699}
 ```
 
-The `divisor` field allows full index reconstruction between adjustments: since weights and divisor are frozen between rebalances/reconstitutions, each tick's index value can be recomputed from `weighted_entropy / divisor`.
+The `divisor` field allows full index reconstruction between adjustments: since weights and divisor are frozen between rebalances/reconstitutions, each tick's index value can be recomputed from `weighted_entropy / divisor`. The exception is `divisor=0.0`, which signals an empty index (all constituents removed); in that case `value` is the preserved pre-removal level and is stored directly rather than being reconstructable from the formula.
 
 **`data/adjustments.jsonl`** (JSON Lines, append-only — one entry per adjustment event):
 
