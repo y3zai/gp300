@@ -80,9 +80,33 @@ def append_history(state: IndexState):
         "value": round(state.value, 2),
         "num_constituents": state.num_constituents,
         "weighted_entropy": round(state.weighted_entropy, 6),
+        "divisor": state.divisor,
     }
 
     with open(history_path, "a") as f:
+        f.write(json.dumps(entry) + "\n")
+
+
+def make_constituent_snapshot(constituents) -> list[dict]:
+    """Return a compact list of constituent dicts for adjustment logs."""
+    return [
+        {
+            "id": c.id,
+            "label": c.label,
+            "source_type": c.source_type,
+            "weight": round(c.weight, 6),
+            "rank": c.rank,
+            "normalized_entropy": round(c.normalized_entropy, 4),
+            "volume_1mo": round(c.volume_1mo, 2),
+        }
+        for c in sorted(constituents, key=lambda x: x.weight, reverse=True)
+    ]
+
+
+def append_adjustment_log(entry: dict):
+    """Append one JSON line to data/adjustments.jsonl."""
+    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    with open(DATA_DIR / "adjustments.jsonl", "a") as f:
         f.write(json.dumps(entry) + "\n")
 
 
@@ -269,6 +293,74 @@ def main():
         append_history(state)
         save_state(state)
         print("  → current.json, constituents.json, history.jsonl, state.json")
+
+        # Append adjustment log for non-trivial events
+        ts = state.timestamp.isoformat()
+
+        if is_first_run:
+            append_adjustment_log({
+                "event": "initialization",
+                "timestamp": ts,
+                "num_constituents": state.num_constituents,
+                "index_value": round(state.value, 2),
+                "divisor": state.divisor,
+                "weighted_entropy": round(state.weighted_entropy, 6),
+                "constituents": make_constituent_snapshot(state.constituents),
+            })
+            print("  → adjustments.jsonl (initialization)")
+
+        elif is_reconstitute and prev_state is not None:
+            prev_ids = {c.id for c in prev_state.constituents}
+            curr_ids = {c.id for c in state.constituents}
+            added_ids = sorted(curr_ids - prev_ids)
+            removed_ids = sorted(prev_ids - curr_ids)
+            append_adjustment_log({
+                "event": "reconstitution",
+                "timestamp": ts,
+                "divisor_before": prev_state.divisor,
+                "divisor_after": state.divisor,
+                "index_before": round(prev_state.value, 2),
+                "index_after": round(state.value, 2),
+                "num_constituents": state.num_constituents,
+                "added_ids": added_ids,
+                "removed_ids": removed_ids,
+                "added_count": len(added_ids),
+                "removed_count": len(removed_ids),
+                "constituents": make_constituent_snapshot(state.constituents),
+            })
+            print("  → adjustments.jsonl (reconstitution)")
+
+        elif is_rebalance:
+            weights = [c.weight for c in state.constituents]
+            append_adjustment_log({
+                "event": "rebalance",
+                "timestamp": ts,
+                "divisor_before": prev_state.divisor,
+                "divisor_after": state.divisor,
+                "index_before": round(prev_state.value, 2),
+                "index_after": round(state.value, 2),
+                "num_constituents": state.num_constituents,
+                "weight_max": round(max(weights), 6),
+                "weight_sum": round(sum(weights), 6),
+                "constituents": make_constituent_snapshot(state.constituents),
+            })
+            print("  → adjustments.jsonl (rebalance)")
+
+        elif is_update and state.removed_constituents:
+            removed_ids = sorted(c.id for c in state.removed_constituents)
+            append_adjustment_log({
+                "event": "expiration_removal",
+                "timestamp": ts,
+                "removed_ids": removed_ids,
+                "removed_count": len(removed_ids),
+                "divisor_before": prev_state.divisor,
+                "divisor_after": state.divisor,
+                "index_before": round(prev_state.value, 2),
+                "index_after": round(state.value, 2),
+                "num_constituents": state.num_constituents,
+            })
+            print("  → adjustments.jsonl (expiration_removal)")
+
     else:
         print("\n(dry-run: no files written)")
 

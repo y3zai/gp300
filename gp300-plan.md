@@ -445,11 +445,27 @@ GitHub Pages (static hosting)
 }
 ```
 
-**`data/history.jsonl`** (JSON Lines, append-only):
+**`data/history.jsonl`** (JSON Lines, append-only — one entry per update cycle):
 ```
-{"timestamp": "2025-03-15T13:00:00Z", "value": 1040.2, "num_constituents": 300, "weighted_entropy": 0.729841}
-{"timestamp": "2025-03-15T14:00:00Z", "value": 1042.7, "num_constituents": 300, "weighted_entropy": 0.731205}
+{"timestamp": "2025-03-15T13:00:00Z", "value": 1040.2, "num_constituents": 300, "weighted_entropy": 0.729841, "divisor": 0.000699}
+{"timestamp": "2025-03-15T14:00:00Z", "value": 1042.7, "num_constituents": 300, "weighted_entropy": 0.731205, "divisor": 0.000699}
 ```
+
+The `divisor` field allows full index reconstruction between adjustments: since weights and divisor are frozen between rebalances/reconstitutions, each tick's index value can be recomputed from `weighted_entropy / divisor`.
+
+**`data/adjustments.jsonl`** (JSON Lines, append-only — one entry per adjustment event):
+
+Records every adjustment event (initialization, reconstitution, rebalance, expiration removal) with full constituent snapshots. This is the audit trail for debugging and reconstructing the complete index history.
+
+Event types:
+- `initialization` — First run. Fields: `timestamp`, `num_constituents`, `index_value`, `divisor`, `weighted_entropy`, `constituents` (full snapshot).
+- `reconstitution` — Biweekly constituent re-selection. Fields: `timestamp`, `divisor_before/after`, `index_before/after`, `num_constituents`, `added_ids`, `removed_ids`, `added_count`, `removed_count`, `constituents`.
+- `rebalance` — Weekly weight recomputation. Fields: `timestamp`, `divisor_before/after`, `index_before/after`, `num_constituents`, `weight_max`, `weight_sum`, `constituents`.
+- `expiration_removal` — Mid-cycle contract expiry. Fields: `timestamp`, `removed_ids`, `removed_count`, `divisor_before/after`, `index_before/after`, `num_constituents`.
+
+Each `constituents` snapshot is a compact array: `{id, label, source_type, weight, rank, normalized_entropy, volume_1mo}`.
+
+**Recoverability**: `adjustments.jsonl` provides full constituent snapshots at each adjustment boundary. Between adjustments, weights and the divisor are frozen, so `history.jsonl` ticks (which include `divisor`) plus live API price data are sufficient to fully reconstruct the index.
 
 **`data/constituents.json`**:
 ```json
