@@ -408,7 +408,7 @@ GitHub Pages (static hosting)
       │
       ├── index.html (dashboard)
       ├── data/current.json (latest index value + metadata)
-      ├── data/history.json (time series)
+      ├── data/history.jsonl (time series)
       └── data/constituents.json (current constituents + weights)
 ```
 
@@ -611,12 +611,12 @@ The key invariant to verify: **`index_before == index_after`** for every adjustm
 - [x] Implement volume-weighted capping algorithm (iterative capping, verified sum=1.0, max=5%)
 - [x] Implement normalized entropy calculation (binary k=2 + multi-outcome k=2..33, verified [0, 1] range)
 - [x] Implement divisor-based index computation (init, update, adjust modes)
-- [x] Output to JSON files (current.json, constituents.json, history.json, state.json)
+- [x] Output to JSON files (current.json, constituents.json, history.jsonl, state.json)
 - [x] Live test: ~300 constituents selected from 974 eligible, 6 capped at 5%, 16 multi-outcome events
 - [x] Parameter adjustment: expiry filters removed entirely (no min/max expiry window)
 
 ### Phase 3: Backtest & Validation
-- [ ] Implement backtest mode (--backtest --start --end flags)
+- [ ] Implement backtest mode (`python backtest.py --start --end`)
 - [ ] Run backtest over a 2–3 month historical window
 - [ ] Verify continuity at all adjustment events (index_before == index_after)
 - [ ] Verify weight sums, caps, entropy ranges, constituent counts

@@ -182,8 +182,18 @@ def inject_historical_prices(
     new_events = []
     for event in events:
         new_markets = []
+        any_has_history = False
         for market in event.markets:
-            # Shallow copy — we only modify outcome_prices
+            # Look up historical price FIRST to determine active/closed overrides
+            hist_price = None
+            if market.clob_token_ids and len(market.clob_token_ids) >= 1:
+                yes_token = market.clob_token_ids[0]
+                hist_price = cache.get_price(yes_token, ts)
+
+            has_history = hist_price is not None
+            if has_history:
+                any_has_history = True
+
             m = Market(
                 id=market.id,
                 question=market.question,
@@ -201,8 +211,8 @@ def inject_historical_prices(
                 liquidity=market.liquidity,
                 end_date=market.end_date,
                 start_date=market.start_date,
-                active=market.active,
-                closed=market.closed,
+                active=True if has_history else market.active,
+                closed=False if has_history else market.closed,
                 neg_risk=market.neg_risk,
                 group_item_title=market.group_item_title,
                 last_trade_price=market.last_trade_price,
@@ -210,15 +220,11 @@ def inject_historical_prices(
             )
 
             # Inject historical price
-            if m.clob_token_ids and len(m.clob_token_ids) >= 1:
-                yes_token = m.clob_token_ids[0]
-                hist_price = cache.get_price(yes_token, ts)
-                if hist_price is not None:
-                    p_yes = max(0.001, min(0.999, hist_price))
-                    m.outcome_prices = [p_yes, 1.0 - p_yes]
-                else:
-                    # No history at this timestamp — mark as unavailable
-                    m.outcome_prices = []
+            if has_history:
+                p_yes = max(0.001, min(0.999, hist_price))
+                m.outcome_prices = [p_yes, 1.0 - p_yes]
+            else:
+                m.outcome_prices = []
 
             new_markets.append(m)
 
@@ -232,8 +238,8 @@ def inject_historical_prices(
             liquidity=event.liquidity,
             end_date=event.end_date,
             start_date=event.start_date,
-            active=event.active,
-            closed=event.closed,
+            active=True if any_has_history else event.active,
+            closed=False if any_has_history else event.closed,
             neg_risk=event.neg_risk,
             markets=new_markets,
         )
@@ -301,6 +307,7 @@ def run_backtest(
         "total_rebalances": 0,
         "total_reconstitutions": 0,
         "total_expirations_removed": 0,
+        "total_reconstitution_removed": 0,
     }
 
     print(f"\nBacktest: {start_dt.date()} → {end_dt.date()}")
@@ -387,7 +394,7 @@ def run_backtest(
                 }
                 log.append(log_entry)
                 val["total_reconstitutions"] += 1
-                val["total_expirations_removed"] += len(removed)
+                val["total_reconstitution_removed"] += len(removed)
 
                 # Check continuity
                 if abs(index_before - value) > 0.01:
@@ -644,7 +651,8 @@ def print_report(result: dict):
     print(f"\n  Adjustment events:")
     print(f"    Rebalances:       {val['total_rebalances']}")
     print(f"    Reconstitutions:  {val['total_reconstitutions']}")
-    print(f"    Expirations out:  {val['total_expirations_removed']}")
+    print(f"    Expirations out:      {val['total_expirations_removed']}")
+    print(f"    Reconstitution out:   {val['total_reconstitution_removed']}")
 
     print(f"\n  Constituent range:  {val['min_constituents']} – {val['max_constituents']}")
 
@@ -722,14 +730,15 @@ def main():
     # Deduplicate by event ID (some events may appear in both)
     seen = {}
     for e in open_events + closed_events:
-        seen[e.id] = e
+        if e.id not in seen:
+            seen[e.id] = e  # open takes priority (listed first)
     events = list(seen.values())
     total_markets = sum(len(e.markets) for e in events)
     print(f"  → {len(events)} events ({len(open_events)} open + {len(closed_events)} closed, deduped), {total_markets} markets")
 
     # Pre-select: build universe and identify relevant tokens only
     # We need tokens for buffer_bottom range (360) + some margin
-    universe = build_constituent_universe(events, start_dt)
+    universe = build_constituent_universe(events, start_dt, config=DEFAULT_CONFIG, eligibility_filter=False)
     ranked = sorted(universe, key=lambda c: c.volume_1mo, reverse=True)
     # Keep top buffer_bottom + 50 for safety margin
     keep_ids = {c.id for c in ranked[:DEFAULT_CONFIG.buffer_bottom + 50]}
