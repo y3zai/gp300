@@ -12,6 +12,8 @@ All read endpoints require NO authentication.
 import json
 import time
 import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from dataclasses import dataclass, field
 from datetime import datetime, timezone, timedelta
 from typing import Optional
@@ -20,6 +22,16 @@ from typing import Optional
 GAMMA_BASE = "https://gamma-api.polymarket.com"
 CLOB_BASE = "https://clob.polymarket.com"
 GEOPOLITICS_TAG_ID = 100265
+
+# Module-level session with retry/backoff for connection pooling and resilience
+_session = requests.Session()
+_retry = Retry(
+    total=3,
+    backoff_factor=1,
+    status_forcelist=[429, 500, 502, 503, 504],
+)
+_session.mount("https://", HTTPAdapter(max_retries=_retry))
+_session.mount("http://", HTTPAdapter(max_retries=_retry))
 
 
 @dataclass
@@ -209,7 +221,7 @@ def fetch_geopolitics_events(
             "ascending": "false",
         }
 
-        resp = requests.get(f"{GAMMA_BASE}/events", params=params, timeout=30)
+        resp = _session.get(f"{GAMMA_BASE}/events", params=params, timeout=30)
         resp.raise_for_status()
         data = resp.json()
 
@@ -232,7 +244,7 @@ def fetch_geopolitics_events(
 def fetch_market_prices(clob_token_id: str) -> Optional[float]:
     """Fetch the current price for a single CLOB token."""
     try:
-        resp = requests.get(
+        resp = _session.get(
             f"{CLOB_BASE}/price",
             params={"token_id": clob_token_id, "side": "buy"},
             timeout=10,
@@ -273,7 +285,7 @@ def fetch_price_history(
         params["interval"] = interval
 
     try:
-        resp = requests.get(f"{CLOB_BASE}/prices-history", params=params, timeout=30)
+        resp = _session.get(f"{CLOB_BASE}/prices-history", params=params, timeout=30)
         resp.raise_for_status()
         data = resp.json()
         return data.get("history", [])

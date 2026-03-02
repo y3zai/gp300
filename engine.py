@@ -133,6 +133,10 @@ def _build_neg_risk_constituent(
     if event.end_date and event.end_date < now:
         return None
 
+    # Skip events that haven't launched yet (lookahead bias prevention)
+    if event.start_date and event.start_date > now:
+        return None
+
     # Only include active, non-closed markets
     active_markets = [m for m in event.markets if m.active and not m.closed]
     if len(active_markets) < 2:
@@ -192,6 +196,10 @@ def _build_binary_constituent(
 
     # Skip expired markets (always checked)
     if market.end_date and market.end_date < now:
+        return None
+
+    # Skip markets that haven't launched yet (lookahead bias prevention)
+    if market.start_date and market.start_date > now:
         return None
 
     # Must have valid prices

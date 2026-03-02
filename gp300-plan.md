@@ -263,7 +263,7 @@ Event: "US strikes Iran by...?" (NOT negRisk)
 
 ### 2.1 Universe
 
-All active Events on Polymarket tagged with geopolitics-related tags. Fetched via Gamma API `GET /events?tag_id=100265&related_tags=true&active=true&closed=false`, which covers the primary Geopolitics tag plus 18 related tags (Iran, Ukraine, Gaza, Israel, Middle East, China, etc. — see Section 1.4 for the full table). The API handles deduplication internally. Each Event is treated as one constituent, with its child Markets aggregated for probability/entropy calculation.
+All active Events on Polymarket tagged with geopolitics-related tags. Fetched via Gamma API `GET /events?tag_id=100265&related_tags=true&active=true&closed=false`, which covers the primary Geopolitics tag plus 18 related tags (Iran, Ukraine, Gaza, Israel, Middle East, China, etc. — see Section 1.4 for the full table). The API handles deduplication internally. Constituent granularity depends on event type: **negRisk events** are aggregated at the Event level (one event = one multi-outcome constituent), while **non-negRisk events** have each child Market treated as a separate binary constituent (see Section 1.7 for details).
 
 ### 2.2 Eligibility Criteria
 
@@ -439,18 +439,16 @@ GitHub Pages (static hosting)
 {
   "index_value": 1042.7,
   "timestamp": "2025-03-15T14:00:00Z",
-  "num_constituents": 498,
+  "num_constituents": 300,
   "weighted_entropy": 0.73,
   "divisor": 0.000699
 }
 ```
 
-**`data/history.json`**:
-```json
-[
-  { "timestamp": "2025-03-15T13:00:00Z", "value": 1040.2 },
-  { "timestamp": "2025-03-15T14:00:00Z", "value": 1042.7 }
-]
+**`data/history.jsonl`** (JSON Lines, append-only):
+```
+{"timestamp": "2025-03-15T13:00:00Z", "value": 1040.2, "num_constituents": 300, "weighted_entropy": 0.729841}
+{"timestamp": "2025-03-15T14:00:00Z", "value": 1042.7, "num_constituents": 300, "weighted_entropy": 0.731205}
 ```
 
 **`data/constituents.json`**:
@@ -458,23 +456,27 @@ GitHub Pages (static hosting)
 [
   {
     "id": "polymarket_contract_id",
-    "question": "Will the US impose new tariffs on China by June 2025?",
+    "label": "Will the US impose new tariffs on China by June 2025?",
+    "source_type": "market",
     "num_outcomes": 2,
     "probabilities": [0.62, 0.38],
     "normalized_entropy": 0.959,
     "weight": 0.038,
-    "volume_30d": 2850000,
-    "expires": "2025-06-30"
+    "volume_1mo": 2850000,
+    "end_date": "2025-06-30T00:00:00+00:00",
+    "rank": 5
   },
   {
-    "id": "polymarket_contract_id_2",
-    "question": "Next UN Secretary General?",
+    "id": "polymarket_event_id",
+    "label": "Next UN Secretary General?",
+    "source_type": "event",
     "num_outcomes": 5,
     "probabilities": [0.40, 0.30, 0.15, 0.10, 0.05],
     "normalized_entropy": 0.840,
     "weight": 0.022,
-    "volume_30d": 1200000,
-    "expires": "2025-09-15"
+    "volume_1mo": 1200000,
+    "end_date": "2025-09-15T00:00:00+00:00",
+    "rank": 42
   }
 ]
 ```
@@ -492,11 +494,14 @@ Polymarket API provides historical price/probability data. The backtest engine p
 ### 7.2 Usage
 
 ```bash
-# Live mode (default): fetch real-time data, compute current index value
-python gp300.py
+# Live mode: fetch real-time data, compute current index value
+python main.py                    # Initialize (or reconstitute)
+python main.py --update           # Regular 30-min price update
+python main.py --rebalance        # Weekly: recompute weights
+python main.py --reconstitute     # Biweekly: re-select constituents
 
 # Backtest mode: simulate the full index lifecycle over a historical period
-python gp300.py --backtest --start 2025-01-01 --end 2025-02-27
+python backtest.py --start 2025-01-01 --end 2025-02-27 [--step 30] [--verbose]
 ```
 
 ### 7.3 What Backtest Mode Does

@@ -71,25 +71,19 @@ def save_constituents(state: IndexState):
 
 
 def append_history(state: IndexState):
-    """Append to data/history.json."""
+    """Append to data/history.jsonl (JSON Lines format, append-only)."""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
-    history_path = DATA_DIR / "history.json"
+    history_path = DATA_DIR / "history.jsonl"
 
-    if history_path.exists():
-        with open(history_path) as f:
-            history = json.load(f)
-    else:
-        history = []
-
-    history.append({
+    entry = {
         "timestamp": state.timestamp.isoformat(),
         "value": round(state.value, 2),
         "num_constituents": state.num_constituents,
         "weighted_entropy": round(state.weighted_entropy, 6),
-    })
+    }
 
-    with open(history_path, "w") as f:
-        json.dump(history, f, indent=2)
+    with open(history_path, "a") as f:
+        f.write(json.dumps(entry) + "\n")
 
 
 def save_state(state: IndexState):
@@ -274,7 +268,7 @@ def main():
         save_constituents(state)
         append_history(state)
         save_state(state)
-        print("  → current.json, constituents.json, history.json, state.json")
+        print("  → current.json, constituents.json, history.jsonl, state.json")
     else:
         print("\n(dry-run: no files written)")
 

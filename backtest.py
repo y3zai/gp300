@@ -176,7 +176,8 @@ def inject_historical_prices(
     For each market, looks up the Yes-token price at timestamp ts,
     and sets outcome_prices = [p_yes, 1 - p_yes].
 
-    Markets with no historical data at this time are left unchanged.
+    Markets with no historical data at this time have outcome_prices set to []
+    so they are naturally excluded from the universe by downstream guards.
     """
     new_events = []
     for event in events:
@@ -215,6 +216,9 @@ def inject_historical_prices(
                 if hist_price is not None:
                     p_yes = max(0.001, min(0.999, hist_price))
                     m.outcome_prices = [p_yes, 1.0 - p_yes]
+                else:
+                    # No history at this timestamp — mark as unavailable
+                    m.outcome_prices = []
 
             new_markets.append(m)
 
@@ -316,7 +320,7 @@ def run_backtest(
             do_reconstitute = True
         elif is_biweekly_boundary(start_dt, current_dt) and current_dt.hour == 0 and current_dt.minute == 0:
             do_reconstitute = True
-        elif is_weekly_boundary(prev_dt, current_dt):
+        elif is_weekly_boundary(prev_dt, current_dt) and current_dt.hour == 0 and current_dt.minute == 0:
             do_rebalance = True
 
         # Inject historical prices
@@ -713,9 +717,15 @@ def main():
 
     # Step 1: Fetch current events
     print(f"\n[1/3] Fetching geopolitics events from Polymarket...")
-    events = fetch_geopolitics_events()
+    open_events = fetch_geopolitics_events(closed=False)
+    closed_events = fetch_geopolitics_events(closed=True)
+    # Deduplicate by event ID (some events may appear in both)
+    seen = {}
+    for e in open_events + closed_events:
+        seen[e.id] = e
+    events = list(seen.values())
     total_markets = sum(len(e.markets) for e in events)
-    print(f"  → {len(events)} events, {total_markets} markets")
+    print(f"  → {len(events)} events ({len(open_events)} open + {len(closed_events)} closed, deduped), {total_markets} markets")
 
     # Pre-select: build universe and identify relevant tokens only
     # We need tokens for buffer_bottom range (360) + some margin
