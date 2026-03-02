@@ -1,1 +1,3 @@
+*.json
+.claude/
 __pycache__/
