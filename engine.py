@@ -616,12 +616,17 @@ def run_full_pipeline(
             # Redistribute weights pro-rata
             selected = redistribute_weights(selected)
 
-            # All constituents removed — return proper removal state
+            # All constituents removed — return proper removal state.
+            # divisor=0.0 signals that value is preserved directly (not
+            # reconstructable from weighted_entropy / divisor).  The existing
+            # divisor > 0 guards in _pre_adjustment_value and update_index_value
+            # handle this correctly, and reconstitution will use state.value as
+            # the anchor for computing the new divisor.
             if not selected:
                 pre_val = _pre_adjustment_value(current_state, universe_map)
                 return IndexState(
-                    value=0.0,
-                    divisor=current_state.divisor,
+                    value=pre_val,
+                    divisor=0.0,
                     weighted_entropy=0.0,
                     num_constituents=0,
                     timestamp=now,
