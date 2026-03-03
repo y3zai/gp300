@@ -18,14 +18,12 @@ Limitations:
 
 import argparse
 import json
-import math
 import sys
 import time as time_mod
 from bisect import bisect_right
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from typing import Optional
-from copy import deepcopy
 
 from api import (
     Event, Market, fetch_geopolitics_events, fetch_price_history,

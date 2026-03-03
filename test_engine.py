@@ -6,7 +6,6 @@ Targeted unit tests for degenerate engine paths:
 - usable_markets consistency in _build_neg_risk_constituent
 """
 
-import math
 from datetime import datetime, timedelta, timezone
 
 from api import Event, Market
@@ -15,12 +14,6 @@ from engine import (
     IndexConfig,
     IndexState,
     _build_neg_risk_constituent,
-    build_constituent_universe,
-    compute_entropy_all,
-    compute_weights,
-    initialize_index,
-    normalized_entropy,
-    rank_and_select,
     run_full_pipeline,
 )
 

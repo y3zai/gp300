@@ -11,19 +11,14 @@ Usage:
 
 import argparse
 import json
-import os
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
 from api import fetch_geopolitics_events
 from engine import (
-    DEFAULT_CONFIG,
     Constituent,
-    IndexConfig,
     IndexState,
-    compute_entropy_all,
-    compute_weights,
     run_full_pipeline,
 )
 
@@ -271,7 +266,7 @@ def main():
 
     # Print summary
     print(f"\n{'=' * 50}")
-    print(f"  G&P 300 Index")
+    print("  G&P 300 Index")
     print(f"{'=' * 50}")
     print(f"  Value:          {state.value:,.2f}")
     print(f"  Constituents:   {state.num_constituents}")
@@ -281,7 +276,7 @@ def main():
     print(f"{'=' * 50}")
 
     if args.verbose and state.constituents:
-        print(f"\nTop 20 constituents by weight:")
+        print("\nTop 20 constituents by weight:")
         print(
             f"{'Rank':>5} {'Weight':>8} {'Entropy':>8} {'Vol30d':>12} {'Type':>6} Label"
         )
