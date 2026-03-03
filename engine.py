@@ -608,6 +608,7 @@ def run_full_pipeline(
         if current_state and not is_first_run and current_state.constituents:
             current_ids = {c.id for c in current_state.constituents}
         selected = rank_and_select(universe, current_ids, config)
+        universe_map = {c.id: c for c in universe}
         removed = []
     else:
         # Both rebalance and regular update: relaxed universe + detect removals
@@ -636,17 +637,13 @@ def run_full_pipeline(
     # Build relaxed universe map for pre-adjustment value computation.
     # Needed so adjust_divisor anchors to the true current index value
     # rather than the stale state.value from the previous step.
-    relaxed_map = None
-    if not is_first_run:
-        if reconstitute:
-            # reconstitute: build relaxed universe for pre-adj value
-            relaxed = build_constituent_universe(
-                events, now, config, eligibility_filter=False
-            )
-            relaxed_map = {c.id: c for c in relaxed}
-        else:
-            # rebalance and regular already built relaxed universe → reuse
-            relaxed_map = universe_map  # already {c.id: c}
+    if reconstitute:
+        relaxed = build_constituent_universe(
+            events, now, config, eligibility_filter=False
+        )
+        relaxed_map = {c.id: c for c in relaxed}
+    else:
+        relaxed_map = universe_map
 
     if not selected:
         if is_first_run:
