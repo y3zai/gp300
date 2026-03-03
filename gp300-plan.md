@@ -641,11 +641,11 @@ The key invariant to verify: **`index_before == index_after`** for every adjustm
 - Known limitation: CLOB `interval=max` only returns ~1 month of data, so Dec–Jan had 0 constituents (value preserved at 1000.0)
 
 ### Phase 4: Automation
-- [ ] Set up GitHub repository
-- [ ] Configure GitHub Actions: 30-minute data update workflow
-- [ ] Configure GitHub Actions: weekly rebalance workflow
-- [ ] Configure GitHub Actions: biweekly reconstitution workflow
-- [ ] Implement mid-cycle expiration removal logic
+- [x] Set up GitHub repository
+- [x] Configure GitHub Actions: 30-minute data update workflow
+- [x] Configure GitHub Actions: weekly rebalance workflow
+- [x] Configure GitHub Actions: biweekly reconstitution workflow
+- [x] Add priority-based skip logic (reconstitute > rebalance > update) to avoid redundant runs at overlapping cron times
 - [ ] Test end-to-end pipeline
 
 ### Phase 5: Frontend

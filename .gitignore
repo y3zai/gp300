@@ -1,3 +1,4 @@
-*.json
 .claude/
 __pycache__/
+data/price_cache.json
+data/backtest_*.json

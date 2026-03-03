@@ -229,10 +229,10 @@ def main():
     is_first_run = prev_state is None
 
     if (is_update or is_rebalance) and is_first_run:
-        print(
-            "ERROR: No previous state found. Run without --update or --rebalance to initialize the index first."
-        )
-        sys.exit(1)
+        print("WARNING: No previous state found. Falling back to initialization.")
+        is_update = False
+        is_rebalance = False
+        is_reconstitute = True
 
     # Fetch data
     print(
