@@ -230,7 +230,7 @@ def main():
 
     if (is_update or is_rebalance) and is_first_run:
         print(
-            "ERROR: No previous state found. Run without --update first to initialize."
+            "ERROR: No previous state found. Run without --update or --rebalance to initialize the index first."
         )
         sys.exit(1)
 
