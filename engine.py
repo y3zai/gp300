@@ -608,6 +608,7 @@ def run_full_pipeline(
         if current_state and not is_first_run and current_state.constituents:
             current_ids = {c.id for c in current_state.constituents}
         selected = rank_and_select(universe, current_ids, config)
+        removed = []
     else:
         # Both rebalance and regular update: relaxed universe + detect removals
         universe = build_constituent_universe(
@@ -672,7 +673,7 @@ def run_full_pipeline(
     if is_first_run or rebalance or reconstitute:
         # Step 3: Compute weights
         selected = compute_weights(selected, config)
-    elif removed:
+    elif len(removed) > 0:
         # Regular update with removals: redistribute weights
         selected = redistribute_weights(selected)
 
@@ -699,7 +700,7 @@ def run_full_pipeline(
         )
     else:
         # Step 5c: Regular update (prices only, possibly with removal)
-        if removed:
+        if len(removed) > 0:
             # Removals happened — adjust divisor to maintain continuity
             pre_val = _pre_adjustment_value(current_state, relaxed_map)
             new_divisor = adjust_divisor(current_state, selected, pre_adj_value=pre_val)
