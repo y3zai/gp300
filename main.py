@@ -228,7 +228,7 @@ def main():
     prev_state = load_state()
     is_first_run = prev_state is None
 
-    if is_update and is_first_run:
+    if (is_update or is_rebalance) and is_first_run:
         print(
             "ERROR: No previous state found. Run without --update first to initialize."
         )
