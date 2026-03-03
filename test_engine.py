@@ -312,6 +312,24 @@ def test_weight_cap_after_removal():
     print("  PASS: test_weight_cap_after_removal")
 
 
+def test_cap_weights_few_constituents():
+    """When n < 1/cap, cap_weights should assign equal weights."""
+    from engine import cap_weights, Constituent
+    # 10 constituents with 5% cap → infeasible (need 20), expect equal weights
+    constituents = [
+        Constituent(id=f"t{i}", label=f"t{i}", source_type="market",
+                    num_outcomes=2, probabilities=[0.5, 0.5],
+                    volume_1mo=1000, end_date=None,
+                    weight=0.1)
+        for i in range(10)
+    ]
+    result = cap_weights(constituents, cap=0.05)
+    for c in result:
+        assert abs(c.weight - 0.1) < 1e-12, f"Expected 0.1, got {c.weight}"
+    assert abs(sum(c.weight for c in result) - 1.0) < 1e-12
+    print("  PASS: test_cap_weights_few_constituents")
+
+
 if __name__ == "__main__":
     print("Running engine edge-case tests...\n")
     test_full_removal_regular_update()
@@ -320,4 +338,5 @@ if __name__ == "__main__":
     test_recovery_from_empty_selects_target_count()
     test_usable_markets_consistency()
     test_weight_cap_after_removal()
+    test_cap_weights_few_constituents()
     print("\nAll tests passed.")

@@ -309,6 +309,14 @@ def cap_weights(
         return constituents
 
     n = len(constituents)
+
+    # Cap is infeasible when n < 1/cap; equal weights are the best we can do
+    if n * cap < 1.0:
+        w = 1.0 / n
+        for c in constituents:
+            c.weight = w
+        return constituents
+
     weights = [c.weight for c in constituents]
 
     for _ in range(20):  # safety limit
