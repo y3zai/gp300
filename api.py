@@ -10,6 +10,7 @@ All read endpoints require NO authentication.
 """
 
 import json
+import logging
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
@@ -22,6 +23,8 @@ from urllib3.util.retry import Retry
 GAMMA_BASE = "https://gamma-api.polymarket.com"
 CLOB_BASE = "https://clob.polymarket.com"
 GEOPOLITICS_TAG_ID = 100265
+
+logger = logging.getLogger(__name__)
 
 # Module-level session with retry/backoff for connection pooling and resilience
 _session = requests.Session()
@@ -252,6 +255,12 @@ def fetch_geopolitics_events(
         offset += limit
         if delay > 0:
             time.sleep(delay)
+    else:
+        logger.warning(
+            "fetch_geopolitics_events hit max_pages=%d (%d events fetched); "
+            "some events may be missing — consider increasing max_pages",
+            max_pages, len(all_events),
+        )
 
     return all_events
 
