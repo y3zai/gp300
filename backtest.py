@@ -338,11 +338,58 @@ def run_backtest(
             universe = build_constituent_universe(hist_events, current_dt, config, eligibility_filter=True)
             # Select constituents
             current_ids = None
-            if state and not is_first:
+            if state and not is_first and state.constituents:
                 current_ids = {c.id for c in state.constituents}
 
             prev_ids = current_ids.copy() if current_ids else set()
             selected = rank_and_select(universe, current_ids, config)
+
+            if not selected:
+                if is_first:
+                    state = initialize_index([], current_dt, config)
+                    log.append({
+                        "timestamp": current_dt.isoformat(),
+                        "event": "initialization",
+                        "num_constituents": 0,
+                        "index_value": round(state.value, 4),
+                        "divisor": state.divisor,
+                        "weighted_entropy": 0.0,
+                    })
+                else:
+                    # Preserve index level through empty reconstitution
+                    relaxed = build_constituent_universe(hist_events, current_dt, config, eligibility_filter=False)
+                    relaxed_map = {c.id: c for c in relaxed}
+                    divisor_before = state.divisor
+                    pre_val = _pre_adjustment_value(state, relaxed_map)
+                    state = IndexState(
+                        value=pre_val, divisor=0.0, weighted_entropy=0.0,
+                        num_constituents=0, timestamp=current_dt, constituents=[],
+                        pre_adjustment_value=pre_val,
+                    )
+                    log.append({
+                        "timestamp": current_dt.isoformat(),
+                        "event": "reconstitution",
+                        "divisor_before": divisor_before,
+                        "divisor_after": 0.0,
+                        "index_before": round(pre_val, 4),
+                        "index_after": round(pre_val, 4),
+                        "num_constituents": 0,
+                        "added_count": 0,
+                        "removed_count": len(prev_ids),
+                    })
+                    val["total_reconstitutions"] += 1
+                    val["total_reconstitution_removed"] += len(prev_ids)
+                history.append({
+                    "timestamp": current_dt.isoformat(),
+                    "ts": ts,
+                    "value": round(state.value, 4),
+                    "num_constituents": state.num_constituents,
+                    "weighted_entropy": round(state.weighted_entropy, 6),
+                    "divisor": state.divisor,
+                })
+                prev_dt = current_dt
+                current_dt += step
+                continue
 
             # Compute weights
             selected = compute_weights(selected, config)
@@ -426,6 +473,38 @@ def run_backtest(
 
             # Compute true pre-adjustment value at current prices
             pre_val = _pre_adjustment_value(state, universe_map)
+
+            if removed and not selected:
+                # All constituents removed during rebalance — preserve value
+                divisor_before = state.divisor
+                state = IndexState(
+                    value=pre_val, divisor=0.0, weighted_entropy=0.0,
+                    num_constituents=0, timestamp=current_dt, constituents=[],
+                    removed_constituents=removed, pre_adjustment_value=pre_val,
+                )
+                log.append({
+                    "timestamp": current_dt.isoformat(),
+                    "event": "expiration_removal",
+                    "removed_ids": [c.id for c in removed],
+                    "removed_count": len(removed),
+                    "divisor_before": divisor_before,
+                    "divisor_after": 0.0,
+                    "index_before": round(pre_val, 4),
+                    "index_after": round(pre_val, 4),
+                    "num_constituents": 0,
+                })
+                val["total_expirations_removed"] += len(removed)
+                history.append({
+                    "timestamp": current_dt.isoformat(),
+                    "ts": ts,
+                    "value": round(state.value, 4),
+                    "num_constituents": state.num_constituents,
+                    "weighted_entropy": round(state.weighted_entropy, 6),
+                    "divisor": state.divisor,
+                })
+                prev_dt = current_dt
+                current_dt += step
+                continue
 
             if removed:
                 # Log expiration removals
@@ -536,6 +615,39 @@ def run_backtest(
             if removed:
                 # Redistribute weights and adjust divisor
                 selected = redistribute_weights(selected)
+
+                if not selected:
+                    # All removed — preserve value
+                    divisor_before = state.divisor
+                    state = IndexState(
+                        value=pre_val, divisor=0.0, weighted_entropy=0.0,
+                        num_constituents=0, timestamp=current_dt, constituents=[],
+                        removed_constituents=removed, pre_adjustment_value=pre_val,
+                    )
+                    log.append({
+                        "timestamp": current_dt.isoformat(),
+                        "event": "expiration_removal",
+                        "removed_ids": [c.id for c in removed],
+                        "removed_count": len(removed),
+                        "divisor_before": divisor_before,
+                        "divisor_after": 0.0,
+                        "index_before": round(pre_val, 4),
+                        "index_after": round(pre_val, 4),
+                        "num_constituents": 0,
+                    })
+                    val["total_expirations_removed"] += len(removed)
+                    history.append({
+                        "timestamp": current_dt.isoformat(),
+                        "ts": ts,
+                        "value": round(state.value, 4),
+                        "num_constituents": state.num_constituents,
+                        "weighted_entropy": round(state.weighted_entropy, 6),
+                        "divisor": state.divisor,
+                    })
+                    prev_dt = current_dt
+                    current_dt += step
+                    continue
+
                 selected = compute_entropy_all(selected)
                 new_divisor = adjust_divisor(state, selected, pre_adj_value=pre_val)
                 we = compute_weighted_entropy(selected)

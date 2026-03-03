@@ -142,16 +142,15 @@ def _build_neg_risk_constituent(
     if len(active_markets) < 2:
         return None
 
-    # Extract Yes prices as probabilities
-    raw_probs = []
-    market_ids = []
-    for m in active_markets:
-        if m.outcome_prices and len(m.outcome_prices) >= 1:
-            raw_probs.append(m.outcome_prices[0])  # Yes price
-            market_ids.append(m.id)
-
-    if len(raw_probs) < 2:
+    # Filter to markets with valid prices — single source of truth
+    usable_markets = [m for m in active_markets
+                      if m.outcome_prices and len(m.outcome_prices) >= 1]
+    if len(usable_markets) < 2:
         return None
+
+    # Extract Yes prices as probabilities
+    raw_probs = [m.outcome_prices[0] for m in usable_markets]
+    market_ids = [m.id for m in usable_markets]
 
     # Normalize probabilities to sum to 1.0
     total = sum(raw_probs)
@@ -159,15 +158,15 @@ def _build_neg_risk_constituent(
         return None
     probs = [p / total for p in raw_probs]
 
-    # Volume: sum of market-level volume1mo
-    total_vol_1mo = sum(m.volume_1mo for m in active_markets)
+    # Volume: sum of market-level volume1mo (usable markets only)
+    total_vol_1mo = sum(m.volume_1mo for m in usable_markets)
 
     # Volume minimum check (only when eligibility_filter is on)
     if eligibility_filter and total_vol_1mo < config.min_volume_1mo:
         return None
 
     # Activity check (only when eligibility_filter is on)
-    if eligibility_filter and not any(m.volume_1wk > 0 for m in active_markets):
+    if eligibility_filter and not any(m.volume_1wk > 0 for m in usable_markets):
         return None
 
     return Constituent(
@@ -589,74 +588,56 @@ def run_full_pipeline(
 
         # Step 2: Select constituents
         current_ids = None
-        if current_state and not is_first_run:
+        if current_state and not is_first_run and current_state.constituents:
             current_ids = {c.id for c in current_state.constituents}
         selected = rank_and_select(universe, current_ids, config)
-    elif rebalance:
-        # Relaxed universe (no volume/activity filter) so existing members
-        # aren't dropped by transient volume changes
-        universe = build_constituent_universe(events, now, config, eligibility_filter=False)
-        universe_map = {c.id: c for c in universe}
-
-        # Detect mid-cycle removals (expired/closed)
-        selected, removed = remove_dropped_constituents(current_state.constituents, universe_map)
-
-        if removed:
-            # Redistribute weights before rebalance recomputes them anyway
-            selected = redistribute_weights(selected)
     else:
-        # Regular update: relaxed universe (skip volume/activity filter)
+        # Both rebalance and regular update: relaxed universe + detect removals
         universe = build_constituent_universe(events, now, config, eligibility_filter=False)
         universe_map = {c.id: c for c in universe}
-
-        # Detect mid-cycle removals (expired/closed)
         selected, removed = remove_dropped_constituents(current_state.constituents, universe_map)
 
-        if removed:
-            # Redistribute weights pro-rata
-            selected = redistribute_weights(selected)
+        # Unified full-removal early return
+        if removed and not selected:
+            pre_val = _pre_adjustment_value(current_state, universe_map)
+            return IndexState(
+                value=pre_val, divisor=0.0, weighted_entropy=0.0,
+                num_constituents=0, timestamp=now, constituents=[],
+                removed_constituents=removed, pre_adjustment_value=pre_val,
+            )
 
-            # All constituents removed — return proper removal state.
-            # divisor=0.0 signals that value is preserved directly (not
-            # reconstructable from weighted_entropy / divisor).  The existing
-            # divisor > 0 guards in _pre_adjustment_value and update_index_value
-            # handle this correctly, and reconstitution will use state.value as
-            # the anchor for computing the new divisor.
-            if not selected:
-                pre_val = _pre_adjustment_value(current_state, universe_map)
-                return IndexState(
-                    value=pre_val,
-                    divisor=0.0,
-                    weighted_entropy=0.0,
-                    num_constituents=0,
-                    timestamp=now,
-                    constituents=[],
-                    removed_constituents=removed,
-                    pre_adjustment_value=pre_val,
-                )
+        # Only redistribute for regular update; rebalance recomputes weights
+        if removed and not rebalance:
+            selected = redistribute_weights(selected)
 
     # Build relaxed universe map for pre-adjustment value computation.
     # Needed so adjust_divisor anchors to the true current index value
     # rather than the stale state.value from the previous step.
     relaxed_map = None
     if not is_first_run:
-        if rebalance or not reconstitute:
-            # rebalance and regular already built relaxed universe → reuse
-            relaxed_map = universe_map  # already {c.id: c}
-        else:
+        if reconstitute:
             # reconstitute: build relaxed universe for pre-adj value
             relaxed = build_constituent_universe(events, now, config, eligibility_filter=False)
             relaxed_map = {c.id: c for c in relaxed}
+        else:
+            # rebalance and regular already built relaxed universe → reuse
+            relaxed_map = universe_map  # already {c.id: c}
 
     if not selected:
-        # Degenerate case
+        if is_first_run:
+            return IndexState(
+                value=config.base_value,
+                divisor=1.0 / config.base_value,
+                weighted_entropy=0.0, num_constituents=0,
+                timestamp=now, constituents=[],
+            )
+        # Reconstitution found nothing: preserve index level
+        pre_val = _pre_adjustment_value(current_state, relaxed_map)
         return IndexState(
-            value=current_state.value if current_state else config.base_value,
-            divisor=current_state.divisor if current_state else 1.0 / config.base_value,
-            weighted_entropy=0.0,
-            num_constituents=0,
-            timestamp=now,
-            constituents=[],
+            value=pre_val, divisor=0.0,
+            weighted_entropy=0.0, num_constituents=0,
+            timestamp=now, constituents=[],
+            pre_adjustment_value=pre_val,
         )
 
     if is_first_run or rebalance or reconstitute:
@@ -688,7 +669,6 @@ def run_full_pipeline(
         # Step 5c: Regular update (prices only, possibly with removal)
         if removed:
             # Removals happened — adjust divisor to maintain continuity
-            selected = compute_entropy_all(selected)  # already done above, but be safe
             pre_val = _pre_adjustment_value(current_state, relaxed_map)
             new_divisor = adjust_divisor(current_state, selected, pre_adj_value=pre_val)
             we = compute_weighted_entropy(selected)
