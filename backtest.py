@@ -850,8 +850,15 @@ def main():
 
     # Step 1: Fetch current events
     print(f"\n[1/3] Fetching geopolitics events from Polymarket...")
-    open_events = fetch_geopolitics_events(closed=False)
-    closed_events = fetch_geopolitics_events(closed=True)
+    open_events = fetch_geopolitics_events(
+        closed=False,
+        start_date_max=end_dt,
+    )
+    closed_events = fetch_geopolitics_events(
+        closed=True,
+        start_date_max=end_dt,
+        end_date_min=start_dt,
+    )
     # Deduplicate by event ID (some events may appear in both)
     seen = {}
     for e in open_events + closed_events:

@@ -229,7 +229,7 @@ def main():
 
     # Fetch data
     print(f"[{now.strftime('%H:%M:%S')}] Fetching geopolitics events from Polymarket...")
-    events = fetch_geopolitics_events()
+    events = fetch_geopolitics_events(active=True)
     total_markets = sum(len(e.markets) for e in events)
     print(f"  → {len(events)} events, {total_markets} markets")
 

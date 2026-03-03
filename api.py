@@ -189,6 +189,9 @@ def _parse_event(e: dict) -> Event:
 
 def fetch_geopolitics_events(
     closed: bool = False,
+    active: Optional[bool] = None,
+    start_date_max: Optional[datetime] = None,
+    end_date_min: Optional[datetime] = None,
     limit: int = 100,
     max_pages: int = 20,
     delay: float = 0.1,
@@ -217,9 +220,15 @@ def fetch_geopolitics_events(
             "closed": str(closed).lower(),
             "limit": limit,
             "offset": offset,
-            "order": "volume24hr",
+            "order": "volume",
             "ascending": "false",
         }
+        if active is not None:
+            params["active"] = str(active).lower()
+        if start_date_max is not None:
+            params["start_date_max"] = start_date_max.strftime("%Y-%m-%dT%H:%M:%SZ")
+        if end_date_min is not None:
+            params["end_date_min"] = end_date_min.strftime("%Y-%m-%dT%H:%M:%SZ")
 
         resp = _session.get(f"{GAMMA_BASE}/events", params=params, timeout=30)
         resp.raise_for_status()
