@@ -10,9 +10,7 @@ from datetime import datetime, timedelta, timezone
 
 from api import Event, Market
 from engine import (
-    Constituent,
     IndexConfig,
-    IndexState,
     _build_neg_risk_constituent,
     run_full_pipeline,
 )
@@ -130,7 +128,6 @@ def test_full_removal_regular_update():
 def test_full_removal_rebalance():
     """All constituents expire during rebalance → value preserved, divisor=0."""
     state, _ = _build_initial_state(3)
-    original_value = state.value
 
     expired_markets = [
         _make_market(f"m{i}", end_date=PAST, volume_1mo=10000 - i) for i in range(3)
