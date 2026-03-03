@@ -137,7 +137,7 @@ Polymarket uses a **tag system** with hardcoded tag IDs. Confirmed tag IDs:
 The Gamma API supports filtering by `tag_id` on the `/events` endpoint, with a `related_tags=true` parameter that automatically includes events from related tags:
 
 ```
-GET /events?tag_id=100265&related_tags=true&closed=false&order=volume24hr&ascending=false&limit=100&offset=0
+GET /events?tag_id=100265&related_tags=true&closed=false&order=volume&ascending=false&limit=100&offset=0
 ```
 
 **Verified inventory** (as of 2026-02-27):
@@ -529,6 +529,12 @@ Starting from `--start`, the engine steps through time in 30-minute increments:
 3. **Every biweekly boundary**: Trigger constituent reconstitution — re-rank eligible contracts, apply 240/360 buffer rule, adjust divisor
 4. **At every step**: Check for expired/resolved contracts, remove them, adjust divisor
 5. **Output**: Full time series of index values, plus logs of every rebalance, reconstitution, and expiration event
+
+**API-level filtering**: The backtest passes `start_date_max=end_dt` to both
+open and closed event fetches (skip events starting after the window), and
+`end_date_min=start_dt` to the closed-event fetch only (skip events that ended
+before the window starts). This reduces unnecessary pagination through
+irrelevant historical events.
 
 ### 7.4 Validation Checks
 
