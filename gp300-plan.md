@@ -649,9 +649,9 @@ The key invariant to verify: **`index_before == index_after`** for every adjustm
 - [ ] Test end-to-end pipeline
 
 ### Phase 5: Frontend
-- [ ] Build static dashboard (index value, time series chart, constituent table)
-- [ ] Deploy to GitHub Pages
-- [ ] Implement auto-refresh polling
+- [x] Build static dashboard (index value, time series chart, constituent table)
+- [x] Deploy to GitHub Pages
+- [x] Implement auto-refresh polling
 
 ### Phase 6: Refinement
 - [ ] Add more visualizations (top movers, entropy distribution, constituent turnover stats)
