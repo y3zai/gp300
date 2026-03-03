@@ -264,6 +264,54 @@ def test_usable_markets_consistency():
     print("  PASS: test_usable_markets_consistency")
 
 
+def test_weight_cap_after_removal():
+    """After expiration removal, no weight exceeds config.weight_cap."""
+    # We need enough remaining constituents for the cap to be feasible.
+    # With cap=0.05, need at least 20 constituents (1/0.05=20).
+    # Build 25 constituents: top one has high volume, bottom 5 will expire.
+    # After redistribution the top constituent would breach 5% without capping.
+    config = IndexConfig(target_count=25, buffer_top=20, buffer_bottom=30,
+                         weight_cap=0.05)
+    n_total = 25
+    n_expire = 5  # expire the bottom 5
+
+    # Skewed volumes: m0 gets a huge share, rest are small
+    volumes = [50000] + [1000] * (n_total - 1)
+    markets = [
+        _make_market(f"m{i}", volume_1mo=volumes[i], end_date=FUTURE)
+        for i in range(n_total)
+    ]
+    events = [_make_event(f"evt-m{i}", [m]) for i, m in enumerate(markets)]
+    state = run_full_pipeline(events, current_state=None, now=NOW, config=config)
+    assert state.num_constituents == n_total
+
+    # Expire the bottom n_expire constituents
+    mixed_markets = []
+    for i in range(n_total):
+        end = PAST if i >= n_total - n_expire else FUTURE
+        mixed_markets.append(
+            _make_market(f"m{i}", volume_1mo=volumes[i], end_date=end)
+        )
+    mixed_events = [
+        _make_event(f"evt-m{i}", [m]) for i, m in enumerate(mixed_markets)
+    ]
+
+    new_state = run_full_pipeline(
+        mixed_events,
+        current_state=state,
+        now=NOW,
+        config=config,
+        reconstitute=False,
+        rebalance=False,
+    )
+    assert len(new_state.constituents) == n_total - n_expire
+    for c in new_state.constituents:
+        assert c.weight <= config.weight_cap + 1e-9, (
+            f"Weight {c.weight:.6f} exceeds cap {config.weight_cap} for {c.id}"
+        )
+    print("  PASS: test_weight_cap_after_removal")
+
+
 if __name__ == "__main__":
     print("Running engine edge-case tests...\n")
     test_full_removal_regular_update()
@@ -271,4 +319,5 @@ if __name__ == "__main__":
     test_empty_reconstitution()
     test_recovery_from_empty_selects_target_count()
     test_usable_markets_consistency()
+    test_weight_cap_after_removal()
     print("\nAll tests passed.")

@@ -32,7 +32,7 @@ from api import (
 from engine import (
     IndexConfig, IndexState, Constituent,
     build_constituent_universe, rank_and_select,
-    compute_weights, compute_entropy_all, compute_weighted_entropy,
+    compute_weights, cap_weights, compute_entropy_all, compute_weighted_entropy,
     initialize_index, update_index_value, adjust_divisor,
     remove_dropped_constituents, redistribute_weights,
     normalized_entropy, DEFAULT_CONFIG, _pre_adjustment_value,
@@ -95,6 +95,27 @@ class PriceCache:
     def total_points(self) -> int:
         return sum(len(pts) for pts in self._data.values())
 
+    def save_to_disk(self, path: str):
+        """Serialize cache to JSON file."""
+        obj = {
+            "data": {k: v for k, v in self._data.items()},
+            "token_to_market": self._token_to_market,
+        }
+        Path(path).parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w") as f:
+            json.dump(obj, f)
+
+    @classmethod
+    def load_from_disk(cls, path: str) -> "PriceCache":
+        """Deserialize cache from JSON file."""
+        with open(path, "r") as f:
+            obj = json.load(f)
+        cache = cls()
+        for token_id, points in obj["data"].items():
+            cache._data[token_id] = [(int(t), float(p)) for t, p in points]
+        cache._token_to_market = obj.get("token_to_market", {})
+        return cache
+
 
 # ──────────────────────────────────────────────
 # Token collection & history fetching
@@ -127,7 +148,8 @@ def fetch_all_histories(
     """
     Fetch price history for all tokens within a time window.
 
-    Uses startTs/endTs to limit data to the backtest period.
+    Uses interval=max to fetch full history (startTs/endTs rejects long ranges),
+    then filters locally to the backtest window.
     Rate limit: 1,000 req/10s — we add small delays to stay safe.
     """
     cache = PriceCache()
@@ -138,9 +160,11 @@ def fetch_all_histories(
         history = fetch_price_history(
             clob_token_id=token_id,
             fidelity=fidelity,
-            start_ts=start_ts,
-            end_ts=end_ts,
+            interval="max",
         )
+        # Filter to backtest window locally
+        if history:
+            history = [h for h in history if start_ts <= h["t"] <= end_ts]
         if history:
             cache.add_history(token_id, history)
         else:
@@ -507,6 +531,7 @@ def run_backtest(
             if removed:
                 # Log expiration removals
                 selected = redistribute_weights(selected)
+                selected = cap_weights(selected, config.weight_cap)
                 selected = compute_entropy_all(selected)
                 removal_divisor = adjust_divisor(state, selected, pre_adj_value=pre_val)
                 removal_we = compute_weighted_entropy(selected)
@@ -550,7 +575,21 @@ def run_backtest(
                           f"-{len(removed)} → {len(selected)} constituents, "
                           f"index={removal_value:.2f}")
 
-            # Now do the rebalance
+            # Now do the rebalance (skip if no constituents remain)
+            if not selected:
+                # Nothing to rebalance — preserve current state
+                history.append({
+                    "timestamp": current_dt.isoformat(),
+                    "ts": ts,
+                    "value": round(state.value, 4),
+                    "num_constituents": state.num_constituents,
+                    "weighted_entropy": round(state.weighted_entropy, 6),
+                    "divisor": state.divisor,
+                })
+                prev_dt = current_dt
+                current_dt += step
+                continue
+
             selected = compute_weights(selected, config)
             selected = compute_entropy_all(selected)
 
@@ -613,6 +652,7 @@ def run_backtest(
             if removed:
                 # Redistribute weights and adjust divisor
                 selected = redistribute_weights(selected)
+                selected = cap_weights(selected, config.weight_cap)
 
                 if not selected:
                     # All removed — preserve value
@@ -689,8 +729,10 @@ def run_backtest(
                           f"-{len(removed)} → {len(selected)} constituents, "
                           f"index={value:.2f}")
             else:
-                selected = compute_entropy_all(selected)
-                state = update_index_value(state, selected, current_dt)
+                if selected:
+                    selected = compute_entropy_all(selected)
+                    state = update_index_value(state, selected, current_dt)
+                # else: 0 constituents, preserve state.value
 
         # Record history point
         history.append({
@@ -832,6 +874,7 @@ def main():
     parser.add_argument("--step", type=int, default=30, help="Step size in minutes (default: 30)")
     parser.add_argument("--fidelity", type=int, default=60, help="Price history fidelity in minutes (default: 60)")
     parser.add_argument("--verbose", "-v", action="store_true", help="Verbose output")
+    parser.add_argument("--cache", type=str, default=None, help="Path to price cache JSON (load if exists, save after fetch)")
 
     args = parser.parse_args()
 
@@ -896,19 +939,28 @@ def main():
                 token_map[market.clob_token_ids[0]] = market.id
     print(f"  → {len(token_map)} tokens to fetch (filtered from {total_markets})")
 
-    t0 = time_mod.time()
-    # Add 1-day buffer on each side for price lookups at boundaries
-    fetch_start = int((start_dt - timedelta(days=1)).timestamp())
-    fetch_end = int((end_dt + timedelta(days=1)).timestamp())
-    cache = fetch_all_histories(
-        token_map,
-        start_ts=fetch_start,
-        end_ts=fetch_end,
-        fidelity=args.fidelity,
-        verbose=args.verbose,
-    )
-    elapsed = time_mod.time() - t0
-    print(f"  → {cache.num_tokens} tokens cached, {cache.total_points:,} price points ({elapsed:.1f}s)")
+    cache_path = args.cache
+    if cache_path and Path(cache_path).exists():
+        print(f"  Loading cached prices from {cache_path}...")
+        cache = PriceCache.load_from_disk(cache_path)
+        print(f"  → {cache.num_tokens} tokens loaded, {cache.total_points:,} price points (from disk)")
+    else:
+        t0 = time_mod.time()
+        # Add 1-day buffer on each side for price lookups at boundaries
+        fetch_start = int((start_dt - timedelta(days=1)).timestamp())
+        fetch_end = int((end_dt + timedelta(days=1)).timestamp())
+        cache = fetch_all_histories(
+            token_map,
+            start_ts=fetch_start,
+            end_ts=fetch_end,
+            fidelity=args.fidelity,
+            verbose=args.verbose,
+        )
+        elapsed = time_mod.time() - t0
+        print(f"  → {cache.num_tokens} tokens cached, {cache.total_points:,} price points ({elapsed:.1f}s)")
+        if cache_path:
+            cache.save_to_disk(cache_path)
+            print(f"  → Saved cache to {cache_path}")
 
     # Step 3: Run backtest
     print(f"\n[3/3] Running backtest simulation...")

@@ -296,36 +296,21 @@ def rank_and_select(
 # ──────────────────────────────────────────────
 
 
-def compute_weights(
+def cap_weights(
     constituents: list[Constituent],
-    config: IndexConfig = DEFAULT_CONFIG,
+    cap: float = 0.05,
 ) -> list[Constituent]:
     """
-    Compute volume1mo-weighted weights with iterative capping.
+    Iteratively cap constituent weights at `cap` and redistribute excess pro-rata.
 
-    Algorithm:
-    1. Natural weights: w_i = volume1mo_i / total_volume1mo
-    2. Cap any w_i > 5%
-    3. Redistribute excess pro-rata to uncapped
-    4. Repeat until converged
+    Operates on constituent.weight values directly (must already be set and sum to ~1).
     """
     if not constituents:
         return constituents
 
-    cap = config.weight_cap
     n = len(constituents)
+    weights = [c.weight for c in constituents]
 
-    # Natural weights
-    total_vol = sum(c.volume_1mo for c in constituents)
-    if total_vol <= 0:
-        # Equal weight fallback
-        for c in constituents:
-            c.weight = 1.0 / n
-        return constituents
-
-    weights = [c.volume_1mo / total_vol for c in constituents]
-
-    # Iterative capping
     for _ in range(20):  # safety limit
         capped = [False] * n
         excess = 0.0
@@ -353,11 +338,42 @@ def compute_weights(
     if abs(total - 1.0) > 1e-9 and total > 0:
         weights = [w / total for w in weights]
 
-    # Assign
     for i, c in enumerate(constituents):
         c.weight = weights[i]
 
     return constituents
+
+
+def compute_weights(
+    constituents: list[Constituent],
+    config: IndexConfig = DEFAULT_CONFIG,
+) -> list[Constituent]:
+    """
+    Compute volume1mo-weighted weights with iterative capping.
+
+    Algorithm:
+    1. Natural weights: w_i = volume1mo_i / total_volume1mo
+    2. Cap any w_i > 5%
+    3. Redistribute excess pro-rata to uncapped
+    4. Repeat until converged
+    """
+    if not constituents:
+        return constituents
+
+    n = len(constituents)
+
+    # Natural weights
+    total_vol = sum(c.volume_1mo for c in constituents)
+    if total_vol <= 0:
+        # Equal weight fallback
+        for c in constituents:
+            c.weight = 1.0 / n
+        return constituents
+
+    for c in constituents:
+        c.weight = c.volume_1mo / total_vol
+
+    return cap_weights(constituents, config.weight_cap)
 
 
 # ──────────────────────────────────────────────
@@ -478,7 +494,10 @@ def initialize_index(
 
     we = compute_weighted_entropy(constituents)
 
-    if we <= 0:
+    if not constituents:
+        # No constituents: store base value, set divisor=0 (empty index)
+        divisor = 0.0
+    elif we <= 0:
         # Edge case: all constituents have zero entropy
         divisor = 1.0 / config.base_value
     else:
@@ -555,6 +574,8 @@ def _pre_adjustment_value(
     computes normalized_entropy at current prices, then applies old weights.
     Falls back to last-known entropy for constituents not in universe_map.
     """
+    if not state.constituents:
+        return state.value
     we = 0.0
     for c in state.constituents:
         if c.id in universe_map:
@@ -673,6 +694,7 @@ def run_full_pipeline(
     elif len(removed) > 0:
         # Regular update with removals: redistribute weights
         selected = redistribute_weights(selected)
+        selected = cap_weights(selected, config.weight_cap)
 
     # Step 4: Compute entropy
     selected = compute_entropy_all(selected)
