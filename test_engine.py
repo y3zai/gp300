@@ -7,51 +7,80 @@ Targeted unit tests for degenerate engine paths:
 """
 
 import math
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta, timezone
 
-from api import Market, Event
+from api import Event, Market
 from engine import (
-    IndexConfig, IndexState, Constituent,
-    build_constituent_universe, rank_and_select,
-    compute_weights, compute_entropy_all,
-    initialize_index, run_full_pipeline,
-    normalized_entropy, _build_neg_risk_constituent,
+    Constituent,
+    IndexConfig,
+    IndexState,
+    _build_neg_risk_constituent,
+    build_constituent_universe,
+    compute_entropy_all,
+    compute_weights,
+    initialize_index,
+    normalized_entropy,
+    rank_and_select,
+    run_full_pipeline,
 )
-
 
 # ── Helpers ──────────────────────────────────────
 
 
 def _make_market(
-    mid: str, *, active=True, closed=False, neg_risk=False,
-    outcome_prices=None, volume_1mo=5000.0, volume_1wk=100.0,
-    end_date=None, start_date=None,
+    mid: str,
+    *,
+    active=True,
+    closed=False,
+    neg_risk=False,
+    outcome_prices=None,
+    volume_1mo=5000.0,
+    volume_1wk=100.0,
+    end_date=None,
+    start_date=None,
 ):
     if outcome_prices is None:
         outcome_prices = [0.6, 0.4]
     return Market(
-        id=mid, question=f"Q-{mid}", slug=f"slug-{mid}",
-        condition_id=f"cond-{mid}", event_id=f"evt-{mid}",
-        outcomes=["Yes", "No"], outcome_prices=outcome_prices,
+        id=mid,
+        question=f"Q-{mid}",
+        slug=f"slug-{mid}",
+        condition_id=f"cond-{mid}",
+        event_id=f"evt-{mid}",
+        outcomes=["Yes", "No"],
+        outcome_prices=outcome_prices,
         clob_token_ids=[f"tok-{mid}"],
-        volume_total=10000.0, volume_24h=500.0,
-        volume_1wk=volume_1wk, volume_1mo=volume_1mo,
-        volume_1yr=50000.0, liquidity=1000.0,
-        end_date=end_date, start_date=start_date,
-        active=active, closed=closed, neg_risk=neg_risk,
-        group_item_title=None, last_trade_price=None,
+        volume_total=10000.0,
+        volume_24h=500.0,
+        volume_1wk=volume_1wk,
+        volume_1mo=volume_1mo,
+        volume_1yr=50000.0,
+        liquidity=1000.0,
+        end_date=end_date,
+        start_date=start_date,
+        active=active,
+        closed=closed,
+        neg_risk=neg_risk,
+        group_item_title=None,
+        last_trade_price=None,
         one_day_price_change=None,
     )
 
 
 def _make_event(eid, markets, *, neg_risk=False, end_date=None, start_date=None):
     return Event(
-        id=eid, title=f"Event-{eid}", slug=f"slug-{eid}",
+        id=eid,
+        title=f"Event-{eid}",
+        slug=f"slug-{eid}",
         volume_total=sum(m.volume_1mo for m in markets),
-        volume_24h=0.0, volume_1mo=sum(m.volume_1mo for m in markets),
+        volume_24h=0.0,
+        volume_1mo=sum(m.volume_1mo for m in markets),
         liquidity=0.0,
-        end_date=end_date, start_date=start_date,
-        active=True, closed=False, neg_risk=neg_risk,
+        end_date=end_date,
+        start_date=start_date,
+        active=True,
+        closed=False,
+        neg_risk=neg_risk,
         markets=markets,
     )
 
@@ -65,8 +94,9 @@ CFG = IndexConfig(target_count=300, buffer_top=240, buffer_bottom=360)
 
 def _build_initial_state(n=3, config=CFG):
     """Build a valid initial IndexState with n binary constituents."""
-    markets = [_make_market(f"m{i}", volume_1mo=10000 - i, end_date=FUTURE)
-               for i in range(n)]
+    markets = [
+        _make_market(f"m{i}", volume_1mo=10000 - i, end_date=FUTURE) for i in range(n)
+    ]
     events = [_make_event(f"evt-m{i}", [m]) for i, m in enumerate(markets)]
     state = run_full_pipeline(events, current_state=None, now=NOW, config=config)
     return state, events
@@ -82,13 +112,20 @@ def test_full_removal_regular_update():
     assert state.divisor > 0
 
     # All markets are now expired (end_date in the past)
-    expired_markets = [_make_market(f"m{i}", end_date=PAST, volume_1mo=10000 - i)
-                       for i in range(3)]
-    expired_events = [_make_event(f"evt-m{i}", [m]) for i, m in enumerate(expired_markets)]
+    expired_markets = [
+        _make_market(f"m{i}", end_date=PAST, volume_1mo=10000 - i) for i in range(3)
+    ]
+    expired_events = [
+        _make_event(f"evt-m{i}", [m]) for i, m in enumerate(expired_markets)
+    ]
 
     new_state = run_full_pipeline(
-        expired_events, current_state=state, now=NOW, config=CFG,
-        reconstitute=False, rebalance=False,
+        expired_events,
+        current_state=state,
+        now=NOW,
+        config=CFG,
+        reconstitute=False,
+        rebalance=False,
     )
     assert new_state.divisor == 0.0, f"Expected divisor=0.0, got {new_state.divisor}"
     assert new_state.value > 0, f"Expected value>0, got {new_state.value}"
@@ -102,13 +139,20 @@ def test_full_removal_rebalance():
     state, _ = _build_initial_state(3)
     original_value = state.value
 
-    expired_markets = [_make_market(f"m{i}", end_date=PAST, volume_1mo=10000 - i)
-                       for i in range(3)]
-    expired_events = [_make_event(f"evt-m{i}", [m]) for i, m in enumerate(expired_markets)]
+    expired_markets = [
+        _make_market(f"m{i}", end_date=PAST, volume_1mo=10000 - i) for i in range(3)
+    ]
+    expired_events = [
+        _make_event(f"evt-m{i}", [m]) for i, m in enumerate(expired_markets)
+    ]
 
     new_state = run_full_pipeline(
-        expired_events, current_state=state, now=NOW, config=CFG,
-        reconstitute=False, rebalance=True,
+        expired_events,
+        current_state=state,
+        now=NOW,
+        config=CFG,
+        reconstitute=False,
+        rebalance=True,
     )
     assert new_state.divisor == 0.0, f"Expected divisor=0.0, got {new_state.divisor}"
     assert new_state.value > 0, f"Expected value>0, got {new_state.value}"
@@ -124,8 +168,12 @@ def test_empty_reconstitution():
 
     # No eligible markets at all
     new_state = run_full_pipeline(
-        [], current_state=state, now=NOW, config=CFG,
-        reconstitute=True, rebalance=False,
+        [],
+        current_state=state,
+        now=NOW,
+        config=CFG,
+        reconstitute=True,
+        rebalance=False,
     )
     assert new_state.divisor == 0.0, f"Expected divisor=0.0, got {new_state.divisor}"
     assert new_state.value > 0, f"Expected value>0, got {new_state.value}"
@@ -139,30 +187,46 @@ def test_recovery_from_empty_selects_target_count():
     config = IndexConfig(target_count=10, buffer_top=8, buffer_bottom=12)
 
     # Build initial state then force empty
-    markets = [_make_market(f"m{i}", volume_1mo=10000 - i, end_date=FUTURE)
-               for i in range(15)]
+    markets = [
+        _make_market(f"m{i}", volume_1mo=10000 - i, end_date=FUTURE) for i in range(15)
+    ]
     events = [_make_event(f"evt-m{i}", [m]) for i, m in enumerate(markets)]
     state = run_full_pipeline(events, current_state=None, now=NOW, config=config)
     assert state.num_constituents == 10
 
     # Force full removal
-    expired_markets = [_make_market(f"m{i}", end_date=PAST, volume_1mo=10000 - i)
-                       for i in range(15)]
-    expired_events = [_make_event(f"evt-m{i}", [m]) for i, m in enumerate(expired_markets)]
+    expired_markets = [
+        _make_market(f"m{i}", end_date=PAST, volume_1mo=10000 - i) for i in range(15)
+    ]
+    expired_events = [
+        _make_event(f"evt-m{i}", [m]) for i, m in enumerate(expired_markets)
+    ]
     empty_state = run_full_pipeline(
-        expired_events, current_state=state, now=NOW, config=config,
-        reconstitute=False, rebalance=False,
+        expired_events,
+        current_state=state,
+        now=NOW,
+        config=config,
+        reconstitute=False,
+        rebalance=False,
     )
     assert empty_state.divisor == 0.0
     assert len(empty_state.constituents) == 0
 
     # Now reconstitute with 15 eligible markets → should get target_count=10, not buffer_top=8
-    fresh_markets = [_make_market(f"new{i}", volume_1mo=10000 - i, end_date=FUTURE)
-                     for i in range(15)]
-    fresh_events = [_make_event(f"evt-new{i}", [m]) for i, m in enumerate(fresh_markets)]
+    fresh_markets = [
+        _make_market(f"new{i}", volume_1mo=10000 - i, end_date=FUTURE)
+        for i in range(15)
+    ]
+    fresh_events = [
+        _make_event(f"evt-new{i}", [m]) for i, m in enumerate(fresh_markets)
+    ]
     recovered_state = run_full_pipeline(
-        fresh_events, current_state=empty_state, now=NOW, config=config,
-        reconstitute=True, rebalance=False,
+        fresh_events,
+        current_state=empty_state,
+        now=NOW,
+        config=config,
+        reconstitute=True,
+        rebalance=False,
     )
     assert recovered_state.num_constituents == config.target_count, (
         f"Expected {config.target_count}, got {recovered_state.num_constituents}"
@@ -179,13 +243,16 @@ def test_usable_markets_consistency():
             prices = [0.2 + i * 0.1]  # valid prices
         else:
             prices = []  # no prices
-        markets.append(_make_market(
-            f"nr{i}", neg_risk=True,
-            outcome_prices=prices,
-            volume_1mo=1000.0 * (i + 1),
-            volume_1wk=10.0,
-            end_date=FUTURE,
-        ))
+        markets.append(
+            _make_market(
+                f"nr{i}",
+                neg_risk=True,
+                outcome_prices=prices,
+                volume_1mo=1000.0 * (i + 1),
+                volume_1wk=10.0,
+                end_date=FUTURE,
+            )
+        )
 
     event = _make_event("nrevt", markets, neg_risk=True, end_date=FUTURE)
 

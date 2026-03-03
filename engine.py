@@ -13,12 +13,12 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Optional
 
-from api import Market, Event
-
+from api import Event, Market
 
 # ──────────────────────────────────────────────
 # Configuration
 # ──────────────────────────────────────────────
+
 
 @dataclass
 class IndexConfig:
@@ -26,11 +26,11 @@ class IndexConfig:
 
     # Constituent selection
     target_count: int = 300
-    buffer_top: int = 240      # ranks 1-240: unconditionally include
-    buffer_bottom: int = 360   # ranks 361+: unconditionally remove
+    buffer_top: int = 240  # ranks 1-240: unconditionally include
+    buffer_bottom: int = 360  # ranks 361+: unconditionally remove
 
     # Eligibility
-    min_volume_1mo: float = 1000.0       # minimum 30d volume in USD
+    min_volume_1mo: float = 1000.0  # minimum 30d volume in USD
 
     # Weighting
     weight_cap: float = 0.05  # 5% per-constituent cap
@@ -46,6 +46,7 @@ DEFAULT_CONFIG = IndexConfig()
 # Constituent: a unified representation
 # ──────────────────────────────────────────────
 
+
 @dataclass
 class Constituent:
     """
@@ -54,13 +55,14 @@ class Constituent:
     For non-negRisk markets: 1 market = 1 constituent (binary, k=2)
     For negRisk events: 1 event = 1 constituent (multi-outcome, k=num_markets)
     """
-    id: str                        # market_id or event_id
-    label: str                     # question or event title
-    source_type: str               # "market" or "event"
+
+    id: str  # market_id or event_id
+    label: str  # question or event title
+    source_type: str  # "market" or "event"
 
     # Outcomes
-    num_outcomes: int              # k: 2 for binary, >2 for multi-outcome
-    probabilities: list[float]     # [p1, p2, ...], should sum to ~1.0
+    num_outcomes: int  # k: 2 for binary, >2 for multi-outcome
+    probabilities: list[float]  # [p1, p2, ...], should sum to ~1.0
 
     # Volume (for ranking & weighting)
     volume_1mo: float
@@ -80,6 +82,7 @@ class Constituent:
 # ──────────────────────────────────────────────
 # Step 1: Build constituent universe
 # ──────────────────────────────────────────────
+
 
 def build_constituent_universe(
     events: list[Event],
@@ -108,13 +111,17 @@ def build_constituent_universe(
     for event in events:
         if event.neg_risk:
             # Multi-outcome: aggregate all active markets under this event
-            constituent = _build_neg_risk_constituent(event, now, config, eligibility_filter)
+            constituent = _build_neg_risk_constituent(
+                event, now, config, eligibility_filter
+            )
             if constituent:
                 universe.append(constituent)
         else:
             # Each market is independent
             for market in event.markets:
-                constituent = _build_binary_constituent(market, now, config, eligibility_filter)
+                constituent = _build_binary_constituent(
+                    market, now, config, eligibility_filter
+                )
                 if constituent:
                     universe.append(constituent)
 
@@ -143,8 +150,9 @@ def _build_neg_risk_constituent(
         return None
 
     # Filter to markets with valid prices — single source of truth
-    usable_markets = [m for m in active_markets
-                      if m.outcome_prices and len(m.outcome_prices) >= 1]
+    usable_markets = [
+        m for m in active_markets if m.outcome_prices and len(m.outcome_prices) >= 1
+    ]
     if len(usable_markets) < 2:
         return None
 
@@ -240,6 +248,7 @@ def _build_binary_constituent(
 # Step 2: Rank and select constituents
 # ──────────────────────────────────────────────
 
+
 def rank_and_select(
     universe: list[Constituent],
     current_constituents: Optional[set[str]] = None,
@@ -265,7 +274,7 @@ def rank_and_select(
 
     if current_constituents is None:
         # Fresh start: take top N
-        selected = ranked[:config.target_count]
+        selected = ranked[: config.target_count]
     else:
         # Apply buffer rule
         selected = []
@@ -285,6 +294,7 @@ def rank_and_select(
 # ──────────────────────────────────────────────
 # Step 3: Compute weights
 # ──────────────────────────────────────────────
+
 
 def compute_weights(
     constituents: list[Constituent],
@@ -354,6 +364,7 @@ def compute_weights(
 # Step 4: Compute normalized entropy
 # ──────────────────────────────────────────────
 
+
 def normalized_entropy(probs: list[float]) -> float:
     """
     Compute normalized information entropy H ∈ [0, 1].
@@ -390,6 +401,7 @@ def compute_entropy_all(constituents: list[Constituent]) -> list[Constituent]:
 # ──────────────────────────────────────────────
 # Mid-cycle removal & weight redistribution
 # ──────────────────────────────────────────────
+
 
 def remove_dropped_constituents(
     old_constituents: list[Constituent],
@@ -431,9 +443,11 @@ def redistribute_weights(constituents: list[Constituent]) -> list[Constituent]:
 # Step 5: Index calculation
 # ──────────────────────────────────────────────
 
+
 @dataclass
 class IndexState:
     """Current state of the G&P 300 index."""
+
     value: float
     divisor: float
     weighted_entropy: float  # numerator before division
@@ -555,6 +569,7 @@ def _pre_adjustment_value(
 # Full pipeline
 # ──────────────────────────────────────────────
 
+
 def run_full_pipeline(
     events: list[Event],
     current_state: Optional[IndexState] = None,
@@ -584,7 +599,9 @@ def run_full_pipeline(
 
     if is_first_run or reconstitute:
         # Step 1: Build universe (full eligibility filtering)
-        universe = build_constituent_universe(events, now, config, eligibility_filter=True)
+        universe = build_constituent_universe(
+            events, now, config, eligibility_filter=True
+        )
 
         # Step 2: Select constituents
         current_ids = None
@@ -593,17 +610,26 @@ def run_full_pipeline(
         selected = rank_and_select(universe, current_ids, config)
     else:
         # Both rebalance and regular update: relaxed universe + detect removals
-        universe = build_constituent_universe(events, now, config, eligibility_filter=False)
+        universe = build_constituent_universe(
+            events, now, config, eligibility_filter=False
+        )
         universe_map = {c.id: c for c in universe}
-        selected, removed = remove_dropped_constituents(current_state.constituents, universe_map)
+        selected, removed = remove_dropped_constituents(
+            current_state.constituents, universe_map
+        )
 
         # Unified full-removal early return
         if removed and not selected:
             pre_val = _pre_adjustment_value(current_state, universe_map)
             return IndexState(
-                value=pre_val, divisor=0.0, weighted_entropy=0.0,
-                num_constituents=0, timestamp=now, constituents=[],
-                removed_constituents=removed, pre_adjustment_value=pre_val,
+                value=pre_val,
+                divisor=0.0,
+                weighted_entropy=0.0,
+                num_constituents=0,
+                timestamp=now,
+                constituents=[],
+                removed_constituents=removed,
+                pre_adjustment_value=pre_val,
             )
 
         # Only redistribute for regular update; rebalance recomputes weights
@@ -617,7 +643,9 @@ def run_full_pipeline(
     if not is_first_run:
         if reconstitute:
             # reconstitute: build relaxed universe for pre-adj value
-            relaxed = build_constituent_universe(events, now, config, eligibility_filter=False)
+            relaxed = build_constituent_universe(
+                events, now, config, eligibility_filter=False
+            )
             relaxed_map = {c.id: c for c in relaxed}
         else:
             # rebalance and regular already built relaxed universe → reuse
@@ -628,15 +656,20 @@ def run_full_pipeline(
             return IndexState(
                 value=config.base_value,
                 divisor=1.0 / config.base_value,
-                weighted_entropy=0.0, num_constituents=0,
-                timestamp=now, constituents=[],
+                weighted_entropy=0.0,
+                num_constituents=0,
+                timestamp=now,
+                constituents=[],
             )
         # Reconstitution found nothing: preserve index level
         pre_val = _pre_adjustment_value(current_state, relaxed_map)
         return IndexState(
-            value=pre_val, divisor=0.0,
-            weighted_entropy=0.0, num_constituents=0,
-            timestamp=now, constituents=[],
+            value=pre_val,
+            divisor=0.0,
+            weighted_entropy=0.0,
+            num_constituents=0,
+            timestamp=now,
+            constituents=[],
             pre_adjustment_value=pre_val,
         )
 

@@ -11,13 +11,13 @@ All read endpoints require NO authentication.
 
 import json
 import time
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
+from typing import Optional
+
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from dataclasses import dataclass, field
-from datetime import datetime, timezone, timedelta
-from typing import Optional
-
 
 GAMMA_BASE = "https://gamma-api.polymarket.com"
 CLOB_BASE = "https://clob.polymarket.com"
@@ -37,6 +37,7 @@ _session.mount("http://", HTTPAdapter(max_retries=_retry))
 @dataclass
 class Market:
     """A single binary market (Yes/No contract)."""
+
     id: str
     question: str
     slug: str
@@ -44,9 +45,9 @@ class Market:
     event_id: str
 
     # Outcomes & prices
-    outcomes: list[str]           # ["Yes", "No"]
-    outcome_prices: list[float]   # [0.62, 0.38]
-    clob_token_ids: list[str]     # token IDs for CLOB API
+    outcomes: list[str]  # ["Yes", "No"]
+    outcome_prices: list[float]  # [0.62, 0.38]
+    clob_token_ids: list[str]  # token IDs for CLOB API
 
     # Volume & liquidity
     volume_total: float
@@ -74,6 +75,7 @@ class Market:
 @dataclass
 class Event:
     """A Polymarket event containing one or more markets."""
+
     id: str
     title: str
     slug: str
@@ -161,8 +163,12 @@ def _parse_market(m: dict) -> Market:
         closed=bool(m.get("closed", False)),
         neg_risk=bool(m.get("negRisk", False)),
         group_item_title=m.get("groupItemTitle"),
-        last_trade_price=_safe_float(m.get("lastTradePrice")) if m.get("lastTradePrice") else None,
-        one_day_price_change=_safe_float(m.get("oneDayPriceChange")) if m.get("oneDayPriceChange") else None,
+        last_trade_price=_safe_float(m.get("lastTradePrice"))
+        if m.get("lastTradePrice")
+        else None,
+        one_day_price_change=_safe_float(m.get("oneDayPriceChange"))
+        if m.get("oneDayPriceChange")
+        else None,
     )
 
 
