@@ -1,8 +1,6 @@
 name: Reconstitute index
 
 on:
-  schedule:
-    - cron: '0 0 1,15 * *'
   workflow_dispatch:
 
 concurrency:
