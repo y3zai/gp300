@@ -632,10 +632,6 @@ def run_full_pipeline(
                 pre_adjustment_value=pre_val,
             )
 
-        # Only redistribute for regular update; rebalance recomputes weights
-        if removed and not rebalance:
-            selected = redistribute_weights(selected)
-
     # Build relaxed universe map for pre-adjustment value computation.
     # Needed so adjust_divisor anchors to the true current index value
     # rather than the stale state.value from the previous step.
@@ -676,6 +672,9 @@ def run_full_pipeline(
     if is_first_run or rebalance or reconstitute:
         # Step 3: Compute weights
         selected = compute_weights(selected, config)
+    elif removed:
+        # Regular update with removals: redistribute weights
+        selected = redistribute_weights(selected)
 
     # Step 4: Compute entropy
     selected = compute_entropy_all(selected)
