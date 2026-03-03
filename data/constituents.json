@@ -1,0 +1,4768 @@
+[
+  {
+    "id": "143443",
+    "label": "Venezuela leader end of 2026?",
+    "source_type": "event",
+    "num_outcomes": 16,
+    "probabilities": [
+      0.1593,
+      0.018,
+      0.0031,
+      0.0118,
+      0.0087,
+      0.0005,
+      0.0005,
+      0.0026,
+      0.0272,
+      0.6166,
+      0.1357,
+      0.0072,
+      0.0051,
+      0.0015,
+      0.0015,
+      0.0005
+    ],
+    "normalized_entropy": 0.4521,
+    "weight": 0.05,
+    "volume_1mo": 56262192.56,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 1
+  },
+  {
+    "id": "916732",
+    "label": "Khamenei out as Supreme Leader of Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.9995,
+      0.0005
+    ],
+    "normalized_entropy": 0.0062,
+    "weight": 0.05,
+    "volume_1mo": 53383283.74,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 2
+  },
+  {
+    "id": "958442",
+    "label": "Will the Iranian regime fall by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.157,
+      0.843
+    ],
+    "normalized_entropy": 0.6271,
+    "weight": 0.05,
+    "volume_1mo": 13484483.78,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 3
+  },
+  {
+    "id": "561829",
+    "label": "Russia x Ukraine ceasefire by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0395,
+      0.9605
+    ],
+    "normalized_entropy": 0.24,
+    "weight": 0.05,
+    "volume_1mo": 8704265.76,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 4
+  },
+  {
+    "id": "1227361",
+    "label": "Will Iran close the Strait of Hormuz by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.485,
+      0.515
+    ],
+    "normalized_entropy": 0.9994,
+    "weight": 0.05,
+    "volume_1mo": 7339110.73,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 5
+  },
+  {
+    "id": "237569",
+    "label": "Next Supreme Leader of Iran?",
+    "source_type": "event",
+    "num_outcomes": 40,
+    "probabilities": [
+      0.0055,
+      0.0065,
+      0.7235,
+      0.0015,
+      0.0005,
+      0.0015,
+      0.0005,
+      0.0015,
+      0.0015,
+      0.0005,
+      0.0241,
+      0.0015,
+      0.007,
+      0.0789,
+      0.0015,
+      0.003,
+      0.0035,
+      0.0015,
+      0.0015,
+      0.0015,
+      0.001,
+      0.0332,
+      0.008,
+      0.0266,
+      0.0005,
+      0.0005,
+      0.0005,
+      0.0005,
+      0.0015,
+      0.0015,
+      0.001,
+      0.0005,
+      0.0015,
+      0.0025,
+      0.0452,
+      0.0015,
+      0.001,
+      0.0015,
+      0.0015,
+      0.0025
+    ],
+    "normalized_entropy": 0.3457,
+    "weight": 0.05,
+    "volume_1mo": 7074504.86,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 6
+  },
+  {
+    "id": "958443",
+    "label": "Will the Iranian regime fall by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.385,
+      0.615
+    ],
+    "normalized_entropy": 0.9615,
+    "weight": 0.041419,
+    "volume_1mo": 5372004.34,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 7
+  },
+  {
+    "id": "1178277",
+    "label": "Will US or Israel strike Iran first?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.4995,
+      0.5005
+    ],
+    "normalized_entropy": 1.0,
+    "weight": 0.036858,
+    "volume_1mo": 4780507.54,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 8
+  },
+  {
+    "id": "663583",
+    "label": "Will the Iranian regime fall before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.475,
+      0.525
+    ],
+    "normalized_entropy": 0.9982,
+    "weight": 0.030115,
+    "volume_1mo": 3905859.62,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 9
+  },
+  {
+    "id": "60182",
+    "label": "Nobel Peace Prize Winner 2026",
+    "source_type": "event",
+    "num_outcomes": 20,
+    "probabilities": [
+      0.1422,
+      0.1501,
+      0.0261,
+      0.0332,
+      0.0237,
+      0.1193,
+      0.0071,
+      0.0071,
+      0.0182,
+      0.0103,
+      0.0877,
+      0.0055,
+      0.0158,
+      0.0774,
+      0.1769,
+      0.0079,
+      0.0071,
+      0.0095,
+      0.0355,
+      0.0395
+    ],
+    "normalized_entropy": 0.8273,
+    "weight": 0.024833,
+    "volume_1mo": 3220884.92,
+    "end_date": "2026-10-10T00:00:00+00:00",
+    "rank": 10
+  },
+  {
+    "id": "701290",
+    "label": "Will China invade Taiwan by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0165,
+      0.9835
+    ],
+    "normalized_entropy": 0.1213,
+    "weight": 0.022306,
+    "volume_1mo": 2893053.56,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 11
+  },
+  {
+    "id": "567687",
+    "label": "Russia x Ukraine ceasefire by end of 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.395,
+      0.605
+    ],
+    "normalized_entropy": 0.968,
+    "weight": 0.020282,
+    "volume_1mo": 2630602.3,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 12
+  },
+  {
+    "id": "997488",
+    "label": "Will Trump acquire Greenland before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.115,
+      0.885
+    ],
+    "normalized_entropy": 0.5148,
+    "weight": 0.020242,
+    "volume_1mo": 2625330.05,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 13
+  },
+  {
+    "id": "79973",
+    "label": "2026 Seoul Mayoral Election Winner",
+    "source_type": "event",
+    "num_outcomes": 14,
+    "probabilities": [
+      0.1392,
+      0.0015,
+      0.0214,
+      0.0015,
+      0.7753,
+      0.0015,
+      0.0015,
+      0.0015,
+      0.0144,
+      0.0015,
+      0.0353,
+      0.0015,
+      0.0015,
+      0.0025
+    ],
+    "normalized_entropy": 0.3128,
+    "weight": 0.019459,
+    "volume_1mo": 2523885.41,
+    "end_date": "2026-06-03T00:00:00+00:00",
+    "rank": 14
+  },
+  {
+    "id": "1466013",
+    "label": "US x Iran ceasefire by March 6?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.044,
+      0.956
+    ],
+    "normalized_entropy": 0.2603,
+    "weight": 0.018906,
+    "volume_1mo": 2452085.27,
+    "end_date": null,
+    "rank": 15
+  },
+  {
+    "id": "916733",
+    "label": "Will Putin meet with Zelenskyy by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.016,
+      0.984
+    ],
+    "normalized_entropy": 0.1184,
+    "weight": 0.018442,
+    "volume_1mo": 2391982.88,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 16
+  },
+  {
+    "id": "1198709",
+    "label": "Will Reza Pahlavi enter Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0585,
+      0.9415
+    ],
+    "normalized_entropy": 0.3215,
+    "weight": 0.016849,
+    "volume_1mo": 2185347.33,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 17
+  },
+  {
+    "id": "567621",
+    "label": "Will China invade Taiwan by end of 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.1105,
+      0.8895
+    ],
+    "normalized_entropy": 0.5014,
+    "weight": 0.015741,
+    "volume_1mo": 2041591.15,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 18
+  },
+  {
+    "id": "1171663",
+    "label": "Russia x Ukraine ceasefire by June 30, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.215,
+      0.785
+    ],
+    "normalized_entropy": 0.7509,
+    "weight": 0.014725,
+    "volume_1mo": 1909802.51,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 19
+  },
+  {
+    "id": "666861",
+    "label": "Trump out as President before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.175,
+      0.825
+    ],
+    "normalized_entropy": 0.669,
+    "weight": 0.011621,
+    "volume_1mo": 1507214.3,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 20
+  },
+  {
+    "id": "1385748",
+    "label": "Will France, UK, or Germany strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.273,
+      0.727
+    ],
+    "normalized_entropy": 0.8457,
+    "weight": 0.011548,
+    "volume_1mo": 1497802.37,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 21
+  },
+  {
+    "id": "822267",
+    "label": "Russian strike on a NATO member by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.036,
+      0.964
+    ],
+    "normalized_entropy": 0.2236,
+    "weight": 0.010471,
+    "volume_1mo": 1358061.35,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 22
+  },
+  {
+    "id": "1285886",
+    "label": " Iran agrees to end enrichment of uranium by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.11,
+      0.89
+    ],
+    "normalized_entropy": 0.4999,
+    "weight": 0.010289,
+    "volume_1mo": 1334457.04,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 23
+  },
+  {
+    "id": "1466014",
+    "label": "US x Iran ceasefire by March 15?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.235,
+      0.765
+    ],
+    "normalized_entropy": 0.7866,
+    "weight": 0.008785,
+    "volume_1mo": 1139464.35,
+    "end_date": null,
+    "rank": 24
+  },
+  {
+    "id": "1126504",
+    "label": "Will the US acquire part of Greenland in 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.155,
+      0.845
+    ],
+    "normalized_entropy": 0.6222,
+    "weight": 0.008517,
+    "volume_1mo": 1104676.48,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 25
+  },
+  {
+    "id": "1170143",
+    "label": "Will the US officially declare war on Iran by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.03,
+      0.97
+    ],
+    "normalized_entropy": 0.1944,
+    "weight": 0.008375,
+    "volume_1mo": 1086222.94,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 26
+  },
+  {
+    "id": "665495",
+    "label": "Ukraine joins NATO before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0365,
+      0.9635
+    ],
+    "normalized_entropy": 0.226,
+    "weight": 0.008326,
+    "volume_1mo": 1079940.49,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 27
+  },
+  {
+    "id": "666720",
+    "label": "Will Russia test a nuclear weapon by March 31 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0245,
+      0.9755
+    ],
+    "normalized_entropy": 0.166,
+    "weight": 0.008014,
+    "volume_1mo": 1039358.85,
+    "end_date": null,
+    "rank": 28
+  },
+  {
+    "id": "1466015",
+    "label": "US x Iran ceasefire by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.42,
+      0.58
+    ],
+    "normalized_entropy": 0.9815,
+    "weight": 0.00764,
+    "volume_1mo": 990961.51,
+    "end_date": null,
+    "rank": 29
+  },
+  {
+    "id": "559651",
+    "label": "Xi Jinping out before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0845,
+      0.9155
+    ],
+    "normalized_entropy": 0.4178,
+    "weight": 0.007616,
+    "volume_1mo": 987830.63,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 30
+  },
+  {
+    "id": "1466423",
+    "label": "Will Iran strike Cyprus in March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.22,
+      0.78
+    ],
+    "normalized_entropy": 0.7602,
+    "weight": 0.006991,
+    "volume_1mo": 906738.96,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 31
+  },
+  {
+    "id": "190746",
+    "label": "How many times will the US strike Somalia in February?",
+    "source_type": "event",
+    "num_outcomes": 4,
+    "probabilities": [
+      0.024,
+      0.975,
+      0.0005,
+      0.0005
+    ],
+    "normalized_entropy": 0.0878,
+    "weight": 0.006777,
+    "volume_1mo": 878972.21,
+    "end_date": "2026-03-04T00:00:00+00:00",
+    "rank": 32
+  },
+  {
+    "id": "677397",
+    "label": "Will Israel launch a major ground offensive in Lebanon by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.755,
+      0.245
+    ],
+    "normalized_entropy": 0.8033,
+    "weight": 0.006405,
+    "volume_1mo": 830783.81,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 33
+  },
+  {
+    "id": "1472026",
+    "label": "Will another country strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.735,
+      0.265
+    ],
+    "normalized_entropy": 0.8342,
+    "weight": 0.006231,
+    "volume_1mo": 808222.44,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 34
+  },
+  {
+    "id": "1301522",
+    "label": "U.S. anti-cartel ground operation in Mexico by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.065,
+      0.935
+    ],
+    "normalized_entropy": 0.347,
+    "weight": 0.005863,
+    "volume_1mo": 760430.08,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 35
+  },
+  {
+    "id": "1227362",
+    "label": "Will Iran close the Strait of Hormuz by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.5295,
+      0.4705
+    ],
+    "normalized_entropy": 0.9975,
+    "weight": 0.005578,
+    "volume_1mo": 723449.81,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 36
+  },
+  {
+    "id": "103763",
+    "label": "Next Prime Minister of Thailand",
+    "source_type": "event",
+    "num_outcomes": 7,
+    "probabilities": [
+      0.9894,
+      0.005,
+      0.0005,
+      0.0005,
+      0.0015,
+      0.0005,
+      0.0025
+    ],
+    "normalized_entropy": 0.0378,
+    "weight": 0.005575,
+    "volume_1mo": 723079.77,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 37
+  },
+  {
+    "id": "1466766",
+    "label": "Will a Gulf State strike Iran by March 7?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.53,
+      0.47
+    ],
+    "normalized_entropy": 0.9974,
+    "weight": 0.005442,
+    "volume_1mo": 705865.46,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 38
+  },
+  {
+    "id": "1402792",
+    "label": "US-Iran nuclear deal by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.105,
+      0.895
+    ],
+    "normalized_entropy": 0.4846,
+    "weight": 0.005306,
+    "volume_1mo": 688149.78,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 39
+  },
+  {
+    "id": "957019",
+    "label": "US-Iran nuclear deal by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.31,
+      0.69
+    ],
+    "normalized_entropy": 0.8932,
+    "weight": 0.005191,
+    "volume_1mo": 673316.68,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 40
+  },
+  {
+    "id": "560317",
+    "label": "Putin out as President of Russia by end of 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.105,
+      0.895
+    ],
+    "normalized_entropy": 0.4846,
+    "weight": 0.005096,
+    "volume_1mo": 660920.2,
+    "end_date": "2026-12-31T18:30:00+00:00",
+    "rank": 41
+  },
+  {
+    "id": "1437238",
+    "label": "Will Israel strike Lebanon on March 1, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0265,
+      0.9735
+    ],
+    "normalized_entropy": 0.1765,
+    "weight": 0.005083,
+    "volume_1mo": 659312.6,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 42
+  },
+  {
+    "id": "665307",
+    "label": "Will Iran close the Strait of Hormuz before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.571,
+      0.429
+    ],
+    "normalized_entropy": 0.9854,
+    "weight": 0.004786,
+    "volume_1mo": 620768.98,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 43
+  },
+  {
+    "id": "79926",
+    "label": "How many different countries will Israel strike in 2026?",
+    "source_type": "event",
+    "num_outcomes": 14,
+    "probabilities": [
+      0.3633,
+      0.0215,
+      0.0025,
+      0.2639,
+      0.009,
+      0.0015,
+      0.0155,
+      0.1149,
+      0.0115,
+      0.003,
+      0.1499,
+      0.0365,
+      0.0045,
+      0.0025
+    ],
+    "normalized_entropy": 0.6425,
+    "weight": 0.004471,
+    "volume_1mo": 579937.13,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 44
+  },
+  {
+    "id": "665228",
+    "label": "Will Hezbollah disarm by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.071,
+      0.929
+    ],
+    "normalized_entropy": 0.3696,
+    "weight": 0.00439,
+    "volume_1mo": 569382.68,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 45
+  },
+  {
+    "id": "1107380",
+    "label": "US strike on Mexico by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.046,
+      0.954
+    ],
+    "normalized_entropy": 0.2692,
+    "weight": 0.003928,
+    "volume_1mo": 509412.33,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 46
+  },
+  {
+    "id": "706279",
+    "label": "Will Trump visit China by April 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.865,
+      0.135
+    ],
+    "normalized_entropy": 0.571,
+    "weight": 0.003826,
+    "volume_1mo": 496185.95,
+    "end_date": "2026-04-30T00:00:00+00:00",
+    "rank": 47
+  },
+  {
+    "id": "1110978",
+    "label": "Fact Check: Maduro capture staged?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.021,
+      0.979
+    ],
+    "normalized_entropy": 0.147,
+    "weight": 0.003734,
+    "volume_1mo": 484298.2,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 48
+  },
+  {
+    "id": "1394368",
+    "label": "Will the U.S. invade Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0465,
+      0.9535
+    ],
+    "normalized_entropy": 0.2713,
+    "weight": 0.003512,
+    "volume_1mo": 455446.74,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 49
+  },
+  {
+    "id": "1472019",
+    "label": "Will Saudi Arabia strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.615,
+      0.385
+    ],
+    "normalized_entropy": 0.9615,
+    "weight": 0.003476,
+    "volume_1mo": 450884.65,
+    "end_date": null,
+    "rank": 50
+  },
+  {
+    "id": "1468352",
+    "label": "Will Iran name a successor to Khamenei by March 6?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.7,
+      0.3
+    ],
+    "normalized_entropy": 0.8813,
+    "weight": 0.003395,
+    "volume_1mo": 440278.18,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 51
+  },
+  {
+    "id": "1465969",
+    "label": "Will US or Israel strike Iran on March 4, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.9935,
+      0.0065
+    ],
+    "normalized_entropy": 0.0566,
+    "weight": 0.003384,
+    "volume_1mo": 438890.09,
+    "end_date": "2026-03-10T00:00:00+00:00",
+    "rank": 52
+  },
+  {
+    "id": "1466148",
+    "label": "Iran x Israel/US conflict ends by March 7?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0425,
+      0.9575
+    ],
+    "normalized_entropy": 0.2536,
+    "weight": 0.003361,
+    "volume_1mo": 435984.7,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 53
+  },
+  {
+    "id": "1090199",
+    "label": "Will Reza Pahlavi enter Iran by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.21,
+      0.79
+    ],
+    "normalized_entropy": 0.7415,
+    "weight": 0.003316,
+    "volume_1mo": 430083.12,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 54
+  },
+  {
+    "id": "994894",
+    "label": "Greece x Turkey military engagement by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.065,
+      0.935
+    ],
+    "normalized_entropy": 0.347,
+    "weight": 0.003259,
+    "volume_1mo": 422665.37,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 55
+  },
+  {
+    "id": "81557",
+    "label": "Who will be the next Prime Minister of Israel after the next election?",
+    "source_type": "event",
+    "num_outcomes": 14,
+    "probabilities": [
+      0.6216,
+      0.0299,
+      0.0054,
+      0.0039,
+      0.0024,
+      0.002,
+      0.0054,
+      0.2545,
+      0.0524,
+      0.0098,
+      0.0069,
+      0.0024,
+      0.002,
+      0.0015
+    ],
+    "normalized_entropy": 0.4259,
+    "weight": 0.003193,
+    "volume_1mo": 414078.7,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 56
+  },
+  {
+    "id": "1466016",
+    "label": "US x Iran ceasefire by April 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.575,
+      0.425
+    ],
+    "normalized_entropy": 0.9837,
+    "weight": 0.003176,
+    "volume_1mo": 411990.87,
+    "end_date": null,
+    "rank": 57
+  },
+  {
+    "id": "958448",
+    "label": "Putin out as President of Russia by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0455,
+      0.9545
+    ],
+    "normalized_entropy": 0.267,
+    "weight": 0.003175,
+    "volume_1mo": 411785.07,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 58
+  },
+  {
+    "id": "955824",
+    "label": "Nuclear weapon detonation by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.048,
+      0.952
+    ],
+    "normalized_entropy": 0.2778,
+    "weight": 0.003133,
+    "volume_1mo": 406287.88,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 59
+  },
+  {
+    "id": "956590",
+    "label": "Will China invade Taiwan by June 30, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.06,
+      0.94
+    ],
+    "normalized_entropy": 0.3274,
+    "weight": 0.002897,
+    "volume_1mo": 375779.51,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 60
+  },
+  {
+    "id": "1467136",
+    "label": "Will Iran strike Israel on March 3?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.778,
+      0.222
+    ],
+    "normalized_entropy": 0.7638,
+    "weight": 0.002845,
+    "volume_1mo": 369033.28,
+    "end_date": null,
+    "rank": 61
+  },
+  {
+    "id": "1465970",
+    "label": "Will US or Israel strike Iran on March 5, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.9885,
+      0.0115
+    ],
+    "normalized_entropy": 0.0906,
+    "weight": 0.00277,
+    "volume_1mo": 359306.19,
+    "end_date": "2026-03-10T00:00:00+00:00",
+    "rank": 62
+  },
+  {
+    "id": "1107581",
+    "label": "US strike on Cuba by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.054,
+      0.946
+    ],
+    "normalized_entropy": 0.3032,
+    "weight": 0.002539,
+    "volume_1mo": 329328.47,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 63
+  },
+  {
+    "id": "52166",
+    "label": "Where will Trump and Putin meet next?",
+    "source_type": "event",
+    "num_outcomes": 15,
+    "probabilities": [
+      0.009,
+      0.0043,
+      0.0224,
+      0.0071,
+      0.0352,
+      0.0267,
+      0.0057,
+      0.0362,
+      0.0171,
+      0.0657,
+      0.0081,
+      0.0052,
+      0.1233,
+      0.6026,
+      0.0314
+    ],
+    "normalized_entropy": 0.5677,
+    "weight": 0.002489,
+    "volume_1mo": 322845.78,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 64
+  },
+  {
+    "id": "898685",
+    "label": "Israel x Hamas Ceasefire Phase II by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0245,
+      0.9755
+    ],
+    "normalized_entropy": 0.166,
+    "weight": 0.00246,
+    "volume_1mo": 319044.13,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 65
+  },
+  {
+    "id": "92705",
+    "label": "Nepal House of Representatives Election Winner",
+    "source_type": "event",
+    "num_outcomes": 7,
+    "probabilities": [
+      0.07,
+      0.004,
+      0.0005,
+      0.91,
+      0.0005,
+      0.0145,
+      0.0005
+    ],
+    "normalized_entropy": 0.1885,
+    "weight": 0.002441,
+    "volume_1mo": 316582.52,
+    "end_date": "2026-03-05T00:00:00+00:00",
+    "rank": 66
+  },
+  {
+    "id": "1472016",
+    "label": "Will Germany strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0665,
+      0.9335
+    ],
+    "normalized_entropy": 0.3527,
+    "weight": 0.002311,
+    "volume_1mo": 299678.73,
+    "end_date": null,
+    "rank": 67
+  },
+  {
+    "id": "677361",
+    "label": "Will Russia capture Kostyantynivka by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.22,
+      0.78
+    ],
+    "normalized_entropy": 0.7602,
+    "weight": 0.002308,
+    "volume_1mo": 299401.38,
+    "end_date": "2026-03-31T12:00:00+00:00",
+    "rank": 68
+  },
+  {
+    "id": "80029",
+    "label": "2026 Gyeonggi Province Gubernatorial Election Winner",
+    "source_type": "event",
+    "num_outcomes": 14,
+    "probabilities": [
+      0.3577,
+      0.5534,
+      0.0318,
+      0.0373,
+      0.0035,
+      0.002,
+      0.002,
+      0.0015,
+      0.0015,
+      0.0015,
+      0.0015,
+      0.0015,
+      0.0025,
+      0.0025
+    ],
+    "normalized_entropy": 0.3979,
+    "weight": 0.002276,
+    "volume_1mo": 295187.37,
+    "end_date": "2026-06-03T00:00:00+00:00",
+    "rank": 69
+  },
+  {
+    "id": "147848",
+    "label": "Lebanon Parliamentary Election Winner",
+    "source_type": "event",
+    "num_outcomes": 23,
+    "probabilities": [
+      0.0831,
+      0.0116,
+      0.0051,
+      0.0495,
+      0.0444,
+      0.0444,
+      0.0033,
+      0.0491,
+      0.052,
+      0.0126,
+      0.0033,
+      0.0116,
+      0.0058,
+      0.0423,
+      0.0033,
+      0.0455,
+      0.0018,
+      0.0191,
+      0.0025,
+      0.4839,
+      0.0025,
+      0.0213,
+      0.0022
+    ],
+    "normalized_entropy": 0.6515,
+    "weight": 0.002242,
+    "volume_1mo": 290822.66,
+    "end_date": "2026-05-31T00:00:00+00:00",
+    "rank": 70
+  },
+  {
+    "id": "665374",
+    "label": "Will the U.S. invade Iran before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.215,
+      0.785
+    ],
+    "normalized_entropy": 0.7509,
+    "weight": 0.002232,
+    "volume_1mo": 289534.95,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 71
+  },
+  {
+    "id": "665325",
+    "label": "US-Iran nuclear deal before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.47,
+      0.53
+    ],
+    "normalized_entropy": 0.9974,
+    "weight": 0.002205,
+    "volume_1mo": 285973.97,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 72
+  },
+  {
+    "id": "567689",
+    "label": "Zelenskyy out as Ukraine president by end of 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.29,
+      0.71
+    ],
+    "normalized_entropy": 0.8687,
+    "weight": 0.002116,
+    "volume_1mo": 274473.63,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 73
+  },
+  {
+    "id": "1472011",
+    "label": "Will UK strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.19,
+      0.81
+    ],
+    "normalized_entropy": 0.7015,
+    "weight": 0.002022,
+    "volume_1mo": 262309.45,
+    "end_date": null,
+    "rank": 74
+  },
+  {
+    "id": "1466149",
+    "label": "Iran x Israel/US conflict ends by March 15?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.155,
+      0.845
+    ],
+    "normalized_entropy": 0.6222,
+    "weight": 0.002019,
+    "volume_1mo": 261926.8,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 75
+  },
+  {
+    "id": "1472548",
+    "label": "Will Reza Pahlavi lead Iran in 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.181,
+      0.819
+    ],
+    "normalized_entropy": 0.6823,
+    "weight": 0.002007,
+    "volume_1mo": 260329.83,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 76
+  },
+  {
+    "id": "677407",
+    "label": "China x Taiwan military clash before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.155,
+      0.845
+    ],
+    "normalized_entropy": 0.6222,
+    "weight": 0.001975,
+    "volume_1mo": 256162.35,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 77
+  },
+  {
+    "id": "1467769",
+    "label": "Will Crude Oil (CL) hit (HIGH) $75 by end of March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.895,
+      0.105
+    ],
+    "normalized_entropy": 0.4846,
+    "weight": 0.001952,
+    "volume_1mo": 253153.66,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 78
+  },
+  {
+    "id": "1467767",
+    "label": "Will Crude Oil (CL) hit (HIGH) $90 by end of March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.335,
+      0.665
+    ],
+    "normalized_entropy": 0.92,
+    "weight": 0.001941,
+    "volume_1mo": 251728.62,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 79
+  },
+  {
+    "id": "1360940",
+    "label": "DeepSeek V4 released by March 15?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.46,
+      0.54
+    ],
+    "normalized_entropy": 0.9954,
+    "weight": 0.001895,
+    "volume_1mo": 245800.88,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 80
+  },
+  {
+    "id": "1144504",
+    "label": "Odds Trump acquires Greenland before 2027 hit 30% by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.015,
+      0.985
+    ],
+    "normalized_entropy": 0.1124,
+    "weight": 0.00188,
+    "volume_1mo": 243822.38,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 81
+  },
+  {
+    "id": "1472017",
+    "label": "Will Qatar strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.465,
+      0.535
+    ],
+    "normalized_entropy": 0.9965,
+    "weight": 0.001858,
+    "volume_1mo": 240925.78,
+    "end_date": null,
+    "rank": 82
+  },
+  {
+    "id": "1467766",
+    "label": "Will Crude Oil (CL) hit (HIGH) $100 by end of March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.26,
+      0.74
+    ],
+    "normalized_entropy": 0.8267,
+    "weight": 0.00184,
+    "volume_1mo": 238602.14,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 83
+  },
+  {
+    "id": "1107878",
+    "label": "Will the U.S. invade Cuba in 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.185,
+      0.815
+    ],
+    "normalized_entropy": 0.6909,
+    "weight": 0.001809,
+    "volume_1mo": 234605.54,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 84
+  },
+  {
+    "id": "1477563",
+    "label": "Will Crude Oil (CL) hit (HIGH) $150 by end of March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0365,
+      0.9635
+    ],
+    "normalized_entropy": 0.226,
+    "weight": 0.001698,
+    "volume_1mo": 220186.23,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 85
+  },
+  {
+    "id": "663544",
+    "label": "Will the U.S. invade Venezuela by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.021,
+      0.979
+    ],
+    "normalized_entropy": 0.147,
+    "weight": 0.001692,
+    "volume_1mo": 219391.66,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 86
+  },
+  {
+    "id": "1467765",
+    "label": "Will Crude Oil (CL) hit (HIGH) $110 by end of March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.15,
+      0.85
+    ],
+    "normalized_entropy": 0.6098,
+    "weight": 0.001673,
+    "volume_1mo": 217000.92,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 87
+  },
+  {
+    "id": "1467763",
+    "label": "Will Crude Oil (CL) hit (HIGH) $120 by end of March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.07,
+      0.93
+    ],
+    "normalized_entropy": 0.3659,
+    "weight": 0.001661,
+    "volume_1mo": 215423.08,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 88
+  },
+  {
+    "id": "665258",
+    "label": "Will China unban Bitcoin by 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.044,
+      0.956
+    ],
+    "normalized_entropy": 0.2603,
+    "weight": 0.001652,
+    "volume_1mo": 214289.68,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 89
+  },
+  {
+    "id": "956370",
+    "label": "Xi Jinping out by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0355,
+      0.9645
+    ],
+    "normalized_entropy": 0.2213,
+    "weight": 0.001639,
+    "volume_1mo": 212517.32,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 90
+  },
+  {
+    "id": "1178057",
+    "label": "Will the Iranian regime survive U.S. military strikes?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.62,
+      0.38
+    ],
+    "normalized_entropy": 0.958,
+    "weight": 0.001631,
+    "volume_1mo": 211561.03,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 91
+  },
+  {
+    "id": "1472010",
+    "label": "Will UAE strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.515,
+      0.485
+    ],
+    "normalized_entropy": 0.9994,
+    "weight": 0.00159,
+    "volume_1mo": 206242.06,
+    "end_date": null,
+    "rank": 92
+  },
+  {
+    "id": "1465971",
+    "label": "Will US or Israel strike Iran on March 6, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.9695,
+      0.0305
+    ],
+    "normalized_entropy": 0.1969,
+    "weight": 0.001585,
+    "volume_1mo": 205632.51,
+    "end_date": "2026-03-10T00:00:00+00:00",
+    "rank": 93
+  },
+  {
+    "id": "1168124",
+    "label": "Trump-Denmark Greenland deal signed by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0275,
+      0.9725
+    ],
+    "normalized_entropy": 0.1817,
+    "weight": 0.001564,
+    "volume_1mo": 202849.03,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 94
+  },
+  {
+    "id": "1126854",
+    "label": "Will the Court Force Trump to Refund Tariffs?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.28,
+      0.72
+    ],
+    "normalized_entropy": 0.8555,
+    "weight": 0.001559,
+    "volume_1mo": 202224.51,
+    "end_date": "2026-06-30T23:55:00+00:00",
+    "rank": 95
+  },
+  {
+    "id": "90335",
+    "label": "2026 South Korean Local Elections: Party Winner",
+    "source_type": "event",
+    "num_outcomes": 5,
+    "probabilities": [
+      0.9605,
+      0.0025,
+      0.0015,
+      0.033,
+      0.0025
+    ],
+    "normalized_entropy": 0.1186,
+    "weight": 0.001546,
+    "volume_1mo": 200478.47,
+    "end_date": "2026-06-03T00:00:00+00:00",
+    "rank": 96
+  },
+  {
+    "id": "1250783",
+    "label": "Will the US conduct a cyberattack on Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.305,
+      0.695
+    ],
+    "normalized_entropy": 0.8873,
+    "weight": 0.001529,
+    "volume_1mo": 198255.6,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 97
+  },
+  {
+    "id": "1472012",
+    "label": "Will France strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.2105,
+      0.7895
+    ],
+    "normalized_entropy": 0.7424,
+    "weight": 0.001489,
+    "volume_1mo": 193084.6,
+    "end_date": null,
+    "rank": 98
+  },
+  {
+    "id": "1468353",
+    "label": "Will Iran name a successor to Khamenei by March 15?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.84,
+      0.16
+    ],
+    "normalized_entropy": 0.6343,
+    "weight": 0.001474,
+    "volume_1mo": 191161.95,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 99
+  },
+  {
+    "id": "1467768",
+    "label": "Will Crude Oil (CL) hit (HIGH) $80 by end of March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.62,
+      0.38
+    ],
+    "normalized_entropy": 0.958,
+    "weight": 0.001451,
+    "volume_1mo": 188177.14,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 100
+  },
+  {
+    "id": "1115288",
+    "label": "US recognizes Reza Pahlavi as leader of Iran in 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.185,
+      0.815
+    ],
+    "normalized_entropy": 0.6909,
+    "weight": 0.001449,
+    "volume_1mo": 187966.48,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 101
+  },
+  {
+    "id": "1385754",
+    "label": "Will France, UK, or Germany strike Iran by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.345,
+      0.655
+    ],
+    "normalized_entropy": 0.9295,
+    "weight": 0.001444,
+    "volume_1mo": 187261.68,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 102
+  },
+  {
+    "id": "1466573",
+    "label": "Trump announces end of military operations against Iran by March 7th?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0385,
+      0.9615
+    ],
+    "normalized_entropy": 0.2354,
+    "weight": 0.001419,
+    "volume_1mo": 184057.7,
+    "end_date": "2026-03-31T23:55:00+00:00",
+    "rank": 103
+  },
+  {
+    "id": "219823",
+    "label": "U.S. tariff rate on China on March 31?",
+    "source_type": "event",
+    "num_outcomes": 5,
+    "probabilities": [
+      0.0181,
+      0.4937,
+      0.4282,
+      0.0272,
+      0.0327
+    ],
+    "normalized_entropy": 0.6178,
+    "weight": 0.001364,
+    "volume_1mo": 176922.28,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 104
+  },
+  {
+    "id": "604470",
+    "label": "Will China blockade Taiwan by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.07,
+      0.93
+    ],
+    "normalized_entropy": 0.3659,
+    "weight": 0.001353,
+    "volume_1mo": 175497.33,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 105
+  },
+  {
+    "id": "1170144",
+    "label": "Will the US officially declare war on Iran by December 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.11,
+      0.89
+    ],
+    "normalized_entropy": 0.4999,
+    "weight": 0.001234,
+    "volume_1mo": 160016.35,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 106
+  },
+  {
+    "id": "236918",
+    "label": "How many different countries will Iran strike in March?",
+    "source_type": "event",
+    "num_outcomes": 9,
+    "probabilities": [
+      0.0035,
+      0.0075,
+      0.0135,
+      0.1165,
+      0.0185,
+      0.0085,
+      0.0105,
+      0.775,
+      0.0465
+    ],
+    "normalized_entropy": 0.3948,
+    "weight": 0.00119,
+    "volume_1mo": 154308.73,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 107
+  },
+  {
+    "id": "1138907",
+    "label": "Masoud Pezeshkian out by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.37,
+      0.63
+    ],
+    "normalized_entropy": 0.9507,
+    "weight": 0.00116,
+    "volume_1mo": 150418.14,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 108
+  },
+  {
+    "id": "1336154",
+    "label": "Will Russia capture all of Rodynske by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.5,
+      0.5
+    ],
+    "normalized_entropy": 1.0,
+    "weight": 0.001097,
+    "volume_1mo": 142268.82,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 109
+  },
+  {
+    "id": "1121887",
+    "label": "Israel strike on Yemen by June 30, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.77,
+      0.23
+    ],
+    "normalized_entropy": 0.778,
+    "weight": 0.00106,
+    "volume_1mo": 137525.06,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 110
+  },
+  {
+    "id": "1107582",
+    "label": "US strike on Cuba by December 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.35,
+      0.65
+    ],
+    "normalized_entropy": 0.9341,
+    "weight": 0.00106,
+    "volume_1mo": 137514.85,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 111
+  },
+  {
+    "id": "1468354",
+    "label": "Will Iran name a successor to Khamenei by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.905,
+      0.095
+    ],
+    "normalized_entropy": 0.4529,
+    "weight": 0.001042,
+    "volume_1mo": 135149.81,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 112
+  },
+  {
+    "id": "1394086",
+    "label": "Will Reza Pahlavi enter Iran by December 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.31,
+      0.69
+    ],
+    "normalized_entropy": 0.8932,
+    "weight": 0.001003,
+    "volume_1mo": 130097.06,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 113
+  },
+  {
+    "id": "1121884",
+    "label": "Israel strike on Yemen by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.665,
+      0.335
+    ],
+    "normalized_entropy": 0.92,
+    "weight": 0.000931,
+    "volume_1mo": 120811.38,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 114
+  },
+  {
+    "id": "677366",
+    "label": "Will Russia capture Kostyantynivka by December 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.885,
+      0.115
+    ],
+    "normalized_entropy": 0.5148,
+    "weight": 0.000921,
+    "volume_1mo": 119509.13,
+    "end_date": "2026-12-31T12:00:00+00:00",
+    "rank": 115
+  },
+  {
+    "id": "681144",
+    "label": "Will Ukraine agree to cede territory to Russia before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.255,
+      0.745
+    ],
+    "normalized_entropy": 0.8191,
+    "weight": 0.000915,
+    "volume_1mo": 118621.9,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 116
+  },
+  {
+    "id": "941750",
+    "label": "Next Thai Prime Minister Chosen by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.415,
+      0.585
+    ],
+    "normalized_entropy": 0.9791,
+    "weight": 0.000894,
+    "volume_1mo": 115891.13,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 117
+  },
+  {
+    "id": "592882",
+    "label": "Nuclear weapon detonation by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.14,
+      0.86
+    ],
+    "normalized_entropy": 0.5842,
+    "weight": 0.000893,
+    "volume_1mo": 115815.01,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 118
+  },
+  {
+    "id": "1439560",
+    "label": "Russia x Ukraine ceasefire by April 30, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.085,
+      0.915
+    ],
+    "normalized_entropy": 0.4196,
+    "weight": 0.000887,
+    "volume_1mo": 115018.42,
+    "end_date": "2026-04-30T00:00:00+00:00",
+    "rank": 119
+  },
+  {
+    "id": "1465972",
+    "label": "Will US or Israel strike Iran on March 7, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.955,
+      0.045
+    ],
+    "normalized_entropy": 0.2648,
+    "weight": 0.000886,
+    "volume_1mo": 114960.73,
+    "end_date": "2026-03-10T00:00:00+00:00",
+    "rank": 120
+  },
+  {
+    "id": "1466150",
+    "label": "Iran x Israel/US conflict ends by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.365,
+      0.635
+    ],
+    "normalized_entropy": 0.9468,
+    "weight": 0.000878,
+    "volume_1mo": 113814.37,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 121
+  },
+  {
+    "id": "1107381",
+    "label": "US strike on Mexico by December 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.285,
+      0.715
+    ],
+    "normalized_entropy": 0.8622,
+    "weight": 0.000866,
+    "volume_1mo": 112361.23,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 122
+  },
+  {
+    "id": "1471457",
+    "label": "US/Israel strike on Fordow nuclear facility by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.525,
+      0.475
+    ],
+    "normalized_entropy": 0.9982,
+    "weight": 0.000864,
+    "volume_1mo": 112059.84,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 123
+  },
+  {
+    "id": "1236458",
+    "label": "Will Russia capture Hryshyne by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.785,
+      0.215
+    ],
+    "normalized_entropy": 0.7509,
+    "weight": 0.000859,
+    "volume_1mo": 111443.29,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 124
+  },
+  {
+    "id": "957646",
+    "label": "Israel x Hamas Ceasefire Phase II by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.25,
+      0.75
+    ],
+    "normalized_entropy": 0.8113,
+    "weight": 0.000857,
+    "volume_1mo": 111177.85,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 125
+  },
+  {
+    "id": "734114",
+    "label": "Zelenskyy out as Ukraine president by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0275,
+      0.9725
+    ],
+    "normalized_entropy": 0.1817,
+    "weight": 0.000849,
+    "volume_1mo": 110071.34,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 126
+  },
+  {
+    "id": "567688",
+    "label": "Netanyahu out by end of 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.33,
+      0.67
+    ],
+    "normalized_entropy": 0.9149,
+    "weight": 0.000847,
+    "volume_1mo": 109853.76,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 127
+  },
+  {
+    "id": "687642",
+    "label": "China x Japan military clash before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.145,
+      0.855
+    ],
+    "normalized_entropy": 0.5972,
+    "weight": 0.000841,
+    "volume_1mo": 109133.1,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 128
+  },
+  {
+    "id": "1040944",
+    "label": "Will Xi Jinping meet with Cheng Li-wun by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.34,
+      0.66
+    ],
+    "normalized_entropy": 0.9248,
+    "weight": 0.000832,
+    "volume_1mo": 107972.67,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 129
+  },
+  {
+    "id": "1466420",
+    "label": "Will Iran strike UAE in March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.995,
+      0.005
+    ],
+    "normalized_entropy": 0.0454,
+    "weight": 0.000813,
+    "volume_1mo": 105427.57,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 130
+  },
+  {
+    "id": "1465975",
+    "label": "Will US or Israel strike Iran on March 10, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.845,
+      0.155
+    ],
+    "normalized_entropy": 0.6222,
+    "weight": 0.000808,
+    "volume_1mo": 104773.52,
+    "end_date": "2026-03-10T00:00:00+00:00",
+    "rank": 131
+  },
+  {
+    "id": "950001",
+    "label": "Naim Qassem out as Hezbollah\u2019s secretary-general by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.505,
+      0.495
+    ],
+    "normalized_entropy": 0.9999,
+    "weight": 0.000798,
+    "volume_1mo": 103444.58,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 132
+  },
+  {
+    "id": "677358",
+    "label": "Ukraine election held by December 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.235,
+      0.765
+    ],
+    "normalized_entropy": 0.7866,
+    "weight": 0.000784,
+    "volume_1mo": 101629.16,
+    "end_date": "2026-12-31T12:00:00+00:00",
+    "rank": 133
+  },
+  {
+    "id": "1115301",
+    "label": "Will the U.S. invade Greenland in 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.065,
+      0.935
+    ],
+    "normalized_entropy": 0.347,
+    "weight": 0.000783,
+    "volume_1mo": 101545.91,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 134
+  },
+  {
+    "id": "1106634",
+    "label": "Miguel D\u00edaz-Canel out as leader of Cuba by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.37,
+      0.63
+    ],
+    "normalized_entropy": 0.9507,
+    "weight": 0.000775,
+    "volume_1mo": 100509.59,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 135
+  },
+  {
+    "id": "1485135",
+    "label": "Will another country strike Iran by March 7?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.595,
+      0.405
+    ],
+    "normalized_entropy": 0.9738,
+    "weight": 0.000761,
+    "volume_1mo": 98733.53,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 136
+  },
+  {
+    "id": "74056",
+    "label": "Where will Zelenskyy and Putin meet next before 2027?",
+    "source_type": "event",
+    "num_outcomes": 14,
+    "probabilities": [
+      0.037,
+      0.0098,
+      0.0046,
+      0.0072,
+      0.0098,
+      0.0231,
+      0.0118,
+      0.037,
+      0.0314,
+      0.0051,
+      0.7712,
+      0.0319,
+      0.0129,
+      0.0072
+    ],
+    "normalized_entropy": 0.4061,
+    "weight": 0.000736,
+    "volume_1mo": 95487.83,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 137
+  },
+  {
+    "id": "197688",
+    "label": "BTS 'Arirang' First Week Album Sales?",
+    "source_type": "event",
+    "num_outcomes": 8,
+    "probabilities": [
+      0.0285,
+      0.0364,
+      0.0044,
+      0.0034,
+      0.8747,
+      0.0295,
+      0.0123,
+      0.0108
+    ],
+    "normalized_entropy": 0.2834,
+    "weight": 0.00072,
+    "volume_1mo": 93338.28,
+    "end_date": "2026-03-20T00:00:00+00:00",
+    "rank": 138
+  },
+  {
+    "id": "1007579",
+    "label": "Will Russia capture Sumy by March 31, 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.135,
+      0.865
+    ],
+    "normalized_entropy": 0.571,
+    "weight": 0.000719,
+    "volume_1mo": 93310.87,
+    "end_date": "2027-03-31T00:00:00+00:00",
+    "rank": 139
+  },
+  {
+    "id": "1471839",
+    "label": "Will Israel or the US target an Iranian nuclear facility?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.9995,
+      0.0005
+    ],
+    "normalized_entropy": 0.0062,
+    "weight": 0.000712,
+    "volume_1mo": 92312.61,
+    "end_date": null,
+    "rank": 140
+  },
+  {
+    "id": "1323426",
+    "label": "US strikes Yemen by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.5765,
+      0.4235
+    ],
+    "normalized_entropy": 0.983,
+    "weight": 0.000709,
+    "volume_1mo": 91893.05,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 141
+  },
+  {
+    "id": "1123479",
+    "label": "Iran coup attempt by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.355,
+      0.645
+    ],
+    "normalized_entropy": 0.9385,
+    "weight": 0.000674,
+    "volume_1mo": 87377.9,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 142
+  },
+  {
+    "id": "1397291",
+    "label": "Will Russia capture all of Lyman by December 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.715,
+      0.285
+    ],
+    "normalized_entropy": 0.8622,
+    "weight": 0.000666,
+    "volume_1mo": 86423.89,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 143
+  },
+  {
+    "id": "694027",
+    "label": "Russia x Ukraine Peace Parlay",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.25,
+      0.75
+    ],
+    "normalized_entropy": 0.8113,
+    "weight": 0.000661,
+    "volume_1mo": 85676.61,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 144
+  },
+  {
+    "id": "1397463",
+    "label": "Will Russia enter Mykhailivka by April 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.255,
+      0.745
+    ],
+    "normalized_entropy": 0.8191,
+    "weight": 0.000649,
+    "volume_1mo": 84230.74,
+    "end_date": "2026-04-30T00:00:00+00:00",
+    "rank": 145
+  },
+  {
+    "id": "1117833",
+    "label": "Will Trump meet with Delcy Rodr\u00edguez by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.22,
+      0.78
+    ],
+    "normalized_entropy": 0.7602,
+    "weight": 0.000617,
+    "volume_1mo": 80024.54,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 146
+  },
+  {
+    "id": "1428639",
+    "label": "Will Trump declare war on Iran by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.125,
+      0.875
+    ],
+    "normalized_entropy": 0.5436,
+    "weight": 0.000613,
+    "volume_1mo": 79548.43,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 147
+  },
+  {
+    "id": "141230",
+    "label": "Maduro Prison Time?",
+    "source_type": "event",
+    "num_outcomes": 5,
+    "probabilities": [
+      0.0355,
+      0.068,
+      0.4173,
+      0.3246,
+      0.1546
+    ],
+    "normalized_entropy": 0.8201,
+    "weight": 0.000612,
+    "volume_1mo": 79409.67,
+    "end_date": "2027-12-31T00:00:00+00:00",
+    "rank": 148
+  },
+  {
+    "id": "677357",
+    "label": "Will Hamas agree to disarm by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.075,
+      0.925
+    ],
+    "normalized_entropy": 0.3843,
+    "weight": 0.000608,
+    "volume_1mo": 78813.09,
+    "end_date": "2026-03-31T20:00:00+00:00",
+    "rank": 149
+  },
+  {
+    "id": "1466574",
+    "label": "Trump announces end of military operations against Iran by March 15th?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.205,
+      0.795
+    ],
+    "normalized_entropy": 0.7318,
+    "weight": 0.000599,
+    "volume_1mo": 77745.66,
+    "end_date": "2026-03-31T23:55:00+00:00",
+    "rank": 150
+  },
+  {
+    "id": "1170467",
+    "label": "DeepSeek V4 released by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.685,
+      0.315
+    ],
+    "normalized_entropy": 0.8989,
+    "weight": 0.000595,
+    "volume_1mo": 77154.39,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 151
+  },
+  {
+    "id": "665223",
+    "label": "Ukraine signs peace deal with Russia by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0425,
+      0.9575
+    ],
+    "normalized_entropy": 0.2536,
+    "weight": 0.000584,
+    "volume_1mo": 75703.64,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 152
+  },
+  {
+    "id": "665426",
+    "label": "Will a new country join the Abraham Accords by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.085,
+      0.915
+    ],
+    "normalized_entropy": 0.4196,
+    "weight": 0.000557,
+    "volume_1mo": 72306.98,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 153
+  },
+  {
+    "id": "1483688",
+    "label": "Iran/Hezbollah strike on Cyprus by March 7?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.23,
+      0.77
+    ],
+    "normalized_entropy": 0.778,
+    "weight": 0.000542,
+    "volume_1mo": 70254.19,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 154
+  },
+  {
+    "id": "677408",
+    "label": "China x Philippines military clash before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.27,
+      0.73
+    ],
+    "normalized_entropy": 0.8415,
+    "weight": 0.000525,
+    "volume_1mo": 68060.49,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 155
+  },
+  {
+    "id": "1467378",
+    "label": "US strikes Iraq by March 7?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.515,
+      0.485
+    ],
+    "normalized_entropy": 0.9994,
+    "weight": 0.00052,
+    "volume_1mo": 67440.05,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 156
+  },
+  {
+    "id": "1336382",
+    "label": "Another critical Cloudflare incident by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.341,
+      0.659
+    ],
+    "normalized_entropy": 0.9258,
+    "weight": 0.000516,
+    "volume_1mo": 66941.97,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 157
+  },
+  {
+    "id": "665736",
+    "label": "Foreign intervention in Gaza by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0465,
+      0.9535
+    ],
+    "normalized_entropy": 0.2713,
+    "weight": 0.000512,
+    "volume_1mo": 66385.45,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 158
+  },
+  {
+    "id": "1060714",
+    "label": "Nothing Ever Happens: 2026",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.46,
+      0.54
+    ],
+    "normalized_entropy": 0.9954,
+    "weight": 0.000505,
+    "volume_1mo": 65448.19,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 159
+  },
+  {
+    "id": "1472013",
+    "label": "Will Jordan strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.085,
+      0.915
+    ],
+    "normalized_entropy": 0.4196,
+    "weight": 0.000504,
+    "volume_1mo": 65417.64,
+    "end_date": null,
+    "rank": 160
+  },
+  {
+    "id": "1465974",
+    "label": "Will US or Israel strike Iran on March 9, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.875,
+      0.125
+    ],
+    "normalized_entropy": 0.5436,
+    "weight": 0.000492,
+    "volume_1mo": 63749.5,
+    "end_date": "2026-03-10T00:00:00+00:00",
+    "rank": 161
+  },
+  {
+    "id": "1485770",
+    "label": "Will Iran name a successor to Khamenei by March 3?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.291,
+      0.709
+    ],
+    "normalized_entropy": 0.87,
+    "weight": 0.00048,
+    "volume_1mo": 62226.99,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 162
+  },
+  {
+    "id": "1466575",
+    "label": "Trump announces end of military operations against Iran by March 31st?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.44,
+      0.56
+    ],
+    "normalized_entropy": 0.9896,
+    "weight": 0.00048,
+    "volume_1mo": 62222.83,
+    "end_date": "2026-03-31T23:55:00+00:00",
+    "rank": 163
+  },
+  {
+    "id": "1465973",
+    "label": "Will US or Israel strike Iran on March 8, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.91,
+      0.09
+    ],
+    "normalized_entropy": 0.4365,
+    "weight": 0.000479,
+    "volume_1mo": 62097.27,
+    "end_date": "2026-03-10T00:00:00+00:00",
+    "rank": 164
+  },
+  {
+    "id": "1370652",
+    "label": " Iran agrees to end enrichment of uranium by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.345,
+      0.655
+    ],
+    "normalized_entropy": 0.9295,
+    "weight": 0.000466,
+    "volume_1mo": 60407.02,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 165
+  },
+  {
+    "id": "1450241",
+    "label": "Pakistan x Afghanistan ceasefire by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.42,
+      0.58
+    ],
+    "normalized_entropy": 0.9815,
+    "weight": 0.000465,
+    "volume_1mo": 60292.73,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 166
+  },
+  {
+    "id": "693491",
+    "label": "Will Venezuela recognize Israel by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.1,
+      0.9
+    ],
+    "normalized_entropy": 0.469,
+    "weight": 0.000464,
+    "volume_1mo": 60179.63,
+    "end_date": null,
+    "rank": 167
+  },
+  {
+    "id": "956626",
+    "label": "Zelenskyy out as Ukraine president by June 30, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.13,
+      0.87
+    ],
+    "normalized_entropy": 0.5574,
+    "weight": 0.000459,
+    "volume_1mo": 59467.86,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 168
+  },
+  {
+    "id": "1455406",
+    "label": "US x Iran meeting by March 15, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.105,
+      0.895
+    ],
+    "normalized_entropy": 0.4846,
+    "weight": 0.000454,
+    "volume_1mo": 58865.17,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 169
+  },
+  {
+    "id": "1400397",
+    "label": "U.S. evacuates Beirut Embassy by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.39,
+      0.61
+    ],
+    "normalized_entropy": 0.9648,
+    "weight": 0.000452,
+    "volume_1mo": 58606.86,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 170
+  },
+  {
+    "id": "1090494",
+    "label": "Will Russia capture all of Donetsk Oblast by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0025,
+      0.9975
+    ],
+    "normalized_entropy": 0.0252,
+    "weight": 0.000445,
+    "volume_1mo": 57705.28,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 171
+  },
+  {
+    "id": "1138908",
+    "label": "Masoud Pezeshkian out by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.605,
+      0.395
+    ],
+    "normalized_entropy": 0.968,
+    "weight": 0.000444,
+    "volume_1mo": 57549.43,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 172
+  },
+  {
+    "id": "677356",
+    "label": "Will India strike Pakistan by December 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.28,
+      0.72
+    ],
+    "normalized_entropy": 0.8555,
+    "weight": 0.000438,
+    "volume_1mo": 56862.08,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 173
+  },
+  {
+    "id": "1138909",
+    "label": "Masoud Pezeshkian out by December 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.665,
+      0.335
+    ],
+    "normalized_entropy": 0.92,
+    "weight": 0.000437,
+    "volume_1mo": 56675.43,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 174
+  },
+  {
+    "id": "665218",
+    "label": "Israel and Saudi Arabia normalize relations before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.25,
+      0.75
+    ],
+    "normalized_entropy": 0.8113,
+    "weight": 0.000436,
+    "volume_1mo": 56550.11,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 175
+  },
+  {
+    "id": "835893",
+    "label": "Ukraine officially agrees to a US backed ceasefire framework by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0415,
+      0.9585
+    ],
+    "normalized_entropy": 0.2491,
+    "weight": 0.000425,
+    "volume_1mo": 55152.13,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 176
+  },
+  {
+    "id": "665224",
+    "label": "Ukraine signs peace deal with Russia before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.235,
+      0.765
+    ],
+    "normalized_entropy": 0.7866,
+    "weight": 0.000419,
+    "volume_1mo": 54360.08,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 177
+  },
+  {
+    "id": "665521",
+    "label": "Iran nuclear test before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.115,
+      0.885
+    ],
+    "normalized_entropy": 0.5148,
+    "weight": 0.00041,
+    "volume_1mo": 53119.96,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 178
+  },
+  {
+    "id": "1007632",
+    "label": "Will Russia enter Dopropillia by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.565,
+      0.435
+    ],
+    "normalized_entropy": 0.9878,
+    "weight": 0.000403,
+    "volume_1mo": 52241.01,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 179
+  },
+  {
+    "id": "1397260",
+    "label": "Will Russia capture Kostyantynivka by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.78,
+      0.22
+    ],
+    "normalized_entropy": 0.7602,
+    "weight": 0.000403,
+    "volume_1mo": 52237.3,
+    "end_date": "2026-03-31T12:00:00+00:00",
+    "rank": 180
+  },
+  {
+    "id": "1466426",
+    "label": "Will Iran strike Iraq in March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.8265,
+      0.1735
+    ],
+    "normalized_entropy": 0.6656,
+    "weight": 0.000392,
+    "volume_1mo": 50827.39,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 181
+  },
+  {
+    "id": "677396",
+    "label": "Iran Nuke before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.105,
+      0.895
+    ],
+    "normalized_entropy": 0.4846,
+    "weight": 0.000388,
+    "volume_1mo": 50329.21,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 182
+  },
+  {
+    "id": "83730",
+    "label": "Gangwon Province Governor Election Winner",
+    "source_type": "event",
+    "num_outcomes": 9,
+    "probabilities": [
+      0.0025,
+      0.0015,
+      0.0015,
+      0.0015,
+      0.1197,
+      0.0015,
+      0.8479,
+      0.0025,
+      0.0214
+    ],
+    "normalized_entropy": 0.2481,
+    "weight": 0.000388,
+    "volume_1mo": 50271.48,
+    "end_date": "2026-06-03T00:00:00+00:00",
+    "rank": 183
+  },
+  {
+    "id": "1397301",
+    "label": "Will Russia capture Kostyantynivka by April 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.505,
+      0.495
+    ],
+    "normalized_entropy": 0.9999,
+    "weight": 0.000386,
+    "volume_1mo": 50020.01,
+    "end_date": "2026-03-31T12:00:00+00:00",
+    "rank": 184
+  },
+  {
+    "id": "700881",
+    "label": "Will Israel annex any territory by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.1975,
+      0.8025
+    ],
+    "normalized_entropy": 0.7169,
+    "weight": 0.000383,
+    "volume_1mo": 49633.53,
+    "end_date": "2026-06-30T22:00:00+00:00",
+    "rank": 185
+  },
+  {
+    "id": "665738",
+    "label": "Ahmed al-Sharaa out as leader of Syria before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.17,
+      0.83
+    ],
+    "normalized_entropy": 0.6577,
+    "weight": 0.000379,
+    "volume_1mo": 49215.05,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 186
+  },
+  {
+    "id": "1486156",
+    "label": "Will Israel's Ben Gurion Airport reopen by March 7?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.255,
+      0.745
+    ],
+    "normalized_entropy": 0.8191,
+    "weight": 0.000378,
+    "volume_1mo": 49088.34,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 187
+  },
+  {
+    "id": "1466422",
+    "label": "Will Iran strike Turkey in March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.06,
+      0.94
+    ],
+    "normalized_entropy": 0.3274,
+    "weight": 0.000371,
+    "volume_1mo": 48088.74,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 188
+  },
+  {
+    "id": "628935",
+    "label": "NATO x Russia military clash by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0385,
+      0.9615
+    ],
+    "normalized_entropy": 0.2354,
+    "weight": 0.000371,
+    "volume_1mo": 48059.68,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 189
+  },
+  {
+    "id": "237598",
+    "label": "Iran leader end of 2026?",
+    "source_type": "event",
+    "num_outcomes": 31,
+    "probabilities": [
+      0.0157,
+      0.0116,
+      0.0101,
+      0.5066,
+      0.0051,
+      0.1366,
+      0.0051,
+      0.003,
+      0.0081,
+      0.003,
+      0.0051,
+      0.0056,
+      0.0197,
+      0.0086,
+      0.0061,
+      0.0046,
+      0.0152,
+      0.0557,
+      0.0061,
+      0.0101,
+      0.0501,
+      0.002,
+      0.0051,
+      0.0197,
+      0.0132,
+      0.0177,
+      0.0071,
+      0.0015,
+      0.004,
+      0.0359,
+      0.002
+    ],
+    "normalized_entropy": 0.5922,
+    "weight": 0.000354,
+    "volume_1mo": 45932.79,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 190
+  },
+  {
+    "id": "1169227",
+    "label": "Kang Sun-woo in jail by March 31? ",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.999,
+      0.001
+    ],
+    "normalized_entropy": 0.0114,
+    "weight": 0.000354,
+    "volume_1mo": 45927.76,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 191
+  },
+  {
+    "id": "1336383",
+    "label": "Another critical Cloudflare incident by April 30, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.59,
+      0.41
+    ],
+    "normalized_entropy": 0.9765,
+    "weight": 0.00035,
+    "volume_1mo": 45417.63,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 192
+  },
+  {
+    "id": "1418674",
+    "label": "Will Russia capture all of Huliaipole by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.59,
+      0.41
+    ],
+    "normalized_entropy": 0.9765,
+    "weight": 0.000348,
+    "volume_1mo": 45106.86,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 193
+  },
+  {
+    "id": "689399",
+    "label": "Miguel D\u00edaz-Canel out as President of Cuba by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.42,
+      0.58
+    ],
+    "normalized_entropy": 0.9815,
+    "weight": 0.000344,
+    "volume_1mo": 44628.66,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 194
+  },
+  {
+    "id": "1437241",
+    "label": "Will Israel strike Lebanon on March 4, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.995,
+      0.005
+    ],
+    "normalized_entropy": 0.0454,
+    "weight": 0.000335,
+    "volume_1mo": 43411.46,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 195
+  },
+  {
+    "id": "1280208",
+    "label": "Israeli parliament dissolved by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.57,
+      0.43
+    ],
+    "normalized_entropy": 0.9858,
+    "weight": 0.000334,
+    "volume_1mo": 43375.92,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 196
+  },
+  {
+    "id": "1472014",
+    "label": "Will Turkey strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0505,
+      0.9495
+    ],
+    "normalized_entropy": 0.2885,
+    "weight": 0.000333,
+    "volume_1mo": 43226.14,
+    "end_date": null,
+    "rank": 197
+  },
+  {
+    "id": "1466425",
+    "label": "Will Iran strike Qatar in March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.984,
+      0.016
+    ],
+    "normalized_entropy": 0.1184,
+    "weight": 0.000329,
+    "volume_1mo": 42702.73,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 198
+  },
+  {
+    "id": "1076686",
+    "label": "Will Somaliland join the Abraham Accords before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.39,
+      0.61
+    ],
+    "normalized_entropy": 0.9648,
+    "weight": 0.000326,
+    "volume_1mo": 42326.2,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 199
+  },
+  {
+    "id": "677315",
+    "label": "Israel and Indonesia normalize relations by December 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.185,
+      0.815
+    ],
+    "normalized_entropy": 0.6909,
+    "weight": 0.000314,
+    "volume_1mo": 40732.16,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 200
+  },
+  {
+    "id": "1487678",
+    "label": "Houthi strike on Israel by March 6, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.155,
+      0.845
+    ],
+    "normalized_entropy": 0.6222,
+    "weight": 0.00031,
+    "volume_1mo": 40166.45,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 201
+  },
+  {
+    "id": "665427",
+    "label": "Will a new country join the Abraham Accords before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.7475,
+      0.2525
+    ],
+    "normalized_entropy": 0.8152,
+    "weight": 0.000307,
+    "volume_1mo": 39759.06,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 202
+  },
+  {
+    "id": "204619",
+    "label": "South Korea By-Elections: Party Winner",
+    "source_type": "event",
+    "num_outcomes": 5,
+    "probabilities": [
+      0.0266,
+      0.0014,
+      0.9309,
+      0.0198,
+      0.0213
+    ],
+    "normalized_entropy": 0.2064,
+    "weight": 0.000305,
+    "volume_1mo": 39601.28,
+    "end_date": null,
+    "rank": 203
+  },
+  {
+    "id": "1124169",
+    "label": "Will Trump visit Greenland by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.031,
+      0.969
+    ],
+    "normalized_entropy": 0.1994,
+    "weight": 0.000303,
+    "volume_1mo": 39267.6,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 204
+  },
+  {
+    "id": "567690",
+    "label": "Erdo\u011fan out by end of 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.105,
+      0.895
+    ],
+    "normalized_entropy": 0.4846,
+    "weight": 0.0003,
+    "volume_1mo": 38908.78,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 205
+  },
+  {
+    "id": "1466419",
+    "label": "Will Iran strike Bahrain in March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.9865,
+      0.0135
+    ],
+    "normalized_entropy": 0.1032,
+    "weight": 0.000297,
+    "volume_1mo": 38582.76,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 206
+  },
+  {
+    "id": "83686",
+    "label": "Incheon Mayoral Election Winner",
+    "source_type": "event",
+    "num_outcomes": 9,
+    "probabilities": [
+      0.0287,
+      0.003,
+      0.9311,
+      0.0015,
+      0.0171,
+      0.0091,
+      0.0015,
+      0.0065,
+      0.0015
+    ],
+    "normalized_entropy": 0.1641,
+    "weight": 0.000297,
+    "volume_1mo": 38520.44,
+    "end_date": "2026-06-03T00:00:00+00:00",
+    "rank": 207
+  },
+  {
+    "id": "676803",
+    "label": "Will a Chinese AI model become #1 by June 30? ",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.145,
+      0.855
+    ],
+    "normalized_entropy": 0.5972,
+    "weight": 0.000296,
+    "volume_1mo": 38426.27,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 208
+  },
+  {
+    "id": "1487829",
+    "label": "Will Israel's Ben Gurion Airport reopen by March 4?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0605,
+      0.9395
+    ],
+    "normalized_entropy": 0.3294,
+    "weight": 0.000294,
+    "volume_1mo": 38179.75,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 209
+  },
+  {
+    "id": "1467137",
+    "label": "Will Iran strike Israel on March 4?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.695,
+      0.305
+    ],
+    "normalized_entropy": 0.8873,
+    "weight": 0.000293,
+    "volume_1mo": 38024.01,
+    "end_date": null,
+    "rank": 210
+  },
+  {
+    "id": "1471840",
+    "label": "Will Israel or the US target an Iranian oil or gas facility?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.55,
+      0.45
+    ],
+    "normalized_entropy": 0.9928,
+    "weight": 0.000293,
+    "volume_1mo": 37994.45,
+    "end_date": null,
+    "rank": 211
+  },
+  {
+    "id": "79932",
+    "label": "How many different countries will the US strike in 2026?",
+    "source_type": "event",
+    "num_outcomes": 12,
+    "probabilities": [
+      0.0307,
+      0.2479,
+      0.1225,
+      0.0615,
+      0.0273,
+      0.0084,
+      0.0431,
+      0.3198,
+      0.0902,
+      0.0307,
+      0.0109,
+      0.0069
+    ],
+    "normalized_entropy": 0.7759,
+    "weight": 0.000292,
+    "volume_1mo": 37822.49,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 212
+  },
+  {
+    "id": "1478045",
+    "label": "Will Iran hold a presidential election by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.135,
+      0.865
+    ],
+    "normalized_entropy": 0.571,
+    "weight": 0.000287,
+    "volume_1mo": 37164.16,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 213
+  },
+  {
+    "id": "1090489",
+    "label": "Israel x Hamas ceasefire cancelled by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.36,
+      0.64
+    ],
+    "normalized_entropy": 0.9427,
+    "weight": 0.000285,
+    "volume_1mo": 36941.29,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 214
+  },
+  {
+    "id": "1117255",
+    "label": "Mahmoud Abbas out as Palestinian President by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.195,
+      0.805
+    ],
+    "normalized_entropy": 0.7118,
+    "weight": 0.000284,
+    "volume_1mo": 36789.37,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 215
+  },
+  {
+    "id": "230954",
+    "label": "How many different countries will Israel strike in March?",
+    "source_type": "event",
+    "num_outcomes": 3,
+    "probabilities": [
+      0.3263,
+      0.1632,
+      0.5105
+    ],
+    "normalized_entropy": 0.9143,
+    "weight": 0.000281,
+    "volume_1mo": 36394.16,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 216
+  },
+  {
+    "id": "1144503",
+    "label": "Odds Trump acquires Greenland before 2027 hit 50% by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0155,
+      0.9845
+    ],
+    "normalized_entropy": 0.1154,
+    "weight": 0.000277,
+    "volume_1mo": 35959.38,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 217
+  },
+  {
+    "id": "1472018",
+    "label": "Will Bahrain strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.235,
+      0.765
+    ],
+    "normalized_entropy": 0.7866,
+    "weight": 0.000277,
+    "volume_1mo": 35911.9,
+    "end_date": null,
+    "rank": 218
+  },
+  {
+    "id": "1427956",
+    "label": "US seizes an Iran-linked oil tanker by March 7?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.155,
+      0.845
+    ],
+    "normalized_entropy": 0.6222,
+    "weight": 0.000271,
+    "volume_1mo": 35179.71,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 219
+  },
+  {
+    "id": "1404777",
+    "label": " Eileen Gu citizenship revoked ?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.065,
+      0.935
+    ],
+    "normalized_entropy": 0.347,
+    "weight": 0.000267,
+    "volume_1mo": 34580.48,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 220
+  },
+  {
+    "id": "1455407",
+    "label": "US x Iran meeting by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.25,
+      0.75
+    ],
+    "normalized_entropy": 0.8113,
+    "weight": 0.000263,
+    "volume_1mo": 34172.41,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 221
+  },
+  {
+    "id": "665414",
+    "label": "Israel and Lebanon normalize relations before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.205,
+      0.795
+    ],
+    "normalized_entropy": 0.7318,
+    "weight": 0.000256,
+    "volume_1mo": 33220.07,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 222
+  },
+  {
+    "id": "1369483",
+    "label": "Greta Thunberg arrested by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.59,
+      0.41
+    ],
+    "normalized_entropy": 0.9765,
+    "weight": 0.000256,
+    "volume_1mo": 33217.54,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 223
+  },
+  {
+    "id": "1367007",
+    "label": "U.S. anti-cartel ground operation in Mexico by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.2,
+      0.8
+    ],
+    "normalized_entropy": 0.7219,
+    "weight": 0.000253,
+    "volume_1mo": 32823.55,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 224
+  },
+  {
+    "id": "1485169",
+    "label": "Will any E.U. country strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.26,
+      0.74
+    ],
+    "normalized_entropy": 0.8267,
+    "weight": 0.000251,
+    "volume_1mo": 32507.83,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 225
+  },
+  {
+    "id": "1184757",
+    "label": "Will Russia capture Bilytske by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.125,
+      0.875
+    ],
+    "normalized_entropy": 0.5436,
+    "weight": 0.000246,
+    "volume_1mo": 31868.27,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 226
+  },
+  {
+    "id": "1286160",
+    "label": "Zhang Youxia sentenced to prison before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.26,
+      0.74
+    ],
+    "normalized_entropy": 0.8267,
+    "weight": 0.000239,
+    "volume_1mo": 31036.27,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 227
+  },
+  {
+    "id": "1455575",
+    "label": "Will Trump meet with King of Morocco Mohammed VI in March 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.38,
+      0.62
+    ],
+    "normalized_entropy": 0.958,
+    "weight": 0.000236,
+    "volume_1mo": 30656.47,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 228
+  },
+  {
+    "id": "1342509",
+    "label": "Another critical Cloudflare incident by June 30, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.86,
+      0.14
+    ],
+    "normalized_entropy": 0.5842,
+    "weight": 0.000233,
+    "volume_1mo": 30159.36,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 229
+  },
+  {
+    "id": "1471740",
+    "label": "Will Iran strike Dimona by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.1,
+      0.9
+    ],
+    "normalized_entropy": 0.469,
+    "weight": 0.000232,
+    "volume_1mo": 30106.74,
+    "end_date": null,
+    "rank": 230
+  },
+  {
+    "id": "1466855",
+    "label": "Will Iran strike a Gulf State on March 3?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.9935,
+      0.0065
+    ],
+    "normalized_entropy": 0.0566,
+    "weight": 0.000232,
+    "volume_1mo": 30083.97,
+    "end_date": null,
+    "rank": 231
+  },
+  {
+    "id": "1427961",
+    "label": "U.S. forces seize another oil tanker by March 7?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.17,
+      0.83
+    ],
+    "normalized_entropy": 0.6577,
+    "weight": 0.000231,
+    "volume_1mo": 29936.12,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 232
+  },
+  {
+    "id": "79988",
+    "label": "2026 Busan Mayoral Election Winner",
+    "source_type": "event",
+    "num_outcomes": 12,
+    "probabilities": [
+      0.3084,
+      0.002,
+      0.002,
+      0.0071,
+      0.0025,
+      0.002,
+      0.002,
+      0.0056,
+      0.002,
+      0.6623,
+      0.0015,
+      0.0025
+    ],
+    "normalized_entropy": 0.3229,
+    "weight": 0.000224,
+    "volume_1mo": 29115.55,
+    "end_date": "2026-06-03T00:00:00+00:00",
+    "rank": 233
+  },
+  {
+    "id": "1467771",
+    "label": "Will Crude Oil (CL) hit (LOW) $65 by end of March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.28,
+      0.72
+    ],
+    "normalized_entropy": 0.8555,
+    "weight": 0.000223,
+    "volume_1mo": 28976.49,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 234
+  },
+  {
+    "id": "955825",
+    "label": "Nuclear weapon detonation by December 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.26,
+      0.74
+    ],
+    "normalized_entropy": 0.8267,
+    "weight": 0.00022,
+    "volume_1mo": 28557.35,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 235
+  },
+  {
+    "id": "1386649",
+    "label": "Will Trump visit North Korea by April 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0905,
+      0.9095
+    ],
+    "normalized_entropy": 0.4381,
+    "weight": 0.000217,
+    "volume_1mo": 28206.66,
+    "end_date": "2026-04-30T00:00:00+00:00",
+    "rank": 236
+  },
+  {
+    "id": "1472015",
+    "label": "Will Canada strike Iran by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.026,
+      0.974
+    ],
+    "normalized_entropy": 0.1739,
+    "weight": 0.000214,
+    "volume_1mo": 27757.86,
+    "end_date": null,
+    "rank": 237
+  },
+  {
+    "id": "665485",
+    "label": "U.S. forces in Gaza before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.31,
+      0.69
+    ],
+    "normalized_entropy": 0.8932,
+    "weight": 0.000209,
+    "volume_1mo": 27100.65,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 238
+  },
+  {
+    "id": "1090495",
+    "label": "Will Russia capture all of Donetsk Oblast by June 30, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.034,
+      0.966
+    ],
+    "normalized_entropy": 0.2141,
+    "weight": 0.000207,
+    "volume_1mo": 26888.06,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 239
+  },
+  {
+    "id": "1183734",
+    "label": "Kadyrov out as Head of the Chechen Republic by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.036,
+      0.964
+    ],
+    "normalized_entropy": 0.2236,
+    "weight": 0.000206,
+    "volume_1mo": 26757.54,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 240
+  },
+  {
+    "id": "1342508",
+    "label": "Another critical Cloudflare incident by May 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.7865,
+      0.2135
+    ],
+    "normalized_entropy": 0.7481,
+    "weight": 0.000204,
+    "volume_1mo": 26413.42,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 241
+  },
+  {
+    "id": "1114326",
+    "label": "Delcy Rodr\u00edguez out as leader of Venezuela by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0235,
+      0.9765
+    ],
+    "normalized_entropy": 0.1607,
+    "weight": 0.000203,
+    "volume_1mo": 26284.08,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 242
+  },
+  {
+    "id": "1007516",
+    "label": "Will Russia enter Orikhiv by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.07,
+      0.93
+    ],
+    "normalized_entropy": 0.3659,
+    "weight": 0.000201,
+    "volume_1mo": 26055.86,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 243
+  },
+  {
+    "id": "1437329",
+    "label": "Will Israel strike Gaza on March 1, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.013,
+      0.987
+    ],
+    "normalized_entropy": 0.1001,
+    "weight": 0.000198,
+    "volume_1mo": 25706.05,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 244
+  },
+  {
+    "id": "1007631",
+    "label": "Will Russia enter Druzkhivka by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.255,
+      0.745
+    ],
+    "normalized_entropy": 0.8191,
+    "weight": 0.000197,
+    "volume_1mo": 25605.86,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 245
+  },
+  {
+    "id": "1437330",
+    "label": "Will Israel strike Gaza on March 2, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.006,
+      0.994
+    ],
+    "normalized_entropy": 0.0529,
+    "weight": 0.000196,
+    "volume_1mo": 25383.05,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 246
+  },
+  {
+    "id": "1007633",
+    "label": "Will Russia enter Kramatorsk by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.185,
+      0.815
+    ],
+    "normalized_entropy": 0.6909,
+    "weight": 0.000195,
+    "volume_1mo": 25265.93,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 247
+  },
+  {
+    "id": "1007636",
+    "label": "Will Russia enter Zaporizhia by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.085,
+      0.915
+    ],
+    "normalized_entropy": 0.4196,
+    "weight": 0.000194,
+    "volume_1mo": 25195.63,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 248
+  },
+  {
+    "id": "1418743",
+    "label": "Will Ukraine re-enter Huliaipole by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.265,
+      0.735
+    ],
+    "normalized_entropy": 0.8342,
+    "weight": 0.000194,
+    "volume_1mo": 25115.87,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 249
+  },
+  {
+    "id": "1485771",
+    "label": "Will Iran name a successor to Khamenei by March 4?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.59,
+      0.41
+    ],
+    "normalized_entropy": 0.9765,
+    "weight": 0.000194,
+    "volume_1mo": 25099.81,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 250
+  },
+  {
+    "id": "1067187",
+    "label": "Xi Jinping divorce before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.022,
+      0.978
+    ],
+    "normalized_entropy": 0.1525,
+    "weight": 0.000193,
+    "volume_1mo": 25022.98,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 251
+  },
+  {
+    "id": "1117256",
+    "label": "Mahmoud Abbas out as Palestinian President by December 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.445,
+      0.555
+    ],
+    "normalized_entropy": 0.9913,
+    "weight": 0.000192,
+    "volume_1mo": 24939.37,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 252
+  },
+  {
+    "id": "665480",
+    "label": "Will US withdraw from NATO before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.06,
+      0.94
+    ],
+    "normalized_entropy": 0.3274,
+    "weight": 0.000191,
+    "volume_1mo": 24835.93,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 253
+  },
+  {
+    "id": "1177578",
+    "label": "US confirms Havana Syndrome\u2013causing device by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.029,
+      0.971
+    ],
+    "normalized_entropy": 0.1894,
+    "weight": 0.00019,
+    "volume_1mo": 24588.71,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 254
+  },
+  {
+    "id": "1439957",
+    "label": "Trump announces new drug boat strike by March 14, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.695,
+      0.305
+    ],
+    "normalized_entropy": 0.8873,
+    "weight": 0.00019,
+    "volume_1mo": 24586.5,
+    "end_date": "2026-03-14T00:00:00+00:00",
+    "rank": 255
+  },
+  {
+    "id": "1455578",
+    "label": "Will Trump meet with Satya Nadella in March 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.355,
+      0.645
+    ],
+    "normalized_entropy": 0.9385,
+    "weight": 0.000189,
+    "volume_1mo": 24570.65,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 256
+  },
+  {
+    "id": "1048397",
+    "label": "U.S. agrees to give Ukraine security guarantee by June 30? ",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.195,
+      0.805
+    ],
+    "normalized_entropy": 0.7118,
+    "weight": 0.000187,
+    "volume_1mo": 24296.73,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 257
+  },
+  {
+    "id": "956981",
+    "label": "Ukraine agrees not to join NATO by March 31? ",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.049,
+      0.951
+    ],
+    "normalized_entropy": 0.2821,
+    "weight": 0.000186,
+    "volume_1mo": 24121.16,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 258
+  },
+  {
+    "id": "665474",
+    "label": "Will Saudi Arabia join the Abraham Accords before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.18,
+      0.82
+    ],
+    "normalized_entropy": 0.6801,
+    "weight": 0.000185,
+    "volume_1mo": 24010.5,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 259
+  },
+  {
+    "id": "1352756",
+    "label": "Will Russia enter Khatnie by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.14,
+      0.86
+    ],
+    "normalized_entropy": 0.5842,
+    "weight": 0.000185,
+    "volume_1mo": 24003.11,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 260
+  },
+  {
+    "id": "1438626",
+    "label": "Will USD fall to 1.6M Iranian rials by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.72,
+      0.28
+    ],
+    "normalized_entropy": 0.8555,
+    "weight": 0.000185,
+    "volume_1mo": 23974.0,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 261
+  },
+  {
+    "id": "665472",
+    "label": "Will Syria join the Abraham Accords before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.16,
+      0.84
+    ],
+    "normalized_entropy": 0.6343,
+    "weight": 0.000183,
+    "volume_1mo": 23717.82,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 262
+  },
+  {
+    "id": "1471982",
+    "label": "Will Israel or the US target Isfahan Nuclear Technology Center nuclear facility?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.97,
+      0.03
+    ],
+    "normalized_entropy": 0.1944,
+    "weight": 0.000182,
+    "volume_1mo": 23540.95,
+    "end_date": null,
+    "rank": 263
+  },
+  {
+    "id": "1484895",
+    "label": "US x Iran ceasefire by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.735,
+      0.265
+    ],
+    "normalized_entropy": 0.8342,
+    "weight": 0.000178,
+    "volume_1mo": 23114.81,
+    "end_date": "2026-05-31T00:00:00+00:00",
+    "rank": 264
+  },
+  {
+    "id": "1466421",
+    "label": "Will Iran strike Kuwait in March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.967,
+      0.033
+    ],
+    "normalized_entropy": 0.2092,
+    "weight": 0.000177,
+    "volume_1mo": 22918.76,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 265
+  },
+  {
+    "id": "665470",
+    "label": "Will Oman join the Abraham Accords before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.19,
+      0.81
+    ],
+    "normalized_entropy": 0.7015,
+    "weight": 0.000172,
+    "volume_1mo": 22269.07,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 266
+  },
+  {
+    "id": "665217",
+    "label": "Israel and Saudi Arabia normalize relations by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.048,
+      0.952
+    ],
+    "normalized_entropy": 0.2778,
+    "weight": 0.00017,
+    "volume_1mo": 22044.06,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 267
+  },
+  {
+    "id": "666711",
+    "label": "Will the U.S. test a nuclear weapon by March 31 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0225,
+      0.9775
+    ],
+    "normalized_entropy": 0.1553,
+    "weight": 0.000169,
+    "volume_1mo": 21975.47,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 268
+  },
+  {
+    "id": "665502",
+    "label": "Will a province schedule a referendum to leave Canada before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.625,
+      0.375
+    ],
+    "normalized_entropy": 0.9544,
+    "weight": 0.000169,
+    "volume_1mo": 21937.67,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 269
+  },
+  {
+    "id": "665484",
+    "label": "Israel x Turkey military clash before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.205,
+      0.795
+    ],
+    "normalized_entropy": 0.7318,
+    "weight": 0.000168,
+    "volume_1mo": 21726.63,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 270
+  },
+  {
+    "id": "665475",
+    "label": "Will Azerbaijan join the Abraham Accords before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.19,
+      0.81
+    ],
+    "normalized_entropy": 0.7015,
+    "weight": 0.000164,
+    "volume_1mo": 21229.95,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 271
+  },
+  {
+    "id": "1397296",
+    "label": "Will Russia capture all of Hryshyne by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.705,
+      0.295
+    ],
+    "normalized_entropy": 0.8751,
+    "weight": 0.000163,
+    "volume_1mo": 21191.89,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 272
+  },
+  {
+    "id": "704240",
+    "label": "2k+ container ship transits of Suez Canal in H1 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.065,
+      0.935
+    ],
+    "normalized_entropy": 0.347,
+    "weight": 0.000163,
+    "volume_1mo": 21172.23,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 273
+  },
+  {
+    "id": "1007628",
+    "label": "Will Russia enter Sloviansk by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.215,
+      0.785
+    ],
+    "normalized_entropy": 0.7509,
+    "weight": 0.000163,
+    "volume_1mo": 21170.14,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 274
+  },
+  {
+    "id": "1484894",
+    "label": "US x Iran ceasefire by May 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.67,
+      0.33
+    ],
+    "normalized_entropy": 0.9149,
+    "weight": 0.000162,
+    "volume_1mo": 21059.54,
+    "end_date": "2026-05-31T00:00:00+00:00",
+    "rank": 275
+  },
+  {
+    "id": "891408",
+    "label": "EU dissolves before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0395,
+      0.9605
+    ],
+    "normalized_entropy": 0.24,
+    "weight": 0.000162,
+    "volume_1mo": 20965.38,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 276
+  },
+  {
+    "id": "1418686",
+    "label": "Will Russia capture Drobysheve by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.9815,
+      0.0185
+    ],
+    "normalized_entropy": 0.1329,
+    "weight": 0.000161,
+    "volume_1mo": 20872.17,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 277
+  },
+  {
+    "id": "1116701",
+    "label": "Viktor Orb\u00e1n out in 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.63,
+      0.37
+    ],
+    "normalized_entropy": 0.9507,
+    "weight": 0.00016,
+    "volume_1mo": 20724.55,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 278
+  },
+  {
+    "id": "663472",
+    "label": "Will Trump meet with Putin by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.032,
+      0.968
+    ],
+    "normalized_entropy": 0.2043,
+    "weight": 0.000158,
+    "volume_1mo": 20499.73,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 279
+  },
+  {
+    "id": "1487679",
+    "label": "Houthi strike on Israel by March 15, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.315,
+      0.685
+    ],
+    "normalized_entropy": 0.8989,
+    "weight": 0.000156,
+    "volume_1mo": 20277.37,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 280
+  },
+  {
+    "id": "1471983",
+    "label": "Will Israel or the US target Natanz Uranium Enrichment Facility?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.985,
+      0.015
+    ],
+    "normalized_entropy": 0.1124,
+    "weight": 0.000156,
+    "volume_1mo": 20273.77,
+    "end_date": null,
+    "rank": 281
+  },
+  {
+    "id": "1485773",
+    "label": "Will Iran name a successor to Khamenei by March 7?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.72,
+      0.28
+    ],
+    "normalized_entropy": 0.8555,
+    "weight": 0.000156,
+    "volume_1mo": 20222.1,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 282
+  },
+  {
+    "id": "1439093",
+    "label": "US x Cuba military clash in 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.34,
+      0.66
+    ],
+    "normalized_entropy": 0.9248,
+    "weight": 0.000154,
+    "volume_1mo": 19934.19,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 283
+  },
+  {
+    "id": "1484914",
+    "label": "Iran x Israel/US conflict ends by May 15?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.665,
+      0.335
+    ],
+    "normalized_entropy": 0.92,
+    "weight": 0.000154,
+    "volume_1mo": 19922.96,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 284
+  },
+  {
+    "id": "1466424",
+    "label": "Will Iran strike Jordan in March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.71,
+      0.29
+    ],
+    "normalized_entropy": 0.8687,
+    "weight": 0.000153,
+    "volume_1mo": 19806.46,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 285
+  },
+  {
+    "id": "1116981",
+    "label": "Will the U.S. invade Mexico in 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.08,
+      0.92
+    ],
+    "normalized_entropy": 0.4022,
+    "weight": 0.000153,
+    "volume_1mo": 19785.59,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 286
+  },
+  {
+    "id": "203617",
+    "label": "South Korean Unemployment Up/Down in February?",
+    "source_type": "event",
+    "num_outcomes": 3,
+    "probabilities": [
+      0.412,
+      0.25,
+      0.338
+    ],
+    "normalized_entropy": 0.9817,
+    "weight": 0.00015,
+    "volume_1mo": 19493.96,
+    "end_date": "2026-03-18T00:00:00+00:00",
+    "rank": 287
+  },
+  {
+    "id": "1486157",
+    "label": "Will Israel's Ben Gurion Airport reopen by March 15?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.755,
+      0.245
+    ],
+    "normalized_entropy": 0.8033,
+    "weight": 0.000148,
+    "volume_1mo": 19218.08,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 288
+  },
+  {
+    "id": "682144",
+    "label": "U.S. Embassy in Damascus reopened by June 30, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.39,
+      0.61
+    ],
+    "normalized_entropy": 0.9648,
+    "weight": 0.000146,
+    "volume_1mo": 18954.53,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 289
+  },
+  {
+    "id": "1485772",
+    "label": "Will Iran name a successor to Khamenei by March 5?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.655,
+      0.345
+    ],
+    "normalized_entropy": 0.9295,
+    "weight": 0.000146,
+    "volume_1mo": 18906.46,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 290
+  },
+  {
+    "id": "1468051",
+    "label": "Will the Kharg Island oil terminal be hit by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.395,
+      0.605
+    ],
+    "normalized_entropy": 0.968,
+    "weight": 0.000145,
+    "volume_1mo": 18832.26,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 291
+  },
+  {
+    "id": "1106656",
+    "label": "Gustavo Petro out as leader of Colombia by June 30?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.0355,
+      0.9645
+    ],
+    "normalized_entropy": 0.2213,
+    "weight": 0.000144,
+    "volume_1mo": 18710.64,
+    "end_date": "2026-06-30T00:00:00+00:00",
+    "rank": 292
+  },
+  {
+    "id": "1437242",
+    "label": "Will Israel strike Lebanon on March 5, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.963,
+      0.037
+    ],
+    "normalized_entropy": 0.2284,
+    "weight": 0.000144,
+    "volume_1mo": 18656.64,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 293
+  },
+  {
+    "id": "1336157",
+    "label": "Will Russia capture all of Drobysheve by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.138,
+      0.862
+    ],
+    "normalized_entropy": 0.579,
+    "weight": 0.000143,
+    "volume_1mo": 18584.9,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 294
+  },
+  {
+    "id": "677404",
+    "label": "China x India military clash by December 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.185,
+      0.815
+    ],
+    "normalized_entropy": 0.6909,
+    "weight": 0.000142,
+    "volume_1mo": 18457.37,
+    "end_date": "2026-12-31T12:00:00+00:00",
+    "rank": 295
+  },
+  {
+    "id": "665515",
+    "label": "Will Israel annex West Bank territory before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.195,
+      0.805
+    ],
+    "normalized_entropy": 0.7118,
+    "weight": 0.000142,
+    "volume_1mo": 18441.68,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 296
+  },
+  {
+    "id": "1466432",
+    "label": "Will Iran strike Lebanon in March?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.125,
+      0.875
+    ],
+    "normalized_entropy": 0.5436,
+    "weight": 0.000141,
+    "volume_1mo": 18287.57,
+    "end_date": "2026-03-07T00:00:00+00:00",
+    "rank": 297
+  },
+  {
+    "id": "1097101",
+    "label": "Venezuela election scheduled by March 31, 2026?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.028,
+      0.972
+    ],
+    "normalized_entropy": 0.1843,
+    "weight": 0.00014,
+    "volume_1mo": 18153.13,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 298
+  },
+  {
+    "id": "677352",
+    "label": "Will India strike Pakistan by March 31?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.088,
+      0.912
+    ],
+    "normalized_entropy": 0.4298,
+    "weight": 0.00014,
+    "volume_1mo": 18114.47,
+    "end_date": "2026-03-31T00:00:00+00:00",
+    "rank": 299
+  },
+  {
+    "id": "1373746",
+    "label": "Will Xi Jinping visit US before 2027?",
+    "source_type": "market",
+    "num_outcomes": 2,
+    "probabilities": [
+      0.57,
+      0.43
+    ],
+    "normalized_entropy": 0.9858,
+    "weight": 0.000139,
+    "volume_1mo": 17973.66,
+    "end_date": "2026-12-31T00:00:00+00:00",
+    "rank": 300
+  }
+]
