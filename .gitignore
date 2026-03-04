@@ -1,4 +1,5 @@
 .claude/
 __pycache__/
+data/gp300.db
 data/price_cache.json
 data/backtest_*.json

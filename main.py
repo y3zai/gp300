@@ -10,78 +10,12 @@ Usage:
 """
 
 import argparse
-import json
 import sys
 from datetime import datetime, timezone
-from pathlib import Path
 
+import db
 from api import fetch_geopolitics_events
-from engine import (
-    Constituent,
-    IndexState,
-    run_full_pipeline,
-)
-
-DATA_DIR = Path("data")
-
-
-# ──────────────────────────────────────────────
-# State persistence (JSON files)
-# ──────────────────────────────────────────────
-
-
-def save_current(state: IndexState):
-    """Write data/current.json."""
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    data = {
-        "index_value": round(state.value, 2),
-        "timestamp": state.timestamp.isoformat(),
-        "num_constituents": state.num_constituents,
-        "weighted_entropy": round(state.weighted_entropy, 6),
-        "divisor": state.divisor,
-    }
-    with open(DATA_DIR / "current.json", "w") as f:
-        json.dump(data, f, indent=2)
-
-
-def save_constituents(state: IndexState):
-    """Write data/constituents.json."""
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    data = []
-    for c in sorted(state.constituents, key=lambda x: x.weight, reverse=True):
-        data.append(
-            {
-                "id": c.id,
-                "label": c.label,
-                "source_type": c.source_type,
-                "num_outcomes": c.num_outcomes,
-                "probabilities": [round(p, 4) for p in c.probabilities],
-                "normalized_entropy": round(c.normalized_entropy, 4),
-                "weight": round(c.weight, 6),
-                "volume_1mo": round(c.volume_1mo, 2),
-                "end_date": c.end_date.isoformat() if c.end_date else None,
-                "rank": c.rank,
-            }
-        )
-    with open(DATA_DIR / "constituents.json", "w") as f:
-        json.dump(data, f, indent=2)
-
-
-def append_history(state: IndexState):
-    """Append to data/history.jsonl (JSON Lines format, append-only)."""
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    history_path = DATA_DIR / "history.jsonl"
-
-    entry = {
-        "timestamp": state.timestamp.isoformat(),
-        "value": round(state.value, 2),
-        "num_constituents": state.num_constituents,
-        "weighted_entropy": round(state.weighted_entropy, 6),
-        "divisor": state.divisor,
-    }
-
-    with open(history_path, "a") as f:
-        f.write(json.dumps(entry) + "\n")
+from engine import IndexState, run_full_pipeline
 
 
 def make_constituent_snapshot(constituents) -> list[dict]:
@@ -98,93 +32,6 @@ def make_constituent_snapshot(constituents) -> list[dict]:
         }
         for c in sorted(constituents, key=lambda x: x.weight, reverse=True)
     ]
-
-
-def append_adjustment_log(entry: dict):
-    """Append one JSON line to data/adjustments.jsonl."""
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    with open(DATA_DIR / "adjustments.jsonl", "a") as f:
-        f.write(json.dumps(entry) + "\n")
-
-
-def save_state(state: IndexState):
-    """
-    Save full engine state for resumption.
-
-    This is an internal file (not for the frontend) that stores
-    enough info to resume without re-initializing the index.
-    """
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
-    data = {
-        "value": state.value,
-        "divisor": state.divisor,
-        "weighted_entropy": state.weighted_entropy,
-        "num_constituents": state.num_constituents,
-        "timestamp": state.timestamp.isoformat(),
-        "constituents": [
-            {
-                "id": c.id,
-                "label": c.label,
-                "source_type": c.source_type,
-                "num_outcomes": c.num_outcomes,
-                "probabilities": c.probabilities,
-                "volume_1mo": c.volume_1mo,
-                "end_date": c.end_date.isoformat() if c.end_date else None,
-                "weight": c.weight,
-                "rank": c.rank,
-                "normalized_entropy": c.normalized_entropy,
-                "source_market_ids": c.source_market_ids,
-            }
-            for c in state.constituents
-        ],
-    }
-    with open(DATA_DIR / "state.json", "w") as f:
-        json.dump(data, f, indent=2)
-
-
-def load_state() -> IndexState | None:
-    """Load previous engine state from data/state.json."""
-    state_path = DATA_DIR / "state.json"
-    if not state_path.exists():
-        return None
-
-    with open(state_path) as f:
-        data = json.load(f)
-
-    constituents = []
-    for cd in data.get("constituents", []):
-        end_date = None
-        if cd.get("end_date"):
-            try:
-                end_date = datetime.fromisoformat(cd["end_date"])
-            except (ValueError, TypeError):
-                pass
-
-        c = Constituent(
-            id=cd["id"],
-            label=cd["label"],
-            source_type=cd["source_type"],
-            num_outcomes=cd["num_outcomes"],
-            probabilities=cd["probabilities"],
-            volume_1mo=cd["volume_1mo"],
-            end_date=end_date,
-            weight=cd.get("weight", 0.0),
-            rank=cd.get("rank", 0),
-            normalized_entropy=cd.get("normalized_entropy", 0.0),
-            source_market_ids=cd.get("source_market_ids", []),
-        )
-        constituents.append(c)
-
-    ts = datetime.fromisoformat(data["timestamp"])
-
-    return IndexState(
-        value=data["value"],
-        divisor=data["divisor"],
-        weighted_entropy=data["weighted_entropy"],
-        num_constituents=data["num_constituents"],
-        timestamp=ts,
-        constituents=constituents,
-    )
 
 
 # ──────────────────────────────────────────────
@@ -211,7 +58,6 @@ def main():
     parser.add_argument(
         "--verbose", "-v", action="store_true", help="Print detailed output"
     )
-
     args = parser.parse_args()
     now = datetime.now(timezone.utc)
 
@@ -225,7 +71,8 @@ def main():
         is_reconstitute = True
 
     # Load previous state
-    prev_state = load_state()
+    conn = db.connect_local()
+    prev_state = db.load_state(conn)
     is_first_run = prev_state is None
 
     if (is_update or is_rebalance) and is_first_run:
@@ -309,20 +156,21 @@ def main():
         n_markets = sum(1 for c in state.constituents if c.source_type == "market")
         print(f"Types: {n_events} multi-outcome events, {n_markets} binary markets")
 
-    # Write output files
+    # Write to database
     if not args.dry_run:
-        print(f"\nWriting output files to {DATA_DIR}/...")
-        save_current(state)
-        save_constituents(state)
-        append_history(state)
-        save_state(state)
-        print("  → current.json, constituents.json, history.jsonl, state.json")
+        print(f"\nWriting to SQLite ({db.DB_PATH})...")
+        db.save_current(conn, state)
+        db.save_constituents(conn, state)
+        db.append_history(conn, state)
+        db.save_state(conn, state)
+        print("  → current, constituents, history, state")
 
         # Append adjustment log for non-trivial events
         ts = state.timestamp.isoformat()
 
         if is_first_run:
-            append_adjustment_log(
+            db.append_adjustment_log(
+                conn,
                 {
                     "event": "initialization",
                     "timestamp": ts,
@@ -331,16 +179,17 @@ def main():
                     "divisor": state.divisor,
                     "weighted_entropy": round(state.weighted_entropy, 6),
                     "constituents": make_constituent_snapshot(state.constituents),
-                }
+                },
             )
-            print("  → adjustments.jsonl (initialization)")
+            print("  → adjustments (initialization)")
 
         elif is_reconstitute and prev_state is not None:
             prev_ids = {c.id for c in prev_state.constituents}
             curr_ids = {c.id for c in state.constituents}
             added_ids = sorted(curr_ids - prev_ids)
             removed_ids = sorted(prev_ids - curr_ids)
-            append_adjustment_log(
+            db.append_adjustment_log(
+                conn,
                 {
                     "event": "reconstitution",
                     "timestamp": ts,
@@ -356,13 +205,14 @@ def main():
                     "added_count": len(added_ids),
                     "removed_count": len(removed_ids),
                     "constituents": make_constituent_snapshot(state.constituents),
-                }
+                },
             )
-            print("  → adjustments.jsonl (reconstitution)")
+            print("  → adjustments (reconstitution)")
 
         elif is_rebalance:
             weights = [c.weight for c in state.constituents]
-            append_adjustment_log(
+            db.append_adjustment_log(
+                conn,
                 {
                     "event": "rebalance",
                     "timestamp": ts,
@@ -376,13 +226,14 @@ def main():
                     "weight_max": round(max(weights), 6),
                     "weight_sum": round(sum(weights), 6),
                     "constituents": make_constituent_snapshot(state.constituents),
-                }
+                },
             )
-            print("  → adjustments.jsonl (rebalance)")
+            print("  → adjustments (rebalance)")
 
         elif is_update and state.removed_constituents:
             removed_ids = sorted(c.id for c in state.removed_constituents)
-            append_adjustment_log(
+            db.append_adjustment_log(
+                conn,
                 {
                     "event": "expiration_removal",
                     "timestamp": ts,
@@ -396,12 +247,14 @@ def main():
                     "index_after": round(state.value, 2),
                     "num_constituents": state.num_constituents,
                     "constituents": make_constituent_snapshot(state.constituents),
-                }
+                },
             )
-            print("  → adjustments.jsonl (expiration_removal)")
+            print("  → adjustments (expiration_removal)")
 
+        conn.close()
     else:
-        print("\n(dry-run: no files written)")
+        conn.close()
+        print("\n(dry-run: no data written)")
 
 
 if __name__ == "__main__":

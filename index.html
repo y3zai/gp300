@@ -363,7 +363,7 @@ footer a {
   </section>
 
   <footer>
-    Data from <a href="https://polymarket.com" target="_blank" rel="noopener">Polymarket</a> &middot; Updated every 30 min
+    Data from <a href="https://polymarket.com" target="_blank" rel="noopener">Polymarket</a> &middot; Updated every 5 min
   </footer>
 </div>
 
@@ -381,31 +381,21 @@ let sortKey = 'rank';
 let sortAsc = true;
 let searchQuery = '';
 
+// --- Config ---
+const API_BASE = '/api';
+
 // --- Data Fetching ---
 async function fetchJSON(path) {
-  const res = await fetch(path + '?t=' + Date.now());
+  const res = await fetch(path + (path.includes('?') ? '&' : '?') + 't=' + Date.now());
   if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
   return res.json();
 }
 
-async function fetchJSONL(path) {
-  const res = await fetch(path + '?t=' + Date.now());
-  if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
-  const text = await res.text();
-  const entries = [];
-  for (const line of text.split('\n')) {
-    if (!line.trim()) continue;
-    try { entries.push(JSON.parse(line)); }
-    catch (e) { /* skip malformed lines */ }
-  }
-  return entries;
-}
-
 async function loadAllData() {
   const [current, history, constituents] = await Promise.all([
-    fetchJSON('data/current.json'),
-    fetchJSONL('data/history.jsonl'),
-    fetchJSON('data/constituents.json'),
+    fetchJSON(API_BASE + '/current'),
+    fetchJSON(API_BASE + '/history'),
+    fetchJSON(API_BASE + '/constituents'),
   ]);
   currentData = current;
   historyData = history;
@@ -685,10 +675,10 @@ async function init() {
   updateSortUI();
   renderTable();
 
-  // Poll current.json every 5 min
+  // Poll current every 5 min
   setInterval(async () => {
     try {
-      currentData = await fetchJSON('data/current.json');
+      currentData = await fetchJSON(API_BASE + '/current');
       renderHeader(activeRange);
     } catch (e) { showToast('Refresh failed'); }
   }, 5 * 60 * 1000);
@@ -697,8 +687,8 @@ async function init() {
   setInterval(async () => {
     try {
       const [history, constituents] = await Promise.all([
-        fetchJSONL('data/history.jsonl'),
-        fetchJSON('data/constituents.json'),
+        fetchJSON(API_BASE + '/history'),
+        fetchJSON(API_BASE + '/constituents'),
       ]);
       historyData = history;
       constituentsData = constituents;

@@ -1,0 +1,12 @@
+name = "gp300"
+main = "src/worker.py"
+compatibility_flags = ["python_workers"]
+compatibility_date = "2026-03-03"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "gp300"
+database_id = "<run `npx wrangler d1 create gp300` and paste the id here>"
+
+[triggers]
+crons = ["*/5 * * * *", "0 0 * * 0", "0 0 1,15 * *"]

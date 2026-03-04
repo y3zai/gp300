@@ -16,25 +16,22 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from typing import Optional
 
-import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
+try:
+    import httpx
+
+    _transport = httpx.HTTPTransport(retries=3)
+    _session = httpx.Client(transport=_transport)
+    _HTTPError = httpx.HTTPError
+except ImportError:
+    # Worker environment — uses js.fetch instead of httpx
+    _session = None
+    _HTTPError = Exception
 
 GAMMA_BASE = "https://gamma-api.polymarket.com"
 CLOB_BASE = "https://clob.polymarket.com"
 GEOPOLITICS_TAG_ID = 100265
 
 logger = logging.getLogger(__name__)
-
-# Module-level session with retry/backoff for connection pooling and resilience
-_session = requests.Session()
-_retry = Retry(
-    total=3,
-    backoff_factor=1,
-    status_forcelist=[429, 500, 502, 503, 504],
-)
-_session.mount("https://", HTTPAdapter(max_retries=_retry))
-_session.mount("http://", HTTPAdapter(max_retries=_retry))
 
 
 @dataclass
@@ -276,7 +273,7 @@ def fetch_market_prices(clob_token_id: str) -> Optional[float]:
         resp.raise_for_status()
         data = resp.json()
         return _safe_float(data.get("price"))
-    except (requests.RequestException, KeyError, ValueError, TypeError):
+    except (_HTTPError, KeyError, ValueError, TypeError):
         return None
 
 
@@ -313,5 +310,5 @@ def fetch_price_history(
         resp.raise_for_status()
         data = resp.json()
         return data.get("history", [])
-    except (requests.RequestException, KeyError, ValueError, TypeError):
+    except (_HTTPError, KeyError, ValueError, TypeError):
         return []
