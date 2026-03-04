@@ -1,599 +1,651 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GP 300 — Geopolitical Prediction Index</title>
-<script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"
-        integrity="sha384-stKllnUqA9AD0gsKCuUtf5XlqAW7PwIgDagoNsTWkjkBmJ/GZ/uHTgEBxdLV2VSK"
-        crossorigin="anonymous"></script>
-<style>
-:root {
-  --bg: #0d1117;
-  --surface: #161b22;
-  --border: #30363d;
-  --text: #e6edf3;
-  --text-muted: #8b949e;
-  --green: #3fb950;
-  --red: #f85149;
-  --blue: #58a6ff;
-  --blue-dim: rgba(88, 166, 255, 0.08);
-}
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.5;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 16px;
-}
-
-/* Header */
-header {
-  border-bottom: 1px solid var(--border);
-  padding: 24px 0;
-}
-
-.header-inner {
-  display: flex;
-  align-items: baseline;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.symbol {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: -0.5px;
-}
-
-.value {
-  font-size: 32px;
-  font-weight: 700;
-  letter-spacing: -0.5px;
-}
-
-.change {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.change.positive { color: var(--green); }
-.change.negative { color: var(--red); }
-
-.timestamp {
-  color: var(--text-muted);
-  font-size: 13px;
-  margin-left: auto;
-}
-
-/* Chart Section */
-#chart-section {
-  border-bottom: 1px solid var(--border);
-  padding: 16px 0 24px;
-}
-
-.period-selector {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-}
-
-.period-btn {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text-muted);
-  padding: 4px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  transition: all 0.15s;
-}
-
-.period-btn:hover {
-  border-color: var(--text-muted);
-  color: var(--text);
-}
-
-.period-btn.active {
-  background: var(--blue-dim);
-  border-color: var(--blue);
-  color: var(--blue);
-}
-
-#chart-container {
-  width: 100%;
-  height: 400px;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-/* Stats Bar */
-#stats-bar {
-  display: flex;
-  gap: 32px;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-  flex-wrap: wrap;
-}
-
-.stat-item {
-  color: var(--text-muted);
-}
-
-.stat-item span {
-  color: var(--text);
-  font-weight: 600;
-}
-
-/* Table Section */
-#table-section {
-  padding: 16px 0 32px;
-}
-
-.search-bar {
-  margin-bottom: 12px;
-}
-
-.search-bar input {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  width: 100%;
-  max-width: 320px;
-  outline: none;
-  transition: border-color 0.15s;
-}
-
-.search-bar input::placeholder { color: var(--text-muted); }
-.search-bar input:focus { border-color: var(--blue); }
-
-.table-wrapper {
-  overflow-x: auto;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-  min-width: 700px;
-}
-
-thead th {
-  background: var(--surface);
-  color: var(--text-muted);
-  font-weight: 600;
-  text-align: left;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
-  cursor: pointer;
-  user-select: none;
-  white-space: nowrap;
-  position: sticky;
-  top: 0;
-}
-
-thead th:hover { color: var(--text); }
-thead th:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
-
-thead th .sort-arrow {
-  display: inline-block;
-  width: 14px;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 11px;
-}
-
-thead th.sort-active .sort-arrow { color: var(--blue); }
-
-tbody tr {
-  border-bottom: 1px solid var(--border);
-  transition: background 0.1s;
-}
-
-tbody tr:last-child { border-bottom: none; }
-tbody tr:hover { background: var(--surface); }
-
-tbody td {
-  padding: 8px 12px;
-  white-space: nowrap;
-}
-
-.badge {
-  display: inline-block;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-
-.badge-event {
-  background: rgba(88, 166, 255, 0.15);
-  color: var(--blue);
-}
-
-.badge-market {
-  background: rgba(63, 185, 80, 0.15);
-  color: var(--green);
-}
-
-td.num {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-}
-
-/* Footer */
-footer {
-  border-top: 1px solid var(--border);
-  padding: 16px 0;
-  text-align: center;
-  color: var(--text-muted);
-  font-size: 13px;
-}
-
-footer a {
-  color: var(--blue);
-  text-decoration: none;
-}
-
-/* Loading */
-.loading-overlay {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 400px;
-  color: var(--text-muted);
-  font-size: 14px;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 1; }
-}
-
-.loading-overlay span { animation: pulse 1.5s ease-in-out infinite; }
-
-/* Toast */
-.toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: var(--surface);
-  border: 1px solid var(--red);
-  color: var(--text);
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  z-index: 100;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.toast.visible { opacity: 1; }
-
-/* Responsive */
-@media (max-width: 768px) {
-  .header-inner {
-    flex-direction: column;
-    gap: 4px;
-  }
-
-  .timestamp { margin-left: 0; }
-
-  .value { font-size: 28px; }
-
-  #chart-container { height: 300px; }
-
-  #stats-bar { gap: 16px; }
-
-  .col-volume, .col-expiry { display: none; }
-}
-</style>
-</head>
-<body>
-
-<div class="container">
-  <header>
-    <div class="header-inner">
-      <span class="symbol">GP 300</span>
-      <span class="value" id="index-value">—</span>
-      <span class="change" id="index-change"></span>
-      <span class="timestamp" id="index-timestamp"></span>
-    </div>
-  </header>
-
-  <section id="chart-section">
-    <div class="period-selector" id="period-selector">
-      <button class="period-btn" data-range="1D">1D</button>
-      <button class="period-btn" data-range="1W">1W</button>
-      <button class="period-btn" data-range="1M">1M</button>
-      <button class="period-btn" data-range="3M">3M</button>
-      <button class="period-btn" data-range="YTD">YTD</button>
-      <button class="period-btn" data-range="1Y">1Y</button>
-      <button class="period-btn" data-range="5Y">5Y</button>
-      <button class="period-btn active" data-range="MAX">MAX</button>
-    </div>
-    <div id="chart-container">
-      <div class="loading-overlay" id="chart-loading"><span>Loading chart data...</span></div>
-    </div>
-  </section>
-
-  <section id="stats-bar">
-    <div class="stat-item">Constituents: <span id="stat-constituents">—</span></div>
-    <div class="stat-item">Weighted Entropy: <span id="stat-entropy">—</span></div>
-  </section>
-
-  <section id="table-section">
-    <div class="search-bar">
-      <input type="text" id="search-input" placeholder="Search constituents...">
-    </div>
-    <div class="table-wrapper">
-      <table id="constituent-table">
-        <thead>
-          <tr>
-            <th data-key="rank">Rank <span class="sort-arrow"></span></th>
-            <th data-key="label">Name <span class="sort-arrow"></span></th>
-            <th data-key="source_type">Type <span class="sort-arrow"></span></th>
-            <th data-key="weight" class="num">Weight <span class="sort-arrow"></span></th>
-            <th data-key="normalized_entropy" class="num">Entropy <span class="sort-arrow"></span></th>
-            <th data-key="volume_1mo" class="num col-volume">Volume <span class="sort-arrow"></span></th>
-            <th data-key="end_date" class="col-expiry">Expiry <span class="sort-arrow"></span></th>
-          </tr>
-        </thead>
-        <tbody id="table-body"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <footer>
-    Data from <a href="https://polymarket.com" target="_blank" rel="noopener">Polymarket</a> &middot; Updated every 5 min
-  </footer>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-// --- State ---
-let currentData = null;
-let historyData = [];
-let constituentsData = [];
-let chart = null;
-let areaSeries = null;
-let activeRange = 'MAX';
-let sortKey = 'rank';
-let sortAsc = true;
-let searchQuery = '';
-
-// --- Config ---
-const API_BASE = '/api';
-
-// --- Data Fetching ---
-async function fetchJSON(path) {
-  const res = await fetch(path + (path.includes('?') ? '&' : '?') + 't=' + Date.now());
-  if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
-  return res.json();
-}
-
-async function loadAllData() {
-  const [current, history, constituents] = await Promise.all([
-    fetchJSON(API_BASE + '/current'),
-    fetchJSON(API_BASE + '/history'),
-    fetchJSON(API_BASE + '/constituents'),
-  ]);
-  currentData = current;
-  historyData = history;
-  constituentsData = constituents;
-}
-
-function showToast(msg) {
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('visible');
-  setTimeout(() => el.classList.remove('visible'), 4000);
-}
-
-// --- Formatting ---
-function formatNumber(n) {
-  return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function formatWeight(w) {
-  return (w * 100).toFixed(2) + '%';
-}
-
-function formatVolume(v) {
-  if (v >= 1e9) return '$' + (v / 1e9).toFixed(1) + 'B';
-  if (v >= 1e6) return '$' + (v / 1e6).toFixed(1) + 'M';
-  if (v >= 1e3) return '$' + (v / 1e3).toFixed(1) + 'K';
-  return '$' + v.toFixed(0);
-}
-
-function formatDate(iso) {
-  if (!iso) return '—';
-  const d = new Date(iso);
-  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-}
-
-function formatTimestamp(iso) {
-  const d = new Date(iso);
-  return 'As of ' + d.toLocaleString('en-US', {
-    month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short'
-  });
-}
-
-// --- Time Range ---
-function getRangeCutoff(range) {
-  const now = new Date();
-  switch (range) {
-    case '1D': return new Date(now - 24 * 60 * 60 * 1000);
-    case '1W': return new Date(now - 7 * 24 * 60 * 60 * 1000);
-    case '1M': return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-    case '3M': return new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
-    case 'YTD': return new Date(now.getFullYear(), 0, 1);
-    case '1Y': return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-    case '5Y': return new Date(now.getFullYear() - 5, now.getMonth(), now.getDate());
-    case 'MAX': return new Date(0);
-    default: return new Date(0);
-  }
-}
-
-function filterHistory(range) {
-  const cutoff = getRangeCutoff(range);
-  return historyData.filter(d => new Date(d.timestamp) >= cutoff);
-}
-
-// --- Chart ---
-function initChart() {
-  const container = document.getElementById('chart-container');
-  document.getElementById('chart-loading').remove();
-
-  chart = LightweightCharts.createChart(container, {
-    layout: {
-      background: { type: 'solid', color: '#0d1117' },
-      textColor: '#8b949e',
-      fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
-    },
-    grid: {
-      vertLines: { color: '#21262d' },
-      horzLines: { color: '#21262d' },
-    },
-    crosshair: {
-      mode: LightweightCharts.CrosshairMode.Normal,
-    },
-    rightPriceScale: {
-      borderColor: '#30363d',
-    },
-    timeScale: {
-      borderColor: '#30363d',
-      timeVisible: true,
-      secondsVisible: false,
-    },
-    handleScroll: { vertTouchDrag: false },
-  });
-
-  areaSeries = chart.addAreaSeries({
-    topColor: 'rgba(88, 166, 255, 0.4)',
-    bottomColor: 'rgba(88, 166, 255, 0.0)',
-    lineColor: '#58a6ff',
-    lineWidth: 2,
-  });
-
-  // Responsive resize
-  const ro = new ResizeObserver(() => {
-    chart.applyOptions({ width: container.clientWidth, height: container.clientHeight });
-  });
-  ro.observe(container);
-}
-
-function updateChart(range) {
-  const filtered = filterHistory(range);
-  const chartData = filtered.map(d => ({
-    time: Math.floor(new Date(d.timestamp).getTime() / 1000),
-    value: d.value,
-  }));
-
-  // Deduplicate by time (keep last)
-  const seen = new Map();
-  for (const pt of chartData) seen.set(pt.time, pt.value);
-  const deduped = Array.from(seen, ([time, value]) => ({ time, value }))
-    .sort((a, b) => a.time - b.time);
-
-  areaSeries.setData(deduped);
-  chart.timeScale().fitContent();
-}
-
-// --- Header & Stats ---
-function renderHeader(range) {
-  const valueEl = document.getElementById('index-value');
-  const changeEl = document.getElementById('index-change');
-  const tsEl = document.getElementById('index-timestamp');
-
-  if (!currentData) return;
-
-  const val = currentData.index_value;
-  valueEl.textContent = formatNumber(val);
-  tsEl.textContent = formatTimestamp(currentData.timestamp);
-
-  // Change relative to range start
-  const filtered = filterHistory(range);
-  if (filtered.length > 0) {
-    const startVal = filtered[0].value;
-    const absChange = val - startVal;
-    const pctChange = startVal !== 0 ? (absChange / startVal) * 100 : 0;
-    const sign = absChange >= 0 ? '+' : '';
-    changeEl.textContent = `${sign}${formatNumber(absChange)} (${sign}${pctChange.toFixed(2)}%)`;
-    changeEl.className = 'change ' + (absChange >= 0 ? 'positive' : 'negative');
-  } else {
-    changeEl.textContent = '';
-  }
-
-  document.getElementById('stat-constituents').textContent = currentData.num_constituents;
-  document.getElementById('stat-entropy').textContent = currentData.weighted_entropy.toFixed(6);
-}
-
-// --- Table ---
-const columns = [
-  { key: 'rank', label: 'Rank', numeric: true },
-  { key: 'label', label: 'Name', numeric: false },
-  { key: 'source_type', label: 'Type', numeric: false },
-  { key: 'weight', label: 'Weight', numeric: true },
-  { key: 'normalized_entropy', label: 'Entropy', numeric: true },
-  { key: 'volume_1mo', label: 'Volume', numeric: true },
-  { key: 'end_date', label: 'Expiry', numeric: false },
-];
-
-function sortConstituents(data) {
-  return [...data].sort((a, b) => {
-    let aVal = a[sortKey];
-    let bVal = b[sortKey];
-
-    // Nulls sort to bottom
-    if (aVal == null && bVal == null) return 0;
-    if (aVal == null) return 1;
-    if (bVal == null) return -1;
-
-    const col = columns.find(c => c.key === sortKey);
-    if (col && !col.numeric) {
-      aVal = String(aVal).toLowerCase();
-      bVal = String(bVal).toLowerCase();
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GP 300 — Geopolitical Prediction Index</title>
+  <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"
+    integrity="sha384-stKllnUqA9AD0gsKCuUtf5XlqAW7PwIgDagoNsTWkjkBmJ/GZ/uHTgEBxdLV2VSK"
+    crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --green: #3fb950;
+      --red: #f85149;
+      --blue: #58a6ff;
+      --blue-dim: rgba(88, 166, 255, 0.08);
     }
 
-    if (aVal < bVal) return sortAsc ? -1 : 1;
-    if (aVal > bVal) return sortAsc ? 1 : -1;
-    return 0;
-  });
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-function renderTable() {
-  const tbody = document.getElementById('table-body');
-  let data = constituentsData;
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
 
-  // Filter by search
-  if (searchQuery) {
-    const q = searchQuery.toLowerCase();
-    data = data.filter(c => c.label.toLowerCase().includes(q));
-  }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
 
-  data = sortConstituents(data);
+    /* Header */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 24px 0;
+    }
 
-  tbody.innerHTML = data.map(c => `<tr>
+    .header-inner {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .symbol {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .value {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .change {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .change.positive {
+      color: var(--green);
+    }
+
+    .change.negative {
+      color: var(--red);
+    }
+
+    .timestamp {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-left: auto;
+    }
+
+    /* Chart Section */
+    #chart-section {
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0 24px;
+    }
+
+    .period-selector {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .period-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+
+    .period-btn:hover {
+      border-color: var(--text-muted);
+      color: var(--text);
+    }
+
+    .period-btn.active {
+      background: var(--blue-dim);
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    #chart-container {
+      width: 100%;
+      height: 400px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    /* Stats Bar */
+    #stats-bar {
+      display: flex;
+      gap: 32px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      color: var(--text-muted);
+    }
+
+    .stat-item span {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Table Section */
+    #table-section {
+      padding: 16px 0 32px;
+    }
+
+    .search-bar {
+      margin-bottom: 12px;
+    }
+
+    .search-bar input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      width: 100%;
+      max-width: 320px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-bar input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-bar input:focus {
+      border-color: var(--blue);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      min-width: 700px;
+    }
+
+    thead th {
+      background: var(--surface);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+      position: sticky;
+      top: 0;
+    }
+
+    thead th:hover {
+      color: var(--text);
+    }
+
+    thead th:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: -2px;
+    }
+
+    thead th .sort-arrow {
+      display: inline-block;
+      width: 14px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 11px;
+    }
+
+    thead th.sort-active .sort-arrow {
+      color: var(--blue);
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: var(--surface);
+    }
+
+    tbody td {
+      padding: 8px 12px;
+      white-space: nowrap;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+
+    .badge-event {
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--blue);
+    }
+
+    .badge-market {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--green);
+    }
+
+    td.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 16px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    footer a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    /* Loading */
+    .loading-overlay {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 400px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 0.4;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    .loading-overlay span {
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--red);
+      color: var(--text);
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 14px;
+      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .toast.visible {
+      opacity: 1;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-inner {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .timestamp {
+        margin-left: 0;
+      }
+
+      .value {
+        font-size: 28px;
+      }
+
+      #chart-container {
+        height: 300px;
+      }
+
+      #stats-bar {
+        gap: 16px;
+      }
+
+      .col-volume,
+      .col-expiry {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <header>
+      <div class="header-inner">
+        <span class="symbol">GP 300</span>
+        <span class="value" id="index-value">—</span>
+        <span class="change" id="index-change"></span>
+        <span class="timestamp" id="index-timestamp"></span>
+      </div>
+    </header>
+
+    <section id="chart-section">
+      <div class="period-selector" id="period-selector">
+        <button class="period-btn" data-range="1D">1D</button>
+        <button class="period-btn" data-range="1W">1W</button>
+        <button class="period-btn" data-range="1M">1M</button>
+        <button class="period-btn" data-range="3M">3M</button>
+        <button class="period-btn" data-range="YTD">YTD</button>
+        <button class="period-btn" data-range="1Y">1Y</button>
+        <button class="period-btn" data-range="5Y">5Y</button>
+        <button class="period-btn active" data-range="MAX">MAX</button>
+      </div>
+      <div id="chart-container">
+        <div class="loading-overlay" id="chart-loading"><span>Loading chart data...</span></div>
+      </div>
+    </section>
+
+    <section id="stats-bar">
+      <div class="stat-item">Constituents: <span id="stat-constituents">—</span></div>
+      <div class="stat-item">Weighted Entropy: <span id="stat-entropy">—</span></div>
+    </section>
+
+    <section id="table-section">
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search constituents...">
+      </div>
+      <div class="table-wrapper">
+        <table id="constituent-table">
+          <thead>
+            <tr>
+              <th data-key="rank">Rank <span class="sort-arrow"></span></th>
+              <th data-key="label">Name <span class="sort-arrow"></span></th>
+              <th data-key="source_type">Type <span class="sort-arrow"></span></th>
+              <th data-key="weight" class="num">Weight <span class="sort-arrow"></span></th>
+              <th data-key="normalized_entropy" class="num">Entropy <span class="sort-arrow"></span></th>
+              <th data-key="volume_1mo" class="num col-volume">Volume <span class="sort-arrow"></span></th>
+              <th data-key="end_date" class="col-expiry">Expiry <span class="sort-arrow"></span></th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      Data from <a href="https://polymarket.com" target="_blank" rel="noopener">Polymarket</a> &middot; Updated every 5
+      min
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // --- State ---
+    let currentData = null;
+    let historyData = [];
+    let constituentsData = [];
+    let chart = null;
+    let areaSeries = null;
+    let activeRange = 'MAX';
+    let sortKey = 'rank';
+    let sortAsc = true;
+    let searchQuery = '';
+
+    // --- Config ---
+    const API_BASE = '/api';
+
+    // --- Data Fetching ---
+    async function fetchJSON(path) {
+      const res = await fetch(path + (path.includes('?') ? '&' : '?') + 't=' + Date.now());
+      if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
+      return res.json();
+    }
+
+    async function loadAllData() {
+      const [current, history, constituents] = await Promise.all([
+        fetchJSON(API_BASE + '/current'),
+        fetchJSON(API_BASE + '/history'),
+        fetchJSON(API_BASE + '/constituents'),
+      ]);
+      currentData = current;
+      historyData = history;
+      constituentsData = constituents;
+    }
+
+    function showToast(msg) {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.classList.add('visible');
+      setTimeout(() => el.classList.remove('visible'), 4000);
+    }
+
+    // --- Formatting ---
+    function formatNumber(n) {
+      return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+
+    function formatWeight(w) {
+      return (w * 100).toFixed(2) + '%';
+    }
+
+    function formatVolume(v) {
+      if (v >= 1e9) return '$' + (v / 1e9).toFixed(1) + 'B';
+      if (v >= 1e6) return '$' + (v / 1e6).toFixed(1) + 'M';
+      if (v >= 1e3) return '$' + (v / 1e3).toFixed(1) + 'K';
+      return '$' + v.toFixed(0);
+    }
+
+    function formatDate(iso) {
+      if (!iso) return '—';
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    }
+
+    function formatTimestamp(iso) {
+      const d = new Date(iso);
+      return 'As of ' + d.toLocaleString('en-US', {
+        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short'
+      });
+    }
+
+    // --- Time Range ---
+    function getRangeCutoff(range) {
+      const now = new Date();
+      switch (range) {
+        case '1D': return new Date(now - 24 * 60 * 60 * 1000);
+        case '1W': return new Date(now - 7 * 24 * 60 * 60 * 1000);
+        case '1M': return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
+        case '3M': return new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
+        case 'YTD': return new Date(now.getFullYear(), 0, 1);
+        case '1Y': return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+        case '5Y': return new Date(now.getFullYear() - 5, now.getMonth(), now.getDate());
+        case 'MAX': return new Date(0);
+        default: return new Date(0);
+      }
+    }
+
+    function filterHistory(range) {
+      const cutoff = getRangeCutoff(range);
+      return historyData.filter(d => new Date(d.timestamp) >= cutoff);
+    }
+
+    // --- Chart ---
+    function initChart() {
+      const container = document.getElementById('chart-container');
+      document.getElementById('chart-loading').remove();
+
+      chart = LightweightCharts.createChart(container, {
+        layout: {
+          background: { type: 'solid', color: '#0d1117' },
+          textColor: '#8b949e',
+          fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
+        },
+        grid: {
+          vertLines: { color: '#21262d' },
+          horzLines: { color: '#21262d' },
+        },
+        crosshair: {
+          mode: LightweightCharts.CrosshairMode.Normal,
+        },
+        rightPriceScale: {
+          borderColor: '#30363d',
+        },
+        timeScale: {
+          borderColor: '#30363d',
+          timeVisible: true,
+          secondsVisible: false,
+        },
+        handleScroll: { vertTouchDrag: false },
+      });
+
+      areaSeries = chart.addAreaSeries({
+        topColor: 'rgba(88, 166, 255, 0.4)',
+        bottomColor: 'rgba(88, 166, 255, 0.0)',
+        lineColor: '#58a6ff',
+        lineWidth: 2,
+      });
+
+      // Responsive resize
+      const ro = new ResizeObserver(() => {
+        chart.applyOptions({ width: container.clientWidth, height: container.clientHeight });
+      });
+      ro.observe(container);
+    }
+
+    function updateChart(range) {
+      const filtered = filterHistory(range);
+      const chartData = filtered.map(d => ({
+        time: Math.floor(new Date(d.timestamp).getTime() / 1000),
+        value: d.value,
+      }));
+
+      // Deduplicate by time (keep last)
+      const seen = new Map();
+      for (const pt of chartData) seen.set(pt.time, pt.value);
+      const deduped = Array.from(seen, ([time, value]) => ({ time, value }))
+        .sort((a, b) => a.time - b.time);
+
+      areaSeries.setData(deduped);
+      chart.timeScale().fitContent();
+    }
+
+    // --- Header & Stats ---
+    function renderHeader(range) {
+      const valueEl = document.getElementById('index-value');
+      const changeEl = document.getElementById('index-change');
+      const tsEl = document.getElementById('index-timestamp');
+
+      if (!currentData) return;
+
+      const val = currentData.index_value;
+      valueEl.textContent = formatNumber(val);
+      tsEl.textContent = formatTimestamp(currentData.timestamp);
+
+      // Change relative to range start
+      const filtered = filterHistory(range);
+      if (filtered.length > 0) {
+        const startVal = filtered[0].value;
+        const absChange = val - startVal;
+        const pctChange = startVal !== 0 ? (absChange / startVal) * 100 : 0;
+        const sign = absChange >= 0 ? '+' : '';
+        changeEl.textContent = `${sign}${formatNumber(absChange)} (${sign}${pctChange.toFixed(2)}%)`;
+        changeEl.className = 'change ' + (absChange >= 0 ? 'positive' : 'negative');
+      } else {
+        changeEl.textContent = '';
+      }
+
+      document.getElementById('stat-constituents').textContent = currentData.num_constituents;
+      document.getElementById('stat-entropy').textContent = currentData.weighted_entropy.toFixed(6);
+    }
+
+    // --- Table ---
+    const columns = [
+      { key: 'rank', label: 'Rank', numeric: true },
+      { key: 'label', label: 'Name', numeric: false },
+      { key: 'source_type', label: 'Type', numeric: false },
+      { key: 'weight', label: 'Weight', numeric: true },
+      { key: 'normalized_entropy', label: 'Entropy', numeric: true },
+      { key: 'volume_1mo', label: 'Volume', numeric: true },
+      { key: 'end_date', label: 'Expiry', numeric: false },
+    ];
+
+    function sortConstituents(data) {
+      return [...data].sort((a, b) => {
+        let aVal = a[sortKey];
+        let bVal = b[sortKey];
+
+        // Nulls sort to bottom
+        if (aVal == null && bVal == null) return 0;
+        if (aVal == null) return 1;
+        if (bVal == null) return -1;
+
+        const col = columns.find(c => c.key === sortKey);
+        if (col && !col.numeric) {
+          aVal = String(aVal).toLowerCase();
+          bVal = String(bVal).toLowerCase();
+        }
+
+        if (aVal < bVal) return sortAsc ? -1 : 1;
+        if (aVal > bVal) return sortAsc ? 1 : -1;
+        return 0;
+      });
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('table-body');
+      let data = constituentsData;
+
+      // Filter by search
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        data = data.filter(c => c.label.toLowerCase().includes(q));
+      }
+
+      data = sortConstituents(data);
+
+      tbody.innerHTML = data.map(c => `<tr>
     <td class="num">${c.rank}</td>
     <td>${escapeHtml(c.label)}</td>
     <td><span class="badge badge-${c.source_type}">${c.source_type}</span></td>
@@ -602,103 +654,107 @@ function renderTable() {
     <td class="num col-volume">${formatVolume(c.volume_1mo)}</td>
     <td class="col-expiry">${formatDate(c.end_date)}</td>
   </tr>`).join('');
-}
-
-function escapeHtml(s) {
-  const d = document.createElement('div');
-  d.textContent = s;
-  return d.innerHTML;
-}
-
-function updateSortUI() {
-  document.querySelectorAll('#constituent-table thead th').forEach(th => {
-    const key = th.dataset.key;
-    const arrow = th.querySelector('.sort-arrow');
-    if (key === sortKey) {
-      th.classList.add('sort-active');
-      arrow.textContent = sortAsc ? '\u25B2' : '\u25BC';
-    } else {
-      th.classList.remove('sort-active');
-      arrow.textContent = '';
     }
-  });
-}
 
-// --- Events ---
-document.getElementById('period-selector').addEventListener('click', e => {
-  if (!e.target.classList.contains('period-btn')) return;
-  document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-  e.target.classList.add('active');
-  activeRange = e.target.dataset.range;
-  updateChart(activeRange);
-  renderHeader(activeRange);
-});
-
-document.querySelectorAll('#constituent-table thead th').forEach(th => {
-  th.setAttribute('tabindex', '0');
-  th.setAttribute('role', 'button');
-  const handler = () => {
-    const key = th.dataset.key;
-    if (sortKey === key) {
-      sortAsc = !sortAsc;
-    } else {
-      sortKey = key;
-      sortAsc = key === 'rank' || key === 'label' || key === 'source_type';
+    function escapeHtml(s) {
+      const d = document.createElement('div');
+      d.textContent = s;
+      return d.innerHTML;
     }
-    updateSortUI();
-    renderTable();
-  };
-  th.addEventListener('click', handler);
-  th.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); }
-  });
-});
 
-document.getElementById('search-input').addEventListener('input', e => {
-  searchQuery = e.target.value;
-  renderTable();
-});
+    function updateSortUI() {
+      document.querySelectorAll('#constituent-table thead th').forEach(th => {
+        const key = th.dataset.key;
+        const arrow = th.querySelector('.sort-arrow');
+        if (key === sortKey) {
+          th.classList.add('sort-active');
+          arrow.textContent = sortAsc ? '\u25B2' : '\u25BC';
+        } else {
+          th.classList.remove('sort-active');
+          arrow.textContent = '';
+        }
+      });
+    }
 
-// --- Init & Polling ---
-async function init() {
-  try {
-    await loadAllData();
-  } catch (e) {
-    showToast('Failed to load data: ' + e.message);
-    document.getElementById('chart-loading').querySelector('span').textContent = 'Failed to load data';
-    return;
-  }
-
-  initChart();
-  updateChart(activeRange);
-  renderHeader(activeRange);
-  updateSortUI();
-  renderTable();
-
-  // Poll current every 5 min
-  setInterval(async () => {
-    try {
-      currentData = await fetchJSON(API_BASE + '/current');
-      renderHeader(activeRange);
-    } catch (e) { showToast('Refresh failed'); }
-  }, 5 * 60 * 1000);
-
-  // Full refresh every 30 min
-  setInterval(async () => {
-    try {
-      const [history, constituents] = await Promise.all([
-        fetchJSON(API_BASE + '/history'),
-        fetchJSON(API_BASE + '/constituents'),
-      ]);
-      historyData = history;
-      constituentsData = constituents;
+    // --- Events ---
+    document.getElementById('period-selector').addEventListener('click', e => {
+      if (!e.target.classList.contains('period-btn')) return;
+      document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      activeRange = e.target.dataset.range;
       updateChart(activeRange);
-      renderTable();
-    } catch (e) { showToast('Full refresh failed'); }
-  }, 30 * 60 * 1000);
-}
+      renderHeader(activeRange);
+    });
 
-document.addEventListener('DOMContentLoaded', init);
-</script>
+    document.querySelectorAll('#constituent-table thead th').forEach(th => {
+      th.setAttribute('tabindex', '0');
+      th.setAttribute('role', 'button');
+      const handler = () => {
+        const key = th.dataset.key;
+        if (sortKey === key) {
+          sortAsc = !sortAsc;
+        } else {
+          sortKey = key;
+          sortAsc = key === 'rank' || key === 'label' || key === 'source_type';
+        }
+        updateSortUI();
+        renderTable();
+      };
+      th.addEventListener('click', handler);
+      th.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); }
+      });
+    });
+
+    document.getElementById('search-input').addEventListener('input', e => {
+      searchQuery = e.target.value;
+      renderTable();
+    });
+
+    // --- Init & Polling ---
+    async function init() {
+      try {
+        await loadAllData();
+      } catch (e) {
+        showToast('Failed to load data: ' + e.message);
+        document.getElementById('chart-loading').querySelector('span').textContent = 'Failed to load data';
+        return;
+      }
+
+      initChart();
+      updateChart(activeRange);
+      renderHeader(activeRange);
+      updateSortUI();
+      renderTable();
+
+      // Poll current every 5 min
+      setInterval(async () => {
+        try {
+          currentData = await fetchJSON(API_BASE + '/current');
+          renderHeader(activeRange);
+        } catch (e) { showToast('Refresh failed'); }
+      }, 5 * 60 * 1000);
+
+      // Full refresh every 30 min
+      setInterval(async () => {
+        try {
+          const [history, constituents] = await Promise.all([
+            fetchJSON(API_BASE + '/history'),
+            fetchJSON(API_BASE + '/constituents'),
+          ]);
+          historyData = history;
+          constituentsData = constituents;
+          updateChart(activeRange);
+          renderTable();
+        } catch (e) { showToast('Full refresh failed'); }
+      }, 30 * 60 * 1000);
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+  <!-- Cloudflare Web Analytics -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+    data-cf-beacon='{"token": "b9c3aa8098274ba5b93c833f298f15fc"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
+
 </html>
