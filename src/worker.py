@@ -350,7 +350,26 @@ class Default(WorkerEntrypoint):
         # Unknown API path
         return json_response({"error": "not found"}, status=404)
 
+    async def _get_cached_snapshot(self):
+        """Read the unified KV snapshot; return parsed dict or None if missing/stale/corrupt."""
+        try:
+            raw = await self.env.CACHE.get("snapshot")
+            if not raw:
+                return None
+            snapshot = json.loads(raw)
+            cached_at = datetime.fromisoformat(snapshot["cached_at"])
+            age = (datetime.now(timezone.utc) - cached_at).total_seconds()
+            if age > 600:  # 10 minutes — 2× the 5-min cron interval
+                return None
+            return snapshot
+        except Exception as e:
+            console.error(f"[gp300] KV snapshot read/parse failed, falling back to D1: {e}")
+            return None
+
     async def _api_current(self):
+        snapshot = await self._get_cached_snapshot()
+        if snapshot:
+            return json_response(snapshot["current"])
         row = await self.env.DB.prepare(
             "SELECT index_value, timestamp, num_constituents, "
             "weighted_entropy, divisor FROM current WHERE id = 1"
@@ -368,6 +387,9 @@ class Default(WorkerEntrypoint):
         )
 
     async def _api_constituents(self):
+        snapshot = await self._get_cached_snapshot()
+        if snapshot:
+            return json_response(snapshot["constituents"])
         result = await self.env.DB.prepare(
             "SELECT id, label, source_type, num_outcomes, probabilities, "
             "normalized_entropy, weight, volume_1mo, end_date, rank "
@@ -395,6 +417,10 @@ class Default(WorkerEntrypoint):
         )
 
     async def _api_history(self, since=None):
+        # Always served from D1 (not KV) to avoid unbounded cache growth.
+        # Brief inconsistency with KV-cached current/constituents is possible
+        # after a cron run (KV eventual consistency), but harmless for
+        # append-only timeseries data and bounded by the 10-min staleness TTL.
         if since:
             result = await self.env.DB.prepare(
                 "SELECT timestamp, value, num_constituents, weighted_entropy, divisor "
@@ -475,6 +501,42 @@ class Default(WorkerEntrypoint):
                 is_first_run=is_first_run,
             )
             console.log("[gp300] saved to D1")
+
+            # Cache current + constituents as a single atomic snapshot in KV
+            try:
+                snapshot = json.dumps({
+                    "cached_at": now.isoformat(),
+                    "current": {
+                        "index_value": round(state.value, 2),
+                        "timestamp": state.timestamp.isoformat(),
+                        "num_constituents": state.num_constituents,
+                        "weighted_entropy": round(state.weighted_entropy, 6),
+                        "divisor": state.divisor,
+                    },
+                    "constituents": [
+                        {
+                            "id": c.id,
+                            "label": c.label,
+                            "source_type": c.source_type,
+                            "num_outcomes": c.num_outcomes,
+                            "probabilities": [round(p, 4) for p in c.probabilities],
+                            "normalized_entropy": round(c.normalized_entropy, 4),
+                            "weight": round(c.weight, 6),
+                            "volume_1mo": round(c.volume_1mo, 2),
+                            "end_date": c.end_date.isoformat() if c.end_date else None,
+                            "rank": c.rank,
+                        }
+                        for c in sorted(state.constituents, key=lambda x: x.weight, reverse=True)
+                    ],
+                })
+                await self.env.CACHE.put("snapshot", snapshot)
+                console.log("[gp300] cached snapshot in KV")
+            except Exception as cache_err:
+                console.error(f"[gp300] KV cache write failed: {cache_err}")
+                try:
+                    await self.env.CACHE.delete("snapshot")
+                except Exception:
+                    pass
         except Exception as e:
             console.error(f"[gp300] pipeline error: {e}\n{traceback.format_exc()}")
             raise

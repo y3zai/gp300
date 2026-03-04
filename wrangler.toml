@@ -13,6 +13,10 @@ binding = "DB"
 database_name = "gp300"
 database_id = "8cf94e95-0310-4a7a-98b6-0430c799c27d"
 
+[[kv_namespaces]]
+binding = "CACHE"
+id = "9200bf3e4ca3461785d49285dded428a"
+
 [triggers]
 crons = ["*/5 * * * *", "0 0 * * SUN", "0 0 1,15 * *"]
 
