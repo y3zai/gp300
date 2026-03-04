@@ -5,7 +5,7 @@ import sqlite3
 from datetime import datetime
 from pathlib import Path
 
-from engine import Constituent, IndexState
+from src.engine import Constituent, IndexState
 
 SCHEMA_PATH = Path(__file__).parent / "schema.sql"
 DB_PATH = Path("data/gp300.db")

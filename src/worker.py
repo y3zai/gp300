@@ -6,14 +6,17 @@ HTTP API serves current data from D1.
 """
 
 import json
+import traceback
 from datetime import datetime, timezone
-from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from js import fetch as js_fetch
+from js import console, fetch as js_fetch
 from workers import WorkerEntrypoint, Response
 
-_INDEX_HTML = (Path(__file__).parent.parent / "index.html").read_text()
+# D1 bind() doesn't accept Python None (becomes JS undefined).
+# We need JS null. JSON.parse("null") gives us exactly that.
+from js import JSON as _JS_JSON
+JS_NULL = _JS_JSON.parse("null")
 
 from api import (
     GAMMA_BASE,
@@ -171,7 +174,7 @@ async def save_results_d1(
                 round(c.normalized_entropy, 4),
                 round(c.weight, 6),
                 round(c.volume_1mo, 2),
-                c.end_date.isoformat() if c.end_date else None,
+                c.end_date.isoformat() if c.end_date else JS_NULL,
                 c.rank,
             )
         )
@@ -344,12 +347,8 @@ class Default(WorkerEntrypoint):
         if path == "/api/history":
             since = params.get("since", [None])[0]
             return await self._api_history(since)
-
-        # Serve frontend for everything else
-        return Response(
-            _INDEX_HTML,
-            headers={"Content-Type": "text/html; charset=utf-8"},
-        )
+        # Unknown API path
+        return json_response({"error": "not found"}, status=404)
 
     async def _api_current(self):
         row = await self.env.DB.prepare(
@@ -432,7 +431,7 @@ class Default(WorkerEntrypoint):
             # Reconstitution — always runs, takes precedence
             await self._run_pipeline(reconstitute=True, rebalance=False)
 
-        elif cron == "0 0 * * 0":
+        elif cron == "0 0 * * SUN":
             # Rebalance — skip if today is a reconstitution day (1st or 15th)
             if now.day in (1, 15):
                 return
@@ -446,29 +445,36 @@ class Default(WorkerEntrypoint):
             await self._run_pipeline(reconstitute=False, rebalance=False)
 
     async def _run_pipeline(self, reconstitute=False, rebalance=False):
-        db = self.env.DB
-        now = datetime.now(timezone.utc)
+        try:
+            db = self.env.DB
+            now = datetime.now(timezone.utc)
 
-        prev_state = await load_state_d1(db)
-        is_first_run = prev_state is None
-        if is_first_run and not reconstitute:
-            reconstitute = True  # first run — fall back to init
+            prev_state = await load_state_d1(db)
+            is_first_run = prev_state is None
+            if is_first_run and not reconstitute:
+                reconstitute = True  # first run — fall back to init
 
-        events = await fetch_events_async()
+            events = await fetch_events_async()
+            console.log(f"[gp300] fetched {len(events)} events, reconstitute={reconstitute}, rebalance={rebalance}")
 
-        state = run_full_pipeline(
-            events=events,
-            current_state=prev_state,
-            now=now,
-            reconstitute=reconstitute,
-            rebalance=rebalance,
-        )
+            state = run_full_pipeline(
+                events=events,
+                current_state=prev_state,
+                now=now,
+                reconstitute=reconstitute,
+                rebalance=rebalance,
+            )
+            console.log(f"[gp300] pipeline done: value={state.value}, constituents={state.num_constituents}")
 
-        await save_results_d1(
-            db,
-            state,
-            prev_state=prev_state,
-            reconstitute=reconstitute,
-            rebalance=rebalance,
-            is_first_run=is_first_run,
-        )
+            await save_results_d1(
+                db,
+                state,
+                prev_state=prev_state,
+                reconstitute=reconstitute,
+                rebalance=rebalance,
+                is_first_run=is_first_run,
+            )
+            console.log("[gp300] saved to D1")
+        except Exception as e:
+            console.error(f"[gp300] pipeline error: {e}\n{traceback.format_exc()}")
+            raise

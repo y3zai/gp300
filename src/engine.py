@@ -13,7 +13,10 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from typing import Optional
 
-from api import Event, Market
+try:
+    from .api import Event, Market
+except ImportError:
+    from api import Event, Market
 
 # ──────────────────────────────────────────────
 # Configuration

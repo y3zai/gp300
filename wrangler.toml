@@ -1,12 +1,22 @@
 name = "gp300"
 main = "src/worker.py"
+workers_dev = true
+preview_urls = false
 compatibility_flags = ["python_workers"]
 compatibility_date = "2026-03-03"
+
+[assets]
+directory = "./public"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "gp300"
-database_id = "<run `npx wrangler d1 create gp300` and paste the id here>"
+database_id = "8cf94e95-0310-4a7a-98b6-0430c799c27d"
 
 [triggers]
-crons = ["*/5 * * * *", "0 0 * * 0", "0 0 1,15 * *"]
+crons = ["*/5 * * * *", "0 0 * * SUN", "0 0 1,15 * *"]
+
+[observability]
+[observability.logs]
+enabled = true
+invocation_logs = true

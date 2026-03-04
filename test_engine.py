@@ -8,8 +8,8 @@ Targeted unit tests for degenerate engine paths:
 
 from datetime import datetime, timedelta, timezone
 
-from api import Event, Market
-from engine import (
+from src.api import Event, Market
+from src.engine import (
     IndexConfig,
     _build_neg_risk_constituent,
     run_full_pipeline,
@@ -314,7 +314,7 @@ def test_weight_cap_after_removal():
 
 def test_cap_weights_few_constituents():
     """When n < 1/cap, cap_weights should assign equal weights."""
-    from engine import cap_weights, Constituent
+    from src.engine import cap_weights, Constituent
     # 10 constituents with 5% cap → infeasible (need 20), expect equal weights
     constituents = [
         Constituent(id=f"t{i}", label=f"t{i}", source_type="market",

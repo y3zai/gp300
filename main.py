@@ -14,8 +14,8 @@ import sys
 from datetime import datetime, timezone
 
 import db
-from api import fetch_geopolitics_events
-from engine import IndexState, run_full_pipeline
+from src.api import fetch_geopolitics_events
+from src.engine import IndexState, run_full_pipeline
 
 
 def make_constituent_snapshot(constituents) -> list[dict]:
