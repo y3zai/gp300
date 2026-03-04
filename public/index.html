@@ -13,7 +13,7 @@
 
     gtag('config', 'G-2Y1P5HZ44L');
   </script>
-  <title>GP 300 — Geopolitical Prediction Index</title>
+  <title>GP 300: Geopolitics Uncertainty Index</title>
   <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"
     integrity="sha384-stKllnUqA9AD0gsKCuUtf5XlqAW7PwIgDagoNsTWkjkBmJ/GZ/uHTgEBxdLV2VSK"
     crossorigin="anonymous"></script>
@@ -57,22 +57,27 @@
 
     .header-inner {
       display: flex;
-      align-items: baseline;
-      gap: 16px;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 4px;
     }
 
-    .symbol {
-      font-size: 24px;
+    .header-title {
+      font-size: 32px;
       font-weight: 700;
       color: var(--text);
       letter-spacing: -0.5px;
     }
 
-    .value {
+    .header-value {
       font-size: 32px;
       font-weight: 700;
       letter-spacing: -0.5px;
+    }
+
+    .header-change {
+      display: flex;
+      align-items: baseline;
+      gap: 12px;
     }
 
     .change {
@@ -91,7 +96,6 @@
     .timestamp {
       color: var(--text-muted);
       font-size: 13px;
-      margin-left: auto;
     }
 
     /* Chart Section */
@@ -338,19 +342,6 @@
 
     /* Responsive */
     @media (max-width: 768px) {
-      .header-inner {
-        flex-direction: column;
-        gap: 4px;
-      }
-
-      .timestamp {
-        margin-left: 0;
-      }
-
-      .value {
-        font-size: 28px;
-      }
-
       #chart-container {
         height: 300px;
       }
@@ -372,10 +363,12 @@
   <div class="container">
     <header>
       <div class="header-inner">
-        <span class="symbol">GP 300</span>
-        <span class="value" id="index-value">—</span>
-        <span class="change" id="index-change"></span>
-        <span class="timestamp" id="index-timestamp"></span>
+        <div class="header-title">GP 300: Geopolitics Uncertainty Index</div>
+        <div class="header-value" id="index-value">—</div>
+        <div class="header-change">
+          <span class="change" id="index-change"></span>
+          <span class="timestamp" id="index-timestamp"></span>
+        </div>
       </div>
     </header>
 
