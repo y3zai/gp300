@@ -566,7 +566,7 @@
     function updateChart(range) {
       const filtered = filterHistory(range);
       const chartData = filtered.map(d => ({
-        time: Math.floor(new Date(d.timestamp).getTime() / 1000),
+        time: Math.floor(new Date(d.timestamp).getTime() / 1000) - new Date().getTimezoneOffset() * 60,
         value: d.value,
       }));
 
