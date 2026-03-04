@@ -423,7 +423,7 @@ class Default(WorkerEntrypoint):
 
     # ── Cron handler ─────────────────────────────
 
-    async def scheduled(self, event):
+    async def scheduled(self, event, env, ctx):
         cron = event.cron
         now = datetime.now(timezone.utc)
 
