@@ -401,7 +401,6 @@
         <table id="constituent-table">
           <thead>
             <tr>
-              <th data-key="rank">Rank <span class="sort-arrow"></span></th>
               <th data-key="label">Name <span class="sort-arrow"></span></th>
               <th data-key="source_type">Type <span class="sort-arrow"></span></th>
               <th data-key="weight" class="num">Weight <span class="sort-arrow"></span></th>
@@ -431,8 +430,8 @@
     let chart = null;
     let areaSeries = null;
     let activeRange = '1D';
-    let sortKey = 'rank';
-    let sortAsc = true;
+    let sortKey = 'weight';
+    let sortAsc = false;
     let searchQuery = '';
 
     // --- Config ---
@@ -604,7 +603,6 @@
 
     // --- Table ---
     const columns = [
-      { key: 'rank', label: 'Rank', numeric: true },
       { key: 'label', label: 'Name', numeric: false },
       { key: 'source_type', label: 'Type', numeric: false },
       { key: 'weight', label: 'Weight', numeric: true },
@@ -648,7 +646,6 @@
       data = sortConstituents(data);
 
       tbody.innerHTML = data.map(c => `<tr>
-    <td class="num">${c.rank}</td>
     <td>${escapeHtml(c.label)}</td>
     <td><span class="badge badge-${c.source_type}">${c.source_type}</span></td>
     <td class="num">${formatWeight(c.weight)}</td>
@@ -697,7 +694,7 @@
           sortAsc = !sortAsc;
         } else {
           sortKey = key;
-          sortAsc = key === 'rank' || key === 'label' || key === 'source_type';
+          sortAsc = key === 'label' || key === 'source_type';
         }
         updateSortUI();
         renderTable();
