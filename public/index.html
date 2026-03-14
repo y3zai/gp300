@@ -256,8 +256,11 @@
       white-space: nowrap;
     }
 
+    td.num, th.num {
+      text-align: center;
+    }
+
     td.num {
-      text-align: right;
       font-variant-numeric: tabular-nums;
     }
 
@@ -383,6 +386,7 @@
             <tr>
               <th data-key="label">Name <span class="sort-arrow"></span></th>
               <th data-key="weight" class="num">Weight <span class="sort-arrow"></span></th>
+              <th data-key="probability" class="num">Probability <span class="sort-arrow"></span></th>
               <th data-key="normalized_entropy" class="num">Entropy <span class="sort-arrow"></span></th>
               <th data-key="volume_1mo" class="num col-volume">Volume <span class="sort-arrow"></span></th>
             </tr>
@@ -447,6 +451,21 @@
 
     function formatWeight(w) {
       return (w * 100).toFixed(2) + '%';
+    }
+
+    function formatProbability(c) {
+      if (!c.probabilities || c.probabilities.length === 0) return '—';
+      if (c.num_outcomes === 2) {
+        return (c.probabilities[0] * 100).toFixed(2) + '%';
+      }
+      const max = Math.max(...c.probabilities);
+      return (max * 100).toFixed(2) + '% (top of ' + c.num_outcomes + ')';
+    }
+
+    function getProbabilityValue(c) {
+      if (!c.probabilities || c.probabilities.length === 0) return 0;
+      if (c.num_outcomes === 2) return c.probabilities[0];
+      return Math.max(...c.probabilities);
     }
 
     function formatVolume(v) {
@@ -579,14 +598,15 @@
     const columns = [
       { key: 'label', label: 'Name', numeric: false },
       { key: 'weight', label: 'Weight', numeric: true },
+      { key: 'probability', label: 'Probability', numeric: true },
       { key: 'normalized_entropy', label: 'Entropy', numeric: true },
       { key: 'volume_1mo', label: 'Volume', numeric: true },
     ];
 
     function sortConstituents(data) {
       return [...data].sort((a, b) => {
-        let aVal = a[sortKey];
-        let bVal = b[sortKey];
+        let aVal = sortKey === 'probability' ? getProbabilityValue(a) : a[sortKey];
+        let bVal = sortKey === 'probability' ? getProbabilityValue(b) : b[sortKey];
 
         // Nulls sort to bottom
         if (aVal == null && bVal == null) return 0;
@@ -620,6 +640,7 @@
       tbody.innerHTML = data.map(c => `<tr>
     <td>${escapeHtml(c.label)}</td>
     <td class="num">${formatWeight(c.weight)}</td>
+    <td class="num">${formatProbability(c)}</td>
     <td class="num">${c.normalized_entropy.toFixed(4)}</td>
     <td class="num col-volume">${formatVolume(c.volume_1mo)}</td>
   </tr>`).join('');
