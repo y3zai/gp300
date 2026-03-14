@@ -372,8 +372,6 @@
     </section>
 
     <section id="stats-bar">
-      <div class="stat-item">Constituents: <span id="stat-constituents">—</span></div>
-      <div class="stat-item">Weighted Entropy: <span id="stat-entropy">—</span></div>
     </section>
 
     <section id="table-section">
@@ -590,8 +588,6 @@
         changeEl.textContent = '';
       }
 
-      document.getElementById('stat-constituents').textContent = currentData.num_constituents;
-      document.getElementById('stat-entropy').textContent = currentData.weighted_entropy.toFixed(6);
     }
 
     // --- Table ---
