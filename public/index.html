@@ -256,25 +256,6 @@
       white-space: nowrap;
     }
 
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-      font-weight: 500;
-      text-transform: capitalize;
-    }
-
-    .badge-event {
-      background: rgba(88, 166, 255, 0.15);
-      color: var(--blue);
-    }
-
-    .badge-market {
-      background: rgba(63, 185, 80, 0.15);
-      color: var(--green);
-    }
-
     td.num {
       text-align: right;
       font-variant-numeric: tabular-nums;
@@ -350,8 +331,7 @@
         gap: 16px;
       }
 
-      .col-volume,
-      .col-expiry {
+      .col-volume {
         display: none;
       }
     }
@@ -402,11 +382,9 @@
           <thead>
             <tr>
               <th data-key="label">Name <span class="sort-arrow"></span></th>
-              <th data-key="source_type">Type <span class="sort-arrow"></span></th>
               <th data-key="weight" class="num">Weight <span class="sort-arrow"></span></th>
               <th data-key="normalized_entropy" class="num">Entropy <span class="sort-arrow"></span></th>
               <th data-key="volume_1mo" class="num col-volume">Volume <span class="sort-arrow"></span></th>
-              <th data-key="end_date" class="col-expiry">Expiry <span class="sort-arrow"></span></th>
             </tr>
           </thead>
           <tbody id="table-body"></tbody>
@@ -478,11 +456,7 @@
       return '$' + v.toFixed(0);
     }
 
-    function formatDate(iso) {
-      if (!iso) return '—';
-      const d = new Date(iso);
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-    }
+
 
     function formatTimestamp(iso) {
       const d = new Date(iso);
@@ -604,11 +578,9 @@
     // --- Table ---
     const columns = [
       { key: 'label', label: 'Name', numeric: false },
-      { key: 'source_type', label: 'Type', numeric: false },
       { key: 'weight', label: 'Weight', numeric: true },
       { key: 'normalized_entropy', label: 'Entropy', numeric: true },
       { key: 'volume_1mo', label: 'Volume', numeric: true },
-      { key: 'end_date', label: 'Expiry', numeric: false },
     ];
 
     function sortConstituents(data) {
@@ -647,11 +619,9 @@
 
       tbody.innerHTML = data.map(c => `<tr>
     <td>${escapeHtml(c.label)}</td>
-    <td><span class="badge badge-${c.source_type}">${c.source_type}</span></td>
     <td class="num">${formatWeight(c.weight)}</td>
     <td class="num">${c.normalized_entropy.toFixed(4)}</td>
     <td class="num col-volume">${formatVolume(c.volume_1mo)}</td>
-    <td class="col-expiry">${formatDate(c.end_date)}</td>
   </tr>`).join('');
     }
 
@@ -694,7 +664,7 @@
           sortAsc = !sortAsc;
         } else {
           sortKey = key;
-          sortAsc = key === 'label' || key === 'source_type';
+          sortAsc = key === 'label';
         }
         updateSortUI();
         renderTable();
