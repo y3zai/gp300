@@ -391,6 +391,11 @@
       </div>
     </section>
 
+    <section id="stats-bar">
+      <div class="stat-item">Constituents: <span id="stat-constituents">—</span></div>
+      <div class="stat-item">Weighted Entropy: <span id="stat-entropy">—</span></div>
+    </section>
+
     <footer>
       Data from <a href="https://polymarket.com" target="_blank" rel="noopener">Polymarket</a> &middot; Updated every 5
       min
@@ -585,6 +590,8 @@
         changeEl.textContent = '';
       }
 
+      document.getElementById('stat-constituents').textContent = currentData.num_constituents;
+      document.getElementById('stat-entropy').textContent = currentData.weighted_entropy.toFixed(6);
     }
 
     // --- Table ---
