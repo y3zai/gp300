@@ -548,15 +548,12 @@
       ro.observe(container);
     }
 
-    function getDownsampleInterval(range) {
-      switch (range) {
-        case '1D': case '1W': return 0;
-        case '1M': return 1800;
-        case '3M': return 3600;
-        case 'YTD': case '1Y': return 3600;
-        case '5Y': case 'MAX': return 86400;
-        default: return 0;
-      }
+    function getDownsampleInterval(data) {
+      const count = data.length;
+      if (count <= 2000) return 0;
+      if (count <= 6000) return 1800;
+      if (count <= 20000) return 3600;
+      return 86400;
     }
 
     // Bucket data by intervalSec, keeping the last (most recent) value per bucket
@@ -584,7 +581,7 @@
       const deduped = Array.from(seen, ([time, value]) => ({ time, value }))
         .sort((a, b) => a.time - b.time);
 
-      const interval = getDownsampleInterval(range);
+      const interval = getDownsampleInterval(deduped);
       const sampled = downsample(deduped, interval);
       areaSeries.setData(sampled);
       requestAnimationFrame(() => chart.timeScale().fitContent());
