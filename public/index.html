@@ -562,7 +562,7 @@
         .sort((a, b) => a.time - b.time);
 
       areaSeries.setData(deduped);
-      chart.timeScale().fitContent();
+      requestAnimationFrame(() => chart.timeScale().fitContent());
     }
 
     // --- Header & Stats ---
