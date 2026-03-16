@@ -559,6 +559,7 @@
       }
     }
 
+    // Bucket data by intervalSec, keeping the last (most recent) value per bucket
     function downsample(data, intervalSec) {
       if (!intervalSec) return data;
       const buckets = new Map();
