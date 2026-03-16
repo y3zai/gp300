@@ -530,7 +530,6 @@
           borderColor: '#30363d',
           timeVisible: true,
           secondsVisible: false,
-          minBarSpacing: 0.001,
         },
         handleScroll: { vertTouchDrag: false },
       });
@@ -549,6 +548,28 @@
       ro.observe(container);
     }
 
+    function getDownsampleInterval(range) {
+      switch (range) {
+        case '1D': case '1W': return 0;
+        case '1M': return 1800;
+        case '3M': return 3600;
+        case 'YTD': case '1Y': return 3600;
+        case '5Y': case 'MAX': return 86400;
+        default: return 0;
+      }
+    }
+
+    function downsample(data, intervalSec) {
+      if (!intervalSec) return data;
+      const buckets = new Map();
+      for (const pt of data) {
+        const key = Math.floor(pt.time / intervalSec) * intervalSec;
+        buckets.set(key, pt.value);
+      }
+      return Array.from(buckets, ([time, value]) => ({ time, value }))
+        .sort((a, b) => a.time - b.time);
+    }
+
     function updateChart(range) {
       const filtered = filterHistory(range);
       const chartData = filtered.map(d => ({
@@ -562,7 +583,9 @@
       const deduped = Array.from(seen, ([time, value]) => ({ time, value }))
         .sort((a, b) => a.time - b.time);
 
-      areaSeries.setData(deduped);
+      const interval = getDownsampleInterval(range);
+      const sampled = downsample(deduped, interval);
+      areaSeries.setData(sampled);
       requestAnimationFrame(() => chart.timeScale().fitContent());
     }
 
