@@ -31,5 +31,8 @@ Homepage = "https://gp300.y3z.ai"
 [project.scripts]
 gp300 = "cli.main:cli"
 
+[tool.hatch.build.targets.sdist]
+include = ["cli/", "CLI_README.md", "pyproject.toml"]
+
 [tool.hatch.build.targets.wheel]
 packages = ["cli"]
