@@ -10,12 +10,11 @@ Usage:
 """
 
 import argparse
-import sys
 from datetime import datetime, timezone
 
 import db
 from src.api import fetch_geopolitics_events
-from src.engine import IndexState, run_full_pipeline
+from src.engine import run_full_pipeline
 
 
 def make_constituent_snapshot(constituents) -> list[dict]:

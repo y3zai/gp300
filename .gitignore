@@ -1,6 +1,10 @@
+.DS_Store
 .claude/
 .wrangler/
 __pycache__/
+*.egg-info/
+dist/
+build/
 data/gp300.db
 data/price_cache.json
 data/backtest_*.json

@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "gp300"
+version = "0.1.0"
+description = "CLI for the GP 300 Geopolitics Uncertainty Index"
+requires-python = ">=3.10"
+dependencies = [
+    "click>=8.0",
+    "httpx>=0.24",
+    "rich>=13.0",
+]
+
+[project.scripts]
+gp300 = "cli.main:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["cli"]
