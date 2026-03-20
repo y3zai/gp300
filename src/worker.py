@@ -353,7 +353,7 @@ class Default(WorkerEntrypoint):
     async def _get_cached_snapshot(self):
         """Read the unified KV snapshot; return parsed dict or None if missing/stale/corrupt."""
         try:
-            raw = await self.env.CACHE.get("snapshot")
+            raw = await self.env.CACHE_GP300.get("snapshot")
             if not raw:
                 return None
             snapshot = json.loads(raw)
@@ -529,12 +529,12 @@ class Default(WorkerEntrypoint):
                         for c in sorted(state.constituents, key=lambda x: x.weight, reverse=True)
                     ],
                 })
-                await self.env.CACHE.put("snapshot", snapshot)
+                await self.env.CACHE_GP300.put("snapshot", snapshot)
                 console.log("[gp300] cached snapshot in KV")
             except Exception as cache_err:
                 console.error(f"[gp300] KV cache write failed: {cache_err}")
                 try:
-                    await self.env.CACHE.delete("snapshot")
+                    await self.env.CACHE_GP300.delete("snapshot")
                 except Exception:
                     pass
         except Exception as e:
