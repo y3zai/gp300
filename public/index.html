@@ -357,6 +357,7 @@
 
     <section id="chart-section">
       <div class="period-selector" id="period-selector">
+        <button class="period-btn" data-range="PERIOD">Period</button>
         <button class="period-btn active" data-range="1D">1D</button>
         <button class="period-btn" data-range="1W">1W</button>
         <button class="period-btn" data-range="1M">1M</button>
@@ -496,6 +497,9 @@
         case '1Y': return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
         case '5Y': return new Date(now.getFullYear() - 5, now.getMonth(), now.getDate());
         case 'MAX': return new Date(0);
+        case 'PERIOD':
+          if (currentData && currentData.last_rebase) return new Date(currentData.last_rebase);
+          return new Date(0);
         default: return new Date(0);
       }
     }
@@ -568,6 +572,20 @@
         .sort((a, b) => a.time - b.time);
     }
 
+    function findRebaseTimestamps() {
+      // Detect rebase points: where index jumps back to ~1000 from a much lower value
+      const rebases = [];
+      for (let i = 1; i < historyData.length; i++) {
+        const prev = historyData[i - 1].value;
+        const curr = historyData[i].value;
+        // Rebase: value jumps by >50% upward and lands near 1000
+        if (curr > prev * 1.5 && curr > 800) {
+          rebases.push(historyData[i].timestamp);
+        }
+      }
+      return rebases;
+    }
+
     function updateChart(range) {
       const filtered = filterHistory(range);
       const chartData = filtered.map(d => ({
@@ -584,6 +602,22 @@
       const interval = getDownsampleInterval(deduped);
       const sampled = downsample(deduped, interval);
       areaSeries.setData(sampled);
+
+      // Add rebase markers
+      const rebaseTimes = findRebaseTimestamps();
+      const tzOffset = new Date().getTimezoneOffset() * 60;
+      const markers = rebaseTimes
+        .map(ts => {
+          const t = Math.floor(new Date(ts).getTime() / 1000) - tzOffset;
+          // Only show marker if it falls within the current chart range
+          if (sampled.length > 0 && t >= sampled[0].time && t <= sampled[sampled.length - 1].time) {
+            return { time: t, position: 'aboveBar', color: '#f0883e', shape: 'arrowDown', text: 'Rebase' };
+          }
+          return null;
+        })
+        .filter(Boolean);
+      areaSeries.setMarkers(markers);
+
       requestAnimationFrame(() => chart.timeScale().fitContent());
     }
 
@@ -734,6 +768,13 @@
       }
 
       initChart();
+      // Default to current rebase period if available, else 1M
+      if (currentData && currentData.last_rebase) {
+        activeRange = 'PERIOD';
+        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+        const periodBtn = document.querySelector('.period-btn[data-range="PERIOD"]');
+        if (periodBtn) periodBtn.classList.add('active');
+      }
       updateChart(activeRange);
       renderHeader(activeRange);
       updateSortUI();

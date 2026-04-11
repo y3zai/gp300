@@ -125,6 +125,12 @@ async def load_state_d1(db):
         )
 
     ts = datetime.fromisoformat(data["timestamp"])
+    last_rebase = None
+    if data.get("last_rebase"):
+        try:
+            last_rebase = datetime.fromisoformat(data["last_rebase"])
+        except (ValueError, TypeError):
+            pass
     return IndexState(
         value=data["value"],
         divisor=data["divisor"],
@@ -132,6 +138,7 @@ async def load_state_d1(db):
         num_constituents=data["num_constituents"],
         timestamp=ts,
         constituents=constituents,
+        last_rebase=last_rebase,
     )
 
 
@@ -201,6 +208,7 @@ async def save_results_d1(
         "weighted_entropy": state.weighted_entropy,
         "num_constituents": state.num_constituents,
         "timestamp": state.timestamp.isoformat(),
+        "last_rebase": state.last_rebase.isoformat() if state.last_rebase else None,
         "constituents": [
             {
                 "id": c.id,
@@ -239,6 +247,22 @@ async def save_results_d1(
             db.prepare(
                 "INSERT INTO adjustments (timestamp, event, data) VALUES (?, ?, ?)"
             ).bind(ts, "initialization", json.dumps(adj_data))
+        )
+
+    elif state.rebased and prev_state is not None:
+        # Bimonthly rebase — index reset to base value
+        adj_data = {
+            "divisor_before": prev_state.divisor,
+            "divisor_after": state.divisor,
+            "index_before": round(prev_state.value, 2),
+            "index_after": round(state.value, 2),
+            "num_constituents": state.num_constituents,
+            "constituents": _make_constituent_snapshot(state.constituents),
+        }
+        stmts.append(
+            db.prepare(
+                "INSERT INTO adjustments (timestamp, event, data) VALUES (?, ?, ?)"
+            ).bind(ts, "rebase", json.dumps(adj_data))
         )
 
     elif reconstitute and prev_state is not None:
@@ -376,6 +400,14 @@ class Default(WorkerEntrypoint):
         ).first()
         if not row:
             return json_response({"error": "no data"}, status=404)
+        # Read last_rebase from state blob
+        last_rebase = None
+        state_row = await self.env.DB.prepare("SELECT data FROM state WHERE id = 1").first()
+        if state_row:
+            try:
+                last_rebase = json.loads(state_row.data).get("last_rebase")
+            except Exception:
+                pass
         return json_response(
             {
                 "index_value": row.index_value,
@@ -383,6 +415,7 @@ class Default(WorkerEntrypoint):
                 "num_constituents": row.num_constituents,
                 "weighted_entropy": row.weighted_entropy,
                 "divisor": row.divisor,
+                "last_rebase": last_rebase,
             }
         )
 
@@ -453,21 +486,20 @@ class Default(WorkerEntrypoint):
         cron = event.cron
         now = datetime.now(timezone.utc)
 
-        if cron == "0 0 1,15 * *":
-            # Reconstitution — always runs, takes precedence
-            await self._run_pipeline(reconstitute=True, rebalance=False)
+        if cron == "0 0 * * SUN":
+            # Weekly reconstitution (+ rebalance) — Sunday 00:00 UTC
+            await self._run_pipeline(reconstitute=True, rebalance=True)
 
-        elif cron == "0 0 * * SUN":
-            # Rebalance — skip if today is a reconstitution day (1st or 15th)
-            if now.day in (1, 15):
+        elif cron == "0 0 * * *":
+            # Daily rebalance — skip on Sundays (reconstitution handles it)
+            if now.weekday() == 6:
                 return
             await self._run_pipeline(reconstitute=False, rebalance=True)
 
         else:
-            # Regular update (*/5) — skip the :00 tick on rebalance/reconstitution days
+            # Regular update (*/5) — skip the midnight tick (rebalance handles it)
             if now.minute == 0 and now.hour == 0:
-                if now.weekday() == 6 or now.day in (1, 15):  # 6 = Sunday
-                    return
+                return
             await self._run_pipeline(reconstitute=False, rebalance=False)
 
     async def _run_pipeline(self, reconstitute=False, rebalance=False):
@@ -512,6 +544,7 @@ class Default(WorkerEntrypoint):
                         "num_constituents": state.num_constituents,
                         "weighted_entropy": round(state.weighted_entropy, 6),
                         "divisor": state.divisor,
+                        "last_rebase": state.last_rebase.isoformat() if state.last_rebase else None,
                     },
                     "constituents": [
                         {
