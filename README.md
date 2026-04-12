@@ -23,7 +23,7 @@ The GP 300 Index aggregates prediction market data to measure geopolitical uncer
 - **Volume-Weighted**: Constituents ranked by 30-day trading volume with 5% concentration cap
 - **Entropy-Based**: Measures uncertainty using normalized information entropy
 - **Multi-Outcome Support**: Handles both binary contracts and mutually-exclusive multi-outcome events
-- **Fully Automated**: Updates every 30 minutes via GitHub Actions and Cloudflare Workers
+- **Fully Automated**: Updates via scheduled Cloudflare Workers every 5 minutes, with additional daily and weekly jobs
 - **Python CLI**: Query index data from the command line
 - **Web Dashboard**: Live visualization with historical charts and constituent breakdown
 
@@ -82,9 +82,9 @@ The index tracks the **top 300 geopolitics-related contracts** from Polymarket, 
 
 ### Update Cycles
 
-- **30-minute updates**: Fetch latest prices and recompute index with frozen weights
-- **Weekly rebalance**: Recalculate weights based on current volume, apply 5% cap
-- **Biweekly reconstitution**: Re-rank eligible contracts, add/remove constituents using buffer rule
+- **5-minute updates**: Fetch latest prices and recompute index with frozen weights
+- **Daily rebalance**: Recalculate weights based on current volume, apply 5% cap
+- **Weekly reconstitution**: Re-rank eligible contracts, add/remove constituents using buffer rule
 
 ## Architecture
 
@@ -106,7 +106,7 @@ Polymarket APIs (Gamma, CLOB)
 ## Repository Structure
 
 ```
-/home/runner/work/gp300/gp300/
+gp300/
 ├── src/                    # Core index engine
 │   ├── api.py             # Polymarket API client
 │   ├── engine.py          # Index computation logic
@@ -140,11 +140,11 @@ Polymarket APIs (Gamma, CLOB)
 git clone https://github.com/y3zai/gp300.git
 cd gp300
 
-# Install dependencies
-pip install -r requirements.txt
+# Install the package and its CLI dependencies
+pip install -e .
 
 # Run the CLI locally
-python -m cli.main
+python -m cli
 
 # Run tests
 python test_engine.py
@@ -179,7 +179,7 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## License
 
-See LICENSE file for details.
+This repository does not currently include a LICENSE file. Until a license is added, all rights are reserved unless stated otherwise by the author.
 
 ## Links
 
