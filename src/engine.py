@@ -625,8 +625,8 @@ def run_full_pipeline(
         current_state: Previous index state (None = first run)
         now: Current timestamp
         config: Index configuration
-        reconstitute: If True, re-select constituents (biweekly)
-        rebalance: If True, recompute weights (weekly)
+        reconstitute: If True, run the scheduled weekly reconstitution flow
+        rebalance: If True, run the scheduled daily rebalance flow
 
     Returns:
         New IndexState

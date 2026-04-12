@@ -144,10 +144,10 @@ cd gp300
 pip install -e .
 
 # Run the CLI locally
-python3 -m cli
+python -m cli  # use python3 if your shell does not provide `python`
 
 # Run tests
-python3 -m pytest -q
+python -m pytest -q  # use python3 if your shell does not provide `python`
 ```
 
 ### Database
