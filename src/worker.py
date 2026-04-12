@@ -254,7 +254,9 @@ async def save_results_d1(
         adj_data = {
             "divisor_before": prev_state.divisor,
             "divisor_after": state.divisor,
-            "index_before": round(prev_state.value, 2),
+            "index_before": round(state.pre_adjustment_value, 2)
+            if state.pre_adjustment_value is not None
+            else round(prev_state.value, 2),
             "index_after": round(state.value, 2),
             "num_constituents": state.num_constituents,
             "constituents": _make_constituent_snapshot(state.constituents),

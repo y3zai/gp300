@@ -573,13 +573,18 @@
     }
 
     function findRebaseTimestamps() {
-      // Detect rebase points: where index jumps back to ~1000 from a much lower value
+      // Detect rebase points: index jumps back to the configured base (1000)
+      // from a materially lower value. Tight bounds avoid false positives.
+      const REBASE_BASE = 1000;
+      const REBASE_EPSILON = 25;
+      const MIN_PRE_REBASE_GAP = 100;
       const rebases = [];
       for (let i = 1; i < historyData.length; i++) {
         const prev = historyData[i - 1].value;
         const curr = historyData[i].value;
-        // Rebase: value jumps by >50% upward and lands near 1000
-        if (curr > prev * 1.5 && curr > 800) {
+        const landsNearBase = Math.abs(curr - REBASE_BASE) <= REBASE_EPSILON;
+        const prevMateriallyBelowBase = prev <= REBASE_BASE - MIN_PRE_REBASE_GAP;
+        if (curr > prev && landsNearBase && prevMateriallyBelowBase) {
           rebases.push(historyData[i].timestamp);
         }
       }
@@ -768,7 +773,7 @@
       }
 
       initChart();
-      // Default to current rebase period if available, else 1M
+      // Default to current rebase period if available, else keep the HTML default (1D)
       if (currentData && currentData.last_rebase) {
         activeRange = 'PERIOD';
         document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));

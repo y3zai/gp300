@@ -330,6 +330,109 @@ def test_cap_weights_few_constituents():
     print("  PASS: test_cap_weights_few_constituents")
 
 
+FUTURE_LONG = NOW + timedelta(days=365)
+
+
+def _build_rebase_state(config=CFG):
+    """Build an initial state with long-lived markets for rebase tests."""
+    markets = [
+        _make_market(f"m{i}", volume_1mo=10000 - i, end_date=FUTURE_LONG)
+        for i in range(3)
+    ]
+    events = [_make_event(f"evt-m{i}", [m]) for i, m in enumerate(markets)]
+    state = run_full_pipeline(events, current_state=None, now=NOW, config=config)
+    return state, events
+
+
+def test_rebase_on_first_run():
+    """First run sets last_rebase to now and flags rebased=True."""
+    state, _ = _build_rebase_state()
+    assert state.rebased is True
+    assert state.last_rebase == NOW
+    assert state.value == 1000.0
+    print("  PASS: test_rebase_on_first_run")
+
+
+def test_rebase_does_not_trigger_before_interval():
+    """Reconstitution before the 8-week boundary must not rebase."""
+    state, _ = _build_rebase_state()
+    initial_rebase_ts = state.last_rebase
+
+    # 7 weeks later — just below the 8-week threshold
+    now_later = NOW + timedelta(weeks=7)
+    low_entropy_markets = [
+        _make_market(
+            f"m{i}",
+            volume_1mo=10000 - i,
+            end_date=FUTURE_LONG,
+            outcome_prices=[0.9, 0.1],
+        )
+        for i in range(3)
+    ]
+    events_later = [_make_event(f"evt-m{i}", [m]) for i, m in enumerate(low_entropy_markets)]
+    state2 = run_full_pipeline(
+        events_later, current_state=state, now=now_later, reconstitute=True, config=CFG
+    )
+    assert state2.rebased is False
+    assert state2.last_rebase == initial_rebase_ts
+    assert state2.value < 1000.0  # entropy decay lowered the index
+    print("  PASS: test_rebase_does_not_trigger_before_interval")
+
+
+def test_rebase_triggers_at_interval():
+    """Reconstitution at/after the 8-week boundary rebases index to 1000."""
+    state, _ = _build_rebase_state()
+
+    # 8 weeks + 1 day later — crosses the rebase boundary
+    now_later = NOW + timedelta(weeks=8, days=1)
+    low_entropy_markets = [
+        _make_market(
+            f"m{i}",
+            volume_1mo=10000 - i,
+            end_date=FUTURE_LONG,
+            outcome_prices=[0.9, 0.1],
+        )
+        for i in range(3)
+    ]
+    events_later = [_make_event(f"evt-m{i}", [m]) for i, m in enumerate(low_entropy_markets)]
+    state2 = run_full_pipeline(
+        events_later, current_state=state, now=now_later, reconstitute=True, config=CFG
+    )
+    assert state2.rebased is True
+    assert state2.last_rebase == now_later
+    assert state2.value == 1000.0
+    print("  PASS: test_rebase_triggers_at_interval")
+
+
+def test_rebase_skips_on_rebalance_only():
+    """Rebalance (without reconstitute) must not trigger rebase even past the interval."""
+    state, _ = _build_rebase_state()
+    initial_rebase_ts = state.last_rebase
+
+    now_later = NOW + timedelta(weeks=10)
+    low_entropy_markets = [
+        _make_market(
+            f"m{i}",
+            volume_1mo=10000 - i,
+            end_date=FUTURE_LONG,
+            outcome_prices=[0.9, 0.1],
+        )
+        for i in range(3)
+    ]
+    events_later = [_make_event(f"evt-m{i}", [m]) for i, m in enumerate(low_entropy_markets)]
+    state2 = run_full_pipeline(
+        events_later,
+        current_state=state,
+        now=now_later,
+        reconstitute=False,
+        rebalance=True,
+        config=CFG,
+    )
+    assert state2.rebased is False
+    assert state2.last_rebase == initial_rebase_ts
+    print("  PASS: test_rebase_skips_on_rebalance_only")
+
+
 if __name__ == "__main__":
     print("Running engine edge-case tests...\n")
     test_full_removal_regular_update()
@@ -339,4 +442,8 @@ if __name__ == "__main__":
     test_usable_markets_consistency()
     test_weight_cap_after_removal()
     test_cap_weights_few_constituents()
+    test_rebase_on_first_run()
+    test_rebase_does_not_trigger_before_interval()
+    test_rebase_triggers_at_interval()
+    test_rebase_skips_on_rebalance_only()
     print("\nAll tests passed.")
