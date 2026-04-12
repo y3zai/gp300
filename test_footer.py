@@ -6,7 +6,7 @@ def test_footer_includes_github_repo_link_after_cli():
 
     cli_label = "CLI:"
     github_label = "Source Code at "
-    github_link = 'href="https://github.com/y3zai/gp300/"'
+    github_link = 'href="https://github.com/y3zai/gp300"'
     polymarket_label = "Data from "
 
     cli_index = html.index(cli_label)
