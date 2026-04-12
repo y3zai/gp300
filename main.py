@@ -3,9 +3,9 @@ G&P 300 Main Entry Point.
 
 Usage:
     python main.py                    # First run: initialize index
-    python main.py --update           # Regular 30-min update (prices only)
-    python main.py --rebalance        # Weekly: recompute weights
-    python main.py --reconstitute     # Biweekly: re-select constituents + weights
+    python main.py --update           # Scheduled 5-minute update (prices only)
+    python main.py --rebalance        # Scheduled daily rebalance
+    python main.py --reconstitute     # Scheduled weekly reconstitution + rebalance
     python main.py --dry-run          # Compute but don't write files
 """
 
@@ -41,15 +41,15 @@ def make_constituent_snapshot(constituents) -> list[dict]:
 def main():
     parser = argparse.ArgumentParser(description="G&P 300 Index Engine")
     parser.add_argument(
-        "--update", action="store_true", help="Regular price update (30-min cycle)"
+        "--update", action="store_true", help="Scheduled 5-minute price update"
     )
     parser.add_argument(
-        "--rebalance", action="store_true", help="Recompute weights (weekly cycle)"
+        "--rebalance", action="store_true", help="Scheduled daily rebalance"
     )
     parser.add_argument(
         "--reconstitute",
         action="store_true",
-        help="Re-select constituents (biweekly cycle)",
+        help="Scheduled weekly reconstitution + rebalance",
     )
     parser.add_argument(
         "--dry-run", action="store_true", help="Compute but don't write files"
