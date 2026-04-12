@@ -1,5 +1,6 @@
 .DS_Store
 .claude/
+.trees/
 .wrangler/
 __pycache__/
 *.egg-info/

@@ -98,6 +98,7 @@ def save_state(conn, state: IndexState):
         "weighted_entropy": state.weighted_entropy,
         "num_constituents": state.num_constituents,
         "timestamp": state.timestamp.isoformat(),
+        "last_rebase": state.last_rebase.isoformat() if state.last_rebase else None,
         "constituents": [
             {
                 "id": c.id,
@@ -155,6 +156,12 @@ def load_state(conn) -> IndexState | None:
         constituents.append(c)
 
     ts = datetime.fromisoformat(data["timestamp"])
+    last_rebase = None
+    if data.get("last_rebase"):
+        try:
+            last_rebase = datetime.fromisoformat(data["last_rebase"])
+        except (ValueError, TypeError):
+            pass
 
     return IndexState(
         value=data["value"],
@@ -163,6 +170,7 @@ def load_state(conn) -> IndexState | None:
         num_constituents=data["num_constituents"],
         timestamp=ts,
         constituents=constituents,
+        last_rebase=last_rebase,
     )
 
 

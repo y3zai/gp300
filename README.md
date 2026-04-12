@@ -84,7 +84,7 @@ The index tracks the **top 300 geopolitics-related contracts** from Polymarket, 
 
 - **5-minute updates**: Fetch latest prices and recompute index with frozen weights
 - **Daily rebalance**: Recalculate weights based on current volume, apply 5% cap
-- **Weekly reconstitution**: Re-rank eligible contracts, add/remove constituents using buffer rule
+- **Weekly reconstitution + rebalance**: Re-rank eligible contracts, add/remove constituents using buffer rule, and refresh weights
 
 ## Architecture
 
@@ -144,10 +144,10 @@ cd gp300
 pip install -e .
 
 # Run the CLI locally
-python -m cli
+python -m cli  # use python3 if your shell does not provide `python`
 
 # Run tests
-python test_engine.py
+python -m pytest -q  # use python3 if your shell does not provide `python`
 ```
 
 ### Database
