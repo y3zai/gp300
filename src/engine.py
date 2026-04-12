@@ -41,6 +41,9 @@ class IndexConfig:
     # Index
     base_value: float = 1000.0
 
+    # Rebase
+    rebase_interval_weeks: int = 8  # reset index to base_value every N weeks
+
 
 DEFAULT_CONFIG = IndexConfig()
 
@@ -483,6 +486,8 @@ class IndexState:
     constituents: list[Constituent]
     removed_constituents: list[Constituent] = field(default_factory=list)
     pre_adjustment_value: Optional[float] = None
+    last_rebase: Optional[datetime] = None
+    rebased: bool = False  # True if this state was produced by a rebase
 
 
 def compute_weighted_entropy(constituents: list[Constituent]) -> float:
@@ -521,6 +526,8 @@ def initialize_index(
         num_constituents=len(constituents),
         timestamp=timestamp,
         constituents=constituents,
+        last_rebase=timestamp,
+        rebased=True,
     )
 
 
@@ -664,6 +671,7 @@ def run_full_pipeline(
                 constituents=[],
                 removed_constituents=removed,
                 pre_adjustment_value=pre_val,
+                last_rebase=current_state.last_rebase,
             )
 
     # Build relaxed universe map for pre-adjustment value computation.
@@ -686,6 +694,8 @@ def run_full_pipeline(
                 num_constituents=0,
                 timestamp=now,
                 constituents=[],
+                last_rebase=now,
+                rebased=True,
             )
         # Reconstitution found nothing: preserve index level
         pre_val = _pre_adjustment_value(current_state, relaxed_map)
@@ -697,6 +707,7 @@ def run_full_pipeline(
             timestamp=now,
             constituents=[],
             pre_adjustment_value=pre_val,
+            last_rebase=current_state.last_rebase,
         )
 
     if is_first_run or rebalance or reconstitute:
@@ -716,8 +727,31 @@ def run_full_pipeline(
     elif rebalance or reconstitute:
         # Step 5b: Adjust divisor, then compute
         pre_val = _pre_adjustment_value(current_state, relaxed_map)
-        new_divisor = adjust_divisor(current_state, selected, pre_adj_value=pre_val)
         we = compute_weighted_entropy(selected)
+
+        # Check if a bimonthly rebase is due (only at reconstitution)
+        last_rebase = current_state.last_rebase
+        should_rebase = reconstitute and (
+            last_rebase is None
+            or (now - last_rebase).days >= config.rebase_interval_weeks * 7
+        )
+
+        if should_rebase and we > 0:
+            new_divisor = we / config.base_value
+            value = config.base_value
+            return IndexState(
+                value=value,
+                divisor=new_divisor,
+                weighted_entropy=we,
+                num_constituents=len(selected),
+                timestamp=now,
+                constituents=selected,
+                pre_adjustment_value=pre_val,
+                last_rebase=now,
+                rebased=True,
+            )
+
+        new_divisor = adjust_divisor(current_state, selected, pre_adj_value=pre_val)
         value = we / new_divisor if new_divisor > 0 else 0.0
         return IndexState(
             value=value,
@@ -727,6 +761,7 @@ def run_full_pipeline(
             timestamp=now,
             constituents=selected,
             pre_adjustment_value=pre_val,
+            last_rebase=last_rebase,
         )
     else:
         # Step 5c: Regular update (prices only, possibly with removal)
@@ -745,6 +780,9 @@ def run_full_pipeline(
                 constituents=selected,
                 removed_constituents=removed,
                 pre_adjustment_value=pre_val,
+                last_rebase=current_state.last_rebase,
             )
         else:
-            return update_index_value(current_state, selected, now)
+            state = update_index_value(current_state, selected, now)
+            state.last_rebase = current_state.last_rebase
+            return state
