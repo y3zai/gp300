@@ -18,7 +18,7 @@ binding = "CACHE_GP300"
 id = "9200bf3e4ca3461785d49285dded428a"
 
 [triggers]
-crons = ["*/5 * * * *", "0 0 * * *", "0 0 * * SUN"]
+crons = ["*/5 * * * *", "1 0 * * MON-SAT", "1 0 * * SUN"]
 
 [observability]
 [observability.logs]
