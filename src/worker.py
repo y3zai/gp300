@@ -486,7 +486,6 @@ class Default(WorkerEntrypoint):
 
     async def scheduled(self, event, env, ctx):
         cron = event.cron
-        now = datetime.now(timezone.utc)
 
         if cron == "1 0 * * SUN":
             # Weekly reconstitution (+ rebalance) — Sunday 00:01 UTC
@@ -496,9 +495,12 @@ class Default(WorkerEntrypoint):
             # Daily rebalance — Mon-Sat only (Sunday handled by reconstitution cron)
             await self._run_pipeline(reconstitute=False, rebalance=True)
 
-        else:
-            # Regular update (*/5) — always runs; offset midnight crons avoid collision
+        elif cron == "*/5 * * * *":
+            # Regular update — every 5 min (offset midnight crons avoid collision)
             await self._run_pipeline(reconstitute=False, rebalance=False)
+
+        else:
+            console.error(f"[gp300] unexpected cron schedule: {cron!r} — skipping")
 
     async def _run_pipeline(self, reconstitute=False, rebalance=False):
         try:
