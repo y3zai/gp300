@@ -28,6 +28,7 @@ from engine import (
     IndexState,
     run_full_pipeline,
 )
+from history import build_history_query
 
 
 # ── Async HTTP helpers ───────────────────────────
@@ -452,20 +453,13 @@ class Default(WorkerEntrypoint):
         )
 
     async def _api_history(self, since=None):
-        # Always served from D1 (not KV) to avoid unbounded cache growth.
-        # Brief inconsistency with KV-cached current/constituents is possible
-        # after a cron run (KV eventual consistency), but harmless for
-        # append-only timeseries data and bounded by the 10-min staleness TTL.
-        if since:
-            result = await self.env.DB.prepare(
-                "SELECT timestamp, value, num_constituents, weighted_entropy, divisor "
-                "FROM history WHERE timestamp >= ? ORDER BY timestamp"
-            ).bind(since).all()
-        else:
-            result = await self.env.DB.prepare(
-                "SELECT timestamp, value, num_constituents, weighted_entropy, divisor "
-                "FROM history ORDER BY timestamp"
-            ).all()
+        # Preserve recent detail while bounding D1 result serialization as the
+        # append-only history table grows.
+        try:
+            query, values = build_history_query(since=since)
+        except ValueError as error:
+            return json_response({"error": str(error)}, status=400)
+        result = await self.env.DB.prepare(query).bind(*values).all()
         rows = result.results
         if hasattr(rows, "to_py"):
             rows = rows.to_py()
