@@ -535,6 +535,9 @@
           borderColor: '#30363d',
           timeVisible: true,
           secondsVisible: false,
+          // The default 0.5px floor clips dense histories even after fitContent().
+          minBarSpacing: 0.001,
+          lockVisibleTimeRangeOnResize: true,
         },
         handleScroll: { vertTouchDrag: false },
       });
