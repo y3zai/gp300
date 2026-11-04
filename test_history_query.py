@@ -158,6 +158,18 @@ def test_history_payloads_match_live_sampling_at_partial_boundaries():
         insert_history(conn, now - timedelta(days=30, minutes=2), 123)
         insert_history(conn, now - timedelta(days=30, minutes=1), 124)
         insert_history(conn, now - timedelta(days=1, minutes=1), 125)
+        # The production writer ignores duplicate history timestamps. Its
+        # conflict policy must not prevent refreshing an existing daily row.
+        conn.execute(
+            f"INSERT OR IGNORE INTO history ({HISTORY_COLUMNS}) VALUES (?, ?, ?, ?, ?)",
+            ((now + timedelta(minutes=5)).isoformat(), 126, 300, 0.5, 0.001),
+        )
+        fix = migration.with_name("0002_fix_history_payload_refresh.sql")
+        conn.executescript(fix.read_text())
+        conn.execute(
+            f"INSERT OR IGNORE INTO history ({HISTORY_COLUMNS}) VALUES (?, ?, ?, ?, ?)",
+            ((now + timedelta(minutes=10)).isoformat(), 127, 300, 0.5, 0.001),
+        )
 
         for since in [None, *(ts.isoformat() for ts in timestamps)]:
             query, params = build_history_payload_query(since=since, now=now)
