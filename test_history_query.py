@@ -1,5 +1,7 @@
+import json
 import sqlite3
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import pytest
 
@@ -133,3 +135,37 @@ def test_history_query_rejects_invalid_since(since):
 
     with pytest.raises(ValueError, match="since"):
         build_history_query(since=since, now=now)
+
+
+def test_history_payloads_match_live_sampling_at_partial_boundaries():
+    from src.history import build_history_payload_query
+
+    now = datetime(2026, 11, 4, 15, 25, tzinfo=timezone.utc)
+    migration = Path(__file__).with_name("migrations") / "0001_history_payloads.sql"
+    conn = create_history_db()
+    try:
+        timestamps = [now - timedelta(days=1), now]
+        for boundary in [now - timedelta(days=7), now - timedelta(days=365)]:
+            timestamps.extend(boundary + timedelta(minutes=delta) for delta in (
+                -1500, -60, -10, -5, 0, 5, 60, 1500
+            ))
+        for index, timestamp in enumerate(reversed(timestamps)):
+            insert_history(conn, timestamp, index)
+
+        conn.executescript(migration.read_text())
+        # An older observation can arrive after the migration and change an
+        # already materialized day and hour.
+        insert_history(conn, now - timedelta(days=30, minutes=2), 123)
+        insert_history(conn, now - timedelta(days=30, minutes=1), 124)
+        insert_history(conn, now - timedelta(days=1, minutes=1), 125)
+
+        for since in [None, *(ts.isoformat() for ts in timestamps)]:
+            query, params = build_history_payload_query(since=since, now=now)
+            actual = [
+                tuple(point[column] for column in HISTORY_COLUMNS.split(", "))
+                for (payload,) in conn.execute(query, params)
+                for point in json.loads(payload)
+            ]
+            assert actual == run_history_query(conn, since=since, now=now)
+    finally:
+        conn.close()

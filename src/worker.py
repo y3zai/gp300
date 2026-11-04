@@ -13,11 +13,6 @@ from urllib.parse import parse_qs, urlparse
 from js import console, fetch as js_fetch
 from workers import WorkerEntrypoint, Response
 
-# D1 bind() doesn't accept Python None (becomes JS undefined).
-# We need JS null. JSON.parse("null") gives us exactly that.
-from js import JSON as _JS_JSON
-JS_NULL = _JS_JSON.parse("null")
-
 from api import (
     GAMMA_BASE,
     GEOPOLITICS_TAG_ID,
@@ -28,7 +23,7 @@ from engine import (
     IndexState,
     run_full_pipeline,
 )
-from history import build_history_query
+from history import build_history_payload_query, build_history_query
 
 
 # ── Async HTTP helpers ───────────────────────────
@@ -164,28 +159,59 @@ async def save_results_d1(
         )
     )
 
-    # constituents — delete-then-insert
-    stmts.append(db.prepare("DELETE FROM constituents"))
-    for c in sorted(state.constituents, key=lambda x: x.weight, reverse=True):
-        stmts.append(
-            db.prepare(
-                "INSERT INTO constituents "
-                "(id, label, source_type, num_outcomes, probabilities, "
-                "normalized_entropy, weight, volume_1mo, end_date, rank) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
-            ).bind(
-                c.id,
-                c.label,
-                c.source_type,
-                c.num_outcomes,
-                json.dumps([round(p, 4) for p in c.probabilities]),
-                round(c.normalized_entropy, 4),
-                round(c.weight, 6),
-                round(c.volume_1mo, 2),
-                c.end_date.isoformat() if c.end_date else JS_NULL,
-                c.rank,
-            )
+    # Reconcile the snapshot in bulk. Updates leave the indexed ID untouched,
+    # and null-safe comparison skips rows whose published values are unchanged.
+    constituents = json.dumps([
+        {
+            "id": c.id,
+            "label": c.label,
+            "source_type": c.source_type,
+            "num_outcomes": c.num_outcomes,
+            "probabilities": json.dumps([round(p, 4) for p in c.probabilities]),
+            "normalized_entropy": round(c.normalized_entropy, 4),
+            "weight": round(c.weight, 6),
+            "volume_1mo": round(c.volume_1mo, 2),
+            "end_date": c.end_date.isoformat() if c.end_date else None,
+            "rank": c.rank,
+        }
+        for c in sorted(state.constituents, key=lambda x: x.weight, reverse=True)
+    ])
+    stmts.append(db.prepare(
+        "DELETE FROM constituents "
+        "WHERE id IS NULL OR id NOT IN (SELECT value ->> 'id' FROM json_each(?))"
+    ).bind(constituents))
+    # WHERE true disambiguates ON CONFLICT from a join clause in SQLite.
+    stmts.append(db.prepare("""
+        INSERT INTO constituents (
+            id, label, source_type, num_outcomes, probabilities,
+            normalized_entropy, weight, volume_1mo, end_date, rank
         )
+        SELECT
+            value ->> 'id', value ->> 'label', value ->> 'source_type',
+            value ->> 'num_outcomes', value ->> 'probabilities',
+            value ->> 'normalized_entropy', value ->> 'weight',
+            value ->> 'volume_1mo', value ->> 'end_date', value ->> 'rank'
+        FROM json_each(?) WHERE true
+        ON CONFLICT(id) DO UPDATE SET
+            label = excluded.label,
+            source_type = excluded.source_type,
+            num_outcomes = excluded.num_outcomes,
+            probabilities = excluded.probabilities,
+            normalized_entropy = excluded.normalized_entropy,
+            weight = excluded.weight,
+            volume_1mo = excluded.volume_1mo,
+            end_date = excluded.end_date,
+            rank = excluded.rank
+        WHERE (
+            constituents.label, constituents.source_type, constituents.num_outcomes,
+            constituents.probabilities, constituents.normalized_entropy, constituents.weight,
+            constituents.volume_1mo, constituents.end_date, constituents.rank
+        ) IS NOT (
+            excluded.label, excluded.source_type, excluded.num_outcomes,
+            excluded.probabilities, excluded.normalized_entropy, excluded.weight,
+            excluded.volume_1mo, excluded.end_date, excluded.rank
+        )
+    """).bind(constituents))
 
     # history (append)
     stmts.append(
@@ -345,13 +371,16 @@ CORS_HEADERS = {
 }
 
 
-def json_response(data, status=200):
-    """Return a JSON response with CORS headers."""
+def json_text_response(body, status=200):
     return Response(
-        json.dumps(data),
+        body,
         status=status,
         headers={"Content-Type": "application/json", **CORS_HEADERS},
     )
+
+
+def json_response(data, status=200):
+    return json_text_response(json.dumps(data), status)
 
 
 # ── Worker entry point ───────────────────────────
@@ -453,28 +482,26 @@ class Default(WorkerEntrypoint):
         )
 
     async def _api_history(self, since=None):
-        # Preserve recent detail while bounding D1 result serialization as the
-        # append-only history table grows.
         try:
-            query, values = build_history_query(since=since)
+            query, values = build_history_payload_query(since=since)
         except ValueError as error:
             return json_response({"error": str(error)}, status=400)
-        result = await self.env.DB.prepare(query).bind(*values).all()
-        rows = result.results
-        if hasattr(rows, "to_py"):
-            rows = rows.to_py()
-        return json_response(
-            [
-                {
-                    "timestamp": r["timestamp"],
-                    "value": r["value"],
-                    "num_constituents": r["num_constituents"],
-                    "weighted_entropy": r["weighted_entropy"],
-                    "divisor": r["divisor"],
-                }
-                for r in rows
-            ]
-        )
+        db = self.env.DB
+        try:
+            result = await db.prepare(query).bind(*values).all()
+        except Exception as error:
+            # Support deployments where the D1 migration has not run yet.
+            if not any(
+                f"no such table: {table}" in str(error)
+                for table in ("history_payloads", "history_points")
+            ):
+                raise
+            query, values = build_history_query(since=since)
+            result = await db.prepare(query).bind(*values).all()
+            return json_response(result.results.to_py())
+
+        chunks = result.results.to_py()
+        return json_text_response("[" + ",".join(row["payload"][1:-1] for row in chunks) + "]")
 
     # ── Cron handler ─────────────────────────────
 

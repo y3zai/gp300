@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 
 
 HISTORY_COLUMNS = (
@@ -82,3 +82,83 @@ def build_history_query(*, since=None, now=None):
         ORDER BY timestamp
     """
     return sql, params
+
+
+def build_history_payload_query(*, since=None, now=None):
+    """Read pre-serialized whole days and sample only the partial UTC days."""
+    now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    lower = _parse_since(since) or datetime.min.replace(tzinfo=timezone.utc)
+    hourly_cutoff = now - timedelta(days=HOURLY_DETAIL_DAYS)
+    recent_cutoff = now - timedelta(days=RECENT_DETAIL_DAYS)
+    days = []
+    partials = []
+
+    for resolution, start, end in (
+        ("daily", lower, hourly_cutoff),
+        ("hourly", max(lower, hourly_cutoff), recent_cutoff),
+        ("recent", max(lower, recent_cutoff), None),
+    ):
+        if end is not None and start >= end:
+            continue
+        end_timestamp = end.isoformat() if end is not None else "~"
+        end_day = end.date().isoformat() if end is not None else "~"
+        start_timestamp = start.isoformat()
+        first_day = start.date().isoformat()
+
+        if start.time() != time.min:
+            first_day = (start.date() + timedelta(days=1)).isoformat() if start.date() < date.max else "~"
+            start_of_next_day = first_day if first_day == "~" else first_day + "T00:00:00+00:00"
+            head_end = min(end_timestamp, start_of_next_day)
+            partials.append((resolution, start_timestamp, head_end))
+            start_timestamp = head_end
+
+        if first_day < end_day:
+            days.append((resolution, first_day, end_day))
+            start_timestamp = end_day + "T00:00:00+00:00"
+
+        if end is not None and start_timestamp < end_timestamp:
+            partials.append((resolution, start_timestamp, end_timestamp))
+
+    # Dummy ranges keep both VALUES clauses valid when one set is empty.
+    days = days or [("", "", "")]
+    partials = partials or [("", "", "")]
+    day_values = ", ".join(["(?, ?, ?)"] * len(days))
+    partial_values = ", ".join(["(?, ?, ?)"] * len(partials))
+    sql = f"""
+        WITH
+        days(resolution, first_day, end_day) AS (VALUES {day_values}),
+        partials(resolution, start, end) AS (VALUES {partial_values}),
+        boundary_points AS (
+            SELECT p.resolution, h.day, h.timestamp, h.point,
+                   row_number() OVER (
+                       PARTITION BY p.resolution,
+                           CASE p.resolution
+                               WHEN 'daily' THEN h.day
+                               WHEN 'hourly' THEN substr(h.timestamp, 1, 13)
+                               ELSE h.timestamp
+                           END
+                       ORDER BY h.timestamp DESC
+                   ) AS rank
+            FROM partials AS p
+            CROSS JOIN history_points AS h
+            WHERE h.timestamp >= p.start AND h.timestamp < p.end
+        ),
+        chunks AS (
+            SELECT h.day AS first_timestamp,
+                   CASE d.resolution
+                       WHEN 'daily' THEN h.daily
+                       WHEN 'hourly' THEN h.hourly
+                       ELSE h.recent
+                   END AS payload
+            FROM days AS d
+            CROSS JOIN history_payloads AS h
+            WHERE h.day >= d.first_day AND h.day < d.end_day
+            UNION ALL
+            SELECT min(timestamp), json_group_array(json(point) ORDER BY timestamp)
+            FROM boundary_points
+            WHERE rank = 1
+            GROUP BY resolution, day
+        )
+        SELECT payload FROM chunks ORDER BY first_timestamp
+    """
+    return sql, [value for row in days + partials for value in row]

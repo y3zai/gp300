@@ -168,6 +168,15 @@ Production deployment uses Cloudflare Workers with:
 
 See `wrangler.toml` for configuration details.
 
+For a new D1 database, initialize it with `schema.sql`. Apply the D1 migrations
+before deploying the Worker so the history endpoint can use precomputed daily
+payloads. The initial migration backfills existing history and consumes D1 read
+quota in proportion to the number of observations.
+
+```bash
+wrangler d1 migrations apply gp300 --remote
+```
+
 ## Documentation
 
 - **[gp300-plan.md](./gp300-plan.md)**: Comprehensive technical specification covering API design, index methodology, weighting, and update cycles
