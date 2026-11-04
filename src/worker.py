@@ -18,11 +18,8 @@ from api import (
     GEOPOLITICS_TAG_ID,
     _parse_event,
 )
-from engine import (
-    Constituent,
-    IndexState,
-    run_full_pipeline,
-)
+from d1_state import STATE_QUERY, build_d1_update, decode_state, select_update
+from engine import run_full_pipeline
 from history import build_history_payload_query, build_history_query
 
 
@@ -70,296 +67,17 @@ async def fetch_events_async():
 # ── Helpers ──────────────────────────────────────
 
 
-def _make_constituent_snapshot(constituents):
-    """Return a compact list of constituent dicts for adjustment logs."""
-    return [
-        {
-            "id": c.id,
-            "label": c.label,
-            "source_type": c.source_type,
-            "weight": round(c.weight, 6),
-            "rank": c.rank,
-            "normalized_entropy": round(c.normalized_entropy, 4),
-            "volume_1mo": round(c.volume_1mo, 2),
-        }
-        for c in sorted(constituents, key=lambda x: x.weight, reverse=True)
-    ]
-
-
-# ── D1 helpers ───────────────────────────────────
-
-
 async def load_state_d1(db):
-    """Load engine state from D1. Returns IndexState or None."""
-    row = await db.prepare("SELECT data FROM state WHERE id = 1").first()
-    if not row:
-        return None
-
-    data = json.loads(row.data)
-    constituents = []
-    for cd in data.get("constituents", []):
-        end_date = None
-        if cd.get("end_date"):
-            try:
-                end_date = datetime.fromisoformat(cd["end_date"])
-            except (ValueError, TypeError):
-                pass
-        constituents.append(
-            Constituent(
-                id=cd["id"],
-                label=cd["label"],
-                source_type=cd["source_type"],
-                num_outcomes=cd["num_outcomes"],
-                probabilities=cd["probabilities"],
-                volume_1mo=cd["volume_1mo"],
-                end_date=end_date,
-                weight=cd.get("weight", 0.0),
-                rank=cd.get("rank", 0),
-                normalized_entropy=cd.get("normalized_entropy", 0.0),
-                source_market_ids=cd.get("source_market_ids", []),
-            )
-        )
-
-    ts = datetime.fromisoformat(data["timestamp"])
-    last_rebase = None
-    if data.get("last_rebase"):
-        try:
-            last_rebase = datetime.fromisoformat(data["last_rebase"])
-        except (ValueError, TypeError):
-            pass
-    return IndexState(
-        value=data["value"],
-        divisor=data["divisor"],
-        weighted_entropy=data["weighted_entropy"],
-        num_constituents=data["num_constituents"],
-        timestamp=ts,
-        constituents=constituents,
-        last_rebase=last_rebase,
-    )
+    """Read the engine snapshot and publication metadata from D1."""
+    row = await db.prepare(STATE_QUERY).first()
+    return decode_state(row.data if row else None)
 
 
-async def save_results_d1(
-    db, state, *, prev_state=None, reconstitute=False, rebalance=False, is_first_run=False
-):
-    """Write current, constituents, history, state, and adjustments to D1 in a single batch."""
-    stmts = []
-
-    # current
-    stmts.append(
-        db.prepare(
-            "INSERT OR REPLACE INTO current "
-            "(id, index_value, timestamp, num_constituents, weighted_entropy, divisor) "
-            "VALUES (1, ?, ?, ?, ?, ?)"
-        ).bind(
-            round(state.value, 2),
-            state.timestamp.isoformat(),
-            state.num_constituents,
-            round(state.weighted_entropy, 6),
-            state.divisor,
-        )
-    )
-
-    # Reconcile the snapshot in bulk. Updates leave the indexed ID untouched,
-    # and null-safe comparison skips rows whose published values are unchanged.
-    constituents = json.dumps([
-        {
-            "id": c.id,
-            "label": c.label,
-            "source_type": c.source_type,
-            "num_outcomes": c.num_outcomes,
-            "probabilities": json.dumps([round(p, 4) for p in c.probabilities]),
-            "normalized_entropy": round(c.normalized_entropy, 4),
-            "weight": round(c.weight, 6),
-            "volume_1mo": round(c.volume_1mo, 2),
-            "end_date": c.end_date.isoformat() if c.end_date else None,
-            "rank": c.rank,
-        }
-        for c in sorted(state.constituents, key=lambda x: x.weight, reverse=True)
-    ])
-    stmts.append(db.prepare(
-        "DELETE FROM constituents "
-        "WHERE id IS NULL OR id NOT IN (SELECT value ->> 'id' FROM json_each(?))"
-    ).bind(constituents))
-    # WHERE true disambiguates ON CONFLICT from a join clause in SQLite.
-    stmts.append(db.prepare("""
-        INSERT INTO constituents (
-            id, label, source_type, num_outcomes, probabilities,
-            normalized_entropy, weight, volume_1mo, end_date, rank
-        )
-        SELECT
-            value ->> 'id', value ->> 'label', value ->> 'source_type',
-            value ->> 'num_outcomes', value ->> 'probabilities',
-            value ->> 'normalized_entropy', value ->> 'weight',
-            value ->> 'volume_1mo', value ->> 'end_date', value ->> 'rank'
-        FROM json_each(?) WHERE true
-        ON CONFLICT(id) DO UPDATE SET
-            label = excluded.label,
-            source_type = excluded.source_type,
-            num_outcomes = excluded.num_outcomes,
-            probabilities = excluded.probabilities,
-            normalized_entropy = excluded.normalized_entropy,
-            weight = excluded.weight,
-            volume_1mo = excluded.volume_1mo,
-            end_date = excluded.end_date,
-            rank = excluded.rank
-        WHERE (
-            constituents.label, constituents.source_type, constituents.num_outcomes,
-            constituents.probabilities, constituents.normalized_entropy, constituents.weight,
-            constituents.volume_1mo, constituents.end_date, constituents.rank
-        ) IS NOT (
-            excluded.label, excluded.source_type, excluded.num_outcomes,
-            excluded.probabilities, excluded.normalized_entropy, excluded.weight,
-            excluded.volume_1mo, excluded.end_date, excluded.rank
-        )
-    """).bind(constituents))
-
-    # history (append)
-    stmts.append(
-        db.prepare(
-            "INSERT OR IGNORE INTO history "
-            "(timestamp, value, num_constituents, weighted_entropy, divisor) "
-            "VALUES (?, ?, ?, ?, ?)"
-        ).bind(
-            state.timestamp.isoformat(),
-            round(state.value, 2),
-            state.num_constituents,
-            round(state.weighted_entropy, 6),
-            state.divisor,
-        )
-    )
-
-    # state (full engine blob for resumption)
-    state_data = {
-        "value": state.value,
-        "divisor": state.divisor,
-        "weighted_entropy": state.weighted_entropy,
-        "num_constituents": state.num_constituents,
-        "timestamp": state.timestamp.isoformat(),
-        "last_rebase": state.last_rebase.isoformat() if state.last_rebase else None,
-        "constituents": [
-            {
-                "id": c.id,
-                "label": c.label,
-                "source_type": c.source_type,
-                "num_outcomes": c.num_outcomes,
-                "probabilities": c.probabilities,
-                "volume_1mo": c.volume_1mo,
-                "end_date": c.end_date.isoformat() if c.end_date else None,
-                "weight": c.weight,
-                "rank": c.rank,
-                "normalized_entropy": c.normalized_entropy,
-                "source_market_ids": c.source_market_ids,
-            }
-            for c in state.constituents
-        ],
-    }
-    stmts.append(
-        db.prepare("INSERT OR REPLACE INTO state (id, data) VALUES (1, ?)").bind(
-            json.dumps(state_data)
-        )
-    )
-
-    # adjustments (audit trail)
-    ts = state.timestamp.isoformat()
-
-    if is_first_run:
-        adj_data = {
-            "num_constituents": state.num_constituents,
-            "index_value": round(state.value, 2),
-            "divisor": state.divisor,
-            "weighted_entropy": round(state.weighted_entropy, 6),
-            "constituents": _make_constituent_snapshot(state.constituents),
-        }
-        stmts.append(
-            db.prepare(
-                "INSERT INTO adjustments (timestamp, event, data) VALUES (?, ?, ?)"
-            ).bind(ts, "initialization", json.dumps(adj_data))
-        )
-
-    elif state.rebased and prev_state is not None:
-        # Bimonthly rebase — index reset to base value
-        adj_data = {
-            "divisor_before": prev_state.divisor,
-            "divisor_after": state.divisor,
-            "index_before": round(state.pre_adjustment_value, 2)
-            if state.pre_adjustment_value is not None
-            else round(prev_state.value, 2),
-            "index_after": round(state.value, 2),
-            "num_constituents": state.num_constituents,
-            "constituents": _make_constituent_snapshot(state.constituents),
-        }
-        stmts.append(
-            db.prepare(
-                "INSERT INTO adjustments (timestamp, event, data) VALUES (?, ?, ?)"
-            ).bind(ts, "rebase", json.dumps(adj_data))
-        )
-
-    elif reconstitute and prev_state is not None:
-        prev_ids = {c.id for c in prev_state.constituents}
-        curr_ids = {c.id for c in state.constituents}
-        added_ids = sorted(curr_ids - prev_ids)
-        removed_ids = sorted(prev_ids - curr_ids)
-        adj_data = {
-            "divisor_before": prev_state.divisor,
-            "divisor_after": state.divisor,
-            "index_before": round(state.pre_adjustment_value, 2)
-            if state.pre_adjustment_value is not None
-            else round(prev_state.value, 2),
-            "index_after": round(state.value, 2),
-            "num_constituents": state.num_constituents,
-            "added_ids": added_ids,
-            "removed_ids": removed_ids,
-            "added_count": len(added_ids),
-            "removed_count": len(removed_ids),
-            "constituents": _make_constituent_snapshot(state.constituents),
-        }
-        stmts.append(
-            db.prepare(
-                "INSERT INTO adjustments (timestamp, event, data) VALUES (?, ?, ?)"
-            ).bind(ts, "reconstitution", json.dumps(adj_data))
-        )
-
-    elif rebalance:
-        weights = [c.weight for c in state.constituents]
-        adj_data = {
-            "divisor_before": prev_state.divisor,
-            "divisor_after": state.divisor,
-            "index_before": round(state.pre_adjustment_value, 2)
-            if state.pre_adjustment_value is not None
-            else round(prev_state.value, 2),
-            "index_after": round(state.value, 2),
-            "num_constituents": state.num_constituents,
-            "weight_max": round(max(weights), 6),
-            "weight_sum": round(sum(weights), 6),
-            "constituents": _make_constituent_snapshot(state.constituents),
-        }
-        stmts.append(
-            db.prepare(
-                "INSERT INTO adjustments (timestamp, event, data) VALUES (?, ?, ?)"
-            ).bind(ts, "rebalance", json.dumps(adj_data))
-        )
-
-    elif state.removed_constituents:
-        removed_ids = sorted(c.id for c in state.removed_constituents)
-        adj_data = {
-            "removed_ids": removed_ids,
-            "removed_count": len(removed_ids),
-            "divisor_before": prev_state.divisor,
-            "divisor_after": state.divisor,
-            "index_before": round(state.pre_adjustment_value, 2)
-            if state.pre_adjustment_value is not None
-            else round(prev_state.value, 2),
-            "index_after": round(state.value, 2),
-            "num_constituents": state.num_constituents,
-            "constituents": _make_constituent_snapshot(state.constituents),
-        }
-        stmts.append(
-            db.prepare(
-                "INSERT INTO adjustments (timestamp, event, data) VALUES (?, ?, ?)"
-            ).bind(ts, "expiration_removal", json.dumps(adj_data))
-        )
-
-    await db.batch(stmts)
+async def save_results_d1(db, state, previous, scheduled_at, mode):
+    """Publish only if D1 still has the engine state read by this invocation."""
+    statements = build_d1_update(state, previous, scheduled_at, mode)
+    result = await db.batch([db.prepare(sql).bind(*params) for sql, params in statements])
+    return bool(result[len(statements) - 1].meta.changes)
 
 
 # ── CORS ─────────────────────────────────────────
@@ -506,53 +224,44 @@ class Default(WorkerEntrypoint):
     # ── Cron handler ─────────────────────────────
 
     async def scheduled(self, event, env, ctx):
-        cron = event.cron
-
-        if cron == "1 0 * * SUN":
-            # Weekly reconstitution (+ rebalance) — Sunday 00:01 UTC
-            await self._run_pipeline(reconstitute=True, rebalance=True)
-
-        elif cron == "1 0 * * MON-SAT":
-            # Daily rebalance — Mon-Sat only (Sunday handled by reconstitution cron)
-            await self._run_pipeline(reconstitute=False, rebalance=True)
-
-        elif cron == "*/5 * * * *":
-            # Regular update — every 5 min (offset midnight crons avoid collision)
-            await self._run_pipeline(reconstitute=False, rebalance=False)
-
+        scheduled = datetime.fromtimestamp(event.scheduledTime / 1000, timezone.utc)
+        if event.cron in ("1 0 * * SUN", "1 0 * * MON-SAT"):
+            slot = scheduled.replace(hour=0, minute=1, second=0, microsecond=0)
+        elif event.cron == "*/5 * * * *":
+            slot = scheduled.replace(minute=scheduled.minute // 5 * 5, second=0, microsecond=0)
         else:
-            console.error(f"[gp300] unexpected cron schedule: {cron!r} — skipping")
+            console.error(f"[gp300] unexpected cron schedule: {event.cron!r} — skipping")
+            return
+        await self._run_pipeline(slot)
 
-    async def _run_pipeline(self, reconstitute=False, rebalance=False):
+    async def _run_pipeline(self, slot):
         try:
             db = self.env.DB
+            previous = await load_state_d1(db)
             now = datetime.now(timezone.utc)
-
-            prev_state = await load_state_d1(db)
-            is_first_run = prev_state is None
-            if is_first_run and not reconstitute:
-                reconstitute = True  # first run — fall back to init
+            mode = select_update(previous, slot)
+            if mode is None:
+                console.log(f"[gp300] skipping completed slot {slot.isoformat()}")
+                return
 
             events = await fetch_events_async()
-            console.log(f"[gp300] fetched {len(events)} events, reconstitute={reconstitute}, rebalance={rebalance}")
+            console.log(
+                f"[gp300] fetched {len(events)} events, "
+                f"reconstitute={mode.reconstitute}, rebalance={mode.rebalance}"
+            )
 
             state = run_full_pipeline(
                 events=events,
-                current_state=prev_state,
+                current_state=previous.state if previous else None,
                 now=now,
-                reconstitute=reconstitute,
-                rebalance=rebalance,
+                reconstitute=mode.reconstitute,
+                rebalance=mode.rebalance,
             )
             console.log(f"[gp300] pipeline done: value={state.value}, constituents={state.num_constituents}")
 
-            await save_results_d1(
-                db,
-                state,
-                prev_state=prev_state,
-                reconstitute=reconstitute,
-                rebalance=rebalance,
-                is_first_run=is_first_run,
-            )
+            if not await save_results_d1(db, state, previous, slot, mode):
+                console.log("[gp300] state changed before publication")
+                return
             console.log("[gp300] saved to D1")
 
             # Cache current + constituents as a single atomic snapshot in KV

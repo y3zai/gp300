@@ -1,52 +1,25 @@
-import asyncio
-import json
-import runpy
 import sqlite3
-import sys
 from contextlib import closing
 from dataclasses import replace
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
-from types import SimpleNamespace
+
+from src.d1_state import STATE_QUERY, build_d1_update, decode_state, select_update
+from src.engine import Constituent, IndexState
 
 
-ROOT = Path(__file__).parent
+def save_results(connection, state, previous):
+    slot = state.timestamp.replace(second=0, microsecond=0)
+    mode = select_update(previous, slot)
+    with connection:
+        for sql, params in build_d1_update(state, previous, slot, mode):
+            connection.execute(sql, params)
+    return decode_state(connection.execute(STATE_QUERY).fetchone()[0])
 
 
-class LocalStatement:
-    def __init__(self, sql, params=()):
-        self.sql = sql
-        self.params = params
-
-    def bind(self, *params):
-        return LocalStatement(self.sql, params)
-
-
-class LocalD1:
-    def __init__(self, connection):
-        self.connection = connection
-
-    def prepare(self, sql):
-        return LocalStatement(sql)
-
-    async def batch(self, statements):
-        with self.connection:
-            for statement in statements:
-                self.connection.execute(statement.sql, statement.params)
-
-
-def test_save_results_writes_only_changed_constituents(monkeypatch):
-    monkeypatch.syspath_prepend(str(ROOT / "src"))
-    monkeypatch.setitem(sys.modules, "js", SimpleNamespace(
-        JSON=SimpleNamespace(parse=json.loads), console=None, fetch=None,
-    ))
-    monkeypatch.setitem(sys.modules, "workers", SimpleNamespace(
-        Response=None, WorkerEntrypoint=object,
-    ))
-    worker = runpy.run_path(str(ROOT / "src" / "worker.py"))
-    save_results = worker["save_results_d1"]
+def test_save_results_writes_only_changed_constituents():
     timestamp = datetime(2026, 11, 4, tzinfo=timezone.utc)
-    unchanged = worker["Constituent"](
+    unchanged = Constituent(
         id="same", label="Will it happen?", source_type="market",
         num_outcomes=2, probabilities=[0.54321, 0.45679], volume_1mo=101.234,
         end_date=None, weight=0.5, rank=1, normalized_entropy=0.75,
@@ -54,19 +27,20 @@ def test_save_results_writes_only_changed_constituents(monkeypatch):
     changed = replace(unchanged, id="change", rank=2)
     removed = replace(unchanged, id="remove", rank=3)
     added = replace(unchanged, id="add", rank=3)
-    before = worker["IndexState"](
+    before = IndexState(
         value=1000, divisor=0.005, weighted_entropy=0.5,
         num_constituents=3, timestamp=timestamp,
         constituents=[unchanged, changed, removed],
     )
-    after = replace(before, constituents=[
-        unchanged, replace(changed, end_date=timestamp), added,
-    ])
+    after = replace(
+        before,
+        timestamp=timestamp + timedelta(minutes=5),
+        constituents=[unchanged, replace(changed, end_date=timestamp), added],
+    )
 
     with closing(sqlite3.connect(":memory:")) as connection:
-        connection.executescript((ROOT / "schema.sql").read_text())
-        d1 = LocalD1(connection)
-        asyncio.run(save_results(d1, before))
+        connection.executescript(Path(__file__).with_name("schema.sql").read_text())
+        previous = save_results(connection, before, None)
         connection.executescript("""
             CREATE TABLE writes (operation TEXT, id TEXT);
             CREATE TRIGGER log_insert AFTER INSERT ON constituents BEGIN
@@ -80,7 +54,7 @@ def test_save_results_writes_only_changed_constituents(monkeypatch):
             END;
         """)
 
-        asyncio.run(save_results(d1, after))
+        previous = save_results(connection, after, previous)
 
         assert connection.execute(
             "SELECT operation, id FROM writes ORDER BY operation"
@@ -94,8 +68,10 @@ def test_save_results_writes_only_changed_constituents(monkeypatch):
         ]
 
         connection.execute("DELETE FROM writes")
-        asyncio.run(save_results(d1, after))
+        unchanged = replace(after, timestamp=timestamp + timedelta(minutes=10))
+        previous = save_results(connection, unchanged, previous)
         assert connection.execute("SELECT * FROM writes").fetchall() == []
 
-        asyncio.run(save_results(d1, replace(after, num_constituents=0, constituents=[])))
+        empty = replace(after, timestamp=timestamp + timedelta(minutes=15), num_constituents=0, constituents=[])
+        save_results(connection, empty, previous)
         assert connection.execute("SELECT * FROM constituents").fetchall() == []
