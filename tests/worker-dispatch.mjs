@@ -19,6 +19,7 @@ test("dispatches the five-minute and midnight slots to the production workflow",
     const [url, options] = requests.at(-1);
     assert.match(url, /\/repos\/y3zai\/gp300\/actions\/workflows\/update-index\.yml\/dispatches$/);
     assert.equal(options.method, "POST");
+    assert.equal(options.redirect, "manual");
     assert.equal(options.headers.Authorization, "Bearer test-token");
     assert.deepEqual(JSON.parse(options.body), {
       ref: "main",

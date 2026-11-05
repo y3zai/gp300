@@ -84,7 +84,7 @@ export default {
     const scheduledAt = slot.toISOString();
     const response = await fetch(dispatchUrl, {
       method: "POST",
-      redirect: "error",
+      redirect: "manual",
       signal: AbortSignal.timeout(15_000),
       headers: {
         "Accept": "application/vnd.github+json",
