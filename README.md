@@ -3,13 +3,13 @@
 [![PyPI version](https://badge.fury.io/py/gp300.svg)](https://badge.fury.io/py/gp300)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-A real-time geopolitical uncertainty index built on prediction market data from [Polymarket](https://polymarket.com). The GP 300 tracks the top 300 most actively traded geopolitics-related contracts to provide a single metric representing global geopolitical uncertainty.
+A historical geopolitical uncertainty index built on prediction market data from [Polymarket](https://polymarket.com). The GP 300 tracked up to 300 actively traded geopolitics-related contracts to measure global geopolitical uncertainty.
 
-**Live Dashboard**: [https://gp300.y3z.ai](https://gp300.y3z.ai)
+The [GP 300 archive](https://gp300.y3z.ai) contains 70,958 observations from March 3 through November 4, 2026, Pacific time. The final observation was at 6:25:54 p.m. PST on November 4. [Download the history as JSON](https://gp300.y3z.ai/history.json).
 
 ## What is GP 300?
 
-The GP 300 Index aggregates prediction market data to measure geopolitical uncertainty in real-time. Similar to how the VIX measures market volatility or the S&P 500 tracks stock performance, the GP 300 applies proven index methodology to the emerging domain of prediction markets.
+The GP 300 Index aggregated prediction market data to measure geopolitical uncertainty. It applied index methodology similar to the VIX and S&P 500 to prediction markets.
 
 **Key Insights**:
 - **Higher index value** → More geopolitical uncertainty
@@ -19,51 +19,39 @@ The GP 300 Index aggregates prediction market data to measure geopolitical uncer
 
 ## Features
 
-- **Data-Driven**: Real-time computation from Polymarket's public APIs
+- **Data-Driven**: Computed from Polymarket's public APIs
 - **Volume-Weighted**: Constituents ranked by 30-day trading volume with 5% concentration cap
 - **Entropy-Based**: Measures uncertainty using normalized information entropy
 - **Multi-Outcome Support**: Handles both binary contracts and mutually-exclusive multi-outcome events
-- **Fully Automated**: Cloudflare Cron dispatches updates to GitHub Actions every five minutes, with additional daily and weekly jobs
 - **Python CLI**: Query index data from the command line
-- **Web Dashboard**: Live visualization with historical charts and constituent breakdown
+- **Web Archive**: Explore historical index values through the last recorded observation
 
 ## Quick Start
 
 ### Installation
 
 ```bash
-pip install gp300
+pip install -e .
 ```
 
 ### Usage
 
 ```bash
-# Current index value
-gp300
-
 # Historical data (1D, 1W, 1M, 3M, YTD, 1Y, MAX)
 gp300 history 1W
 gp300 history MAX --limit 10
 
-# List constituents
-gp300 constituents
-gp300 constituents --top 10 --sort entropy
-
 # JSON output (for piping to jq, scripts, etc.)
-gp300 current --json
-gp300 constituents --json
+gp300 history MAX --limit 1 --json
 ```
 
 ## CLI Commands
 
 | Command | Description |
 |---------|-------------|
-| `gp300` | Show current index value (default) |
-| `gp300 current` | Same as bare `gp300` |
-| `gp300 history [RANGE]` | Historical data. Options: `--limit N` |
-| `gp300 constituents` | List constituents. Options: `--top N`, `--sort [weight\|entropy\|volume\|name]` |
+| `gp300 history [RANGE]` | Archived index observations. Options: `--limit N` |
 
-All commands support `--json` for raw JSON output and `-h` for help.
+The archive's relative ranges end at the final observation. See the [CLI reference](./CLI_README.md) for custom server options.
 
 ## Methodology
 
@@ -80,7 +68,7 @@ The index tracks the **top 300 geopolitics-related contracts** from Polymarket, 
    - Multi-outcome events: Full Shannon entropy across all outcomes, normalized
 4. **Index Value**: Weighted average of constituent entropies × divisor
 
-### Update Cycles
+### Historical Update Cycles
 
 - **5-minute updates**: Fetch latest prices and recompute index with frozen weights
 - **Daily rebalance**: Recalculate weights based on current volume, apply 5% cap
@@ -109,15 +97,14 @@ Polymarket APIs (Gamma, CLOB)
 gp300/
 ├── src/                    # Core index engine
 │   ├── api.py             # Polymarket API client
-│   ├── engine.py          # Index computation logic
-│   ├── update_index.py    # Scheduled Python runner on GitHub Actions
-│   └── worker.mjs         # Cloudflare API and Cron dispatch
+│   └── engine.py          # Index computation logic
 ├── cli/                    # CLI tool (published to PyPI)
 │   ├── main.py            # CLI commands (Click framework)
 │   ├── api.py             # CLI-specific API wrapper
 │   └── formatting.py      # Terminal output formatting (Rich library)
 ├── public/                 # Static web dashboard
-│   └── index.html         # Live dashboard with charts
+│   ├── index.html         # Historical chart
+│   └── history.json       # Frozen observations
 ├── main.py                # Orchestrator for index updates
 ├── backtest.py            # Historical simulation mode
 ├── db.py                  # SQLite database interface
@@ -145,7 +132,7 @@ cd gp300
 pip install -e .
 
 # Run the CLI locally
-python -m cli  # use python3 if your shell does not provide `python`
+python -m cli history 1W
 
 # Run tests
 python -m pytest -q  # use python3 if your shell does not provide `python`
@@ -153,7 +140,7 @@ python -m pytest -q  # use python3 if your shell does not provide `python`
 
 ### Database
 
-The project uses SQLite for local development and Cloudflare D1 for production. The schema includes tables for:
+The local index engine uses SQLite. The schema includes tables for:
 - Index snapshots and historical data
 - Constituent details and weights
 - Rebalance/reconstitution events
@@ -161,26 +148,13 @@ The project uses SQLite for local development and Cloudflare D1 for production. 
 
 ### Deployment
 
-Cloudflare serves the API from D1 and dispatches the five-minute and midnight
-UTC jobs in `wrangler.toml` to the `Update GP300 index` GitHub Actions workflow.
-The workflow fetches Polymarket data, runs the Python engine, and publishes an
-atomic D1 update. The same scheduled slot can be retried safely.
-
-For a new D1 database, initialize it with `schema.sql`. Apply the D1 migrations
-before deploying the Worker so the history endpoint can use precomputed daily
-payloads. The initial migration backfills existing history and consumes D1 read
-quota in proportion to the number of observations.
+Cloudflare serves the files in `public/` as static assets. The archive uses
+`/history.json`, with `/api/history` as a static alias for downloads. Both
+URLs serve the complete archive. Clients apply date filters locally.
 
 ```bash
-wrangler d1 migrations apply gp300 --remote
+wrangler deploy
 ```
-
-Configure the Worker secret `GITHUB_DISPATCH_TOKEN` with a GitHub token scoped
-to this repository with Actions write access. Configure the GitHub Actions
-secret `CLOUDFLARE_GP300_SCHEDULER_TOKEN` with a Cloudflare account token with
-D1 write access. Rotate either secret before its token expires. To test the
-runner without publishing, manually dispatch the workflow with a recent UTC
-slot and leave `dry_run` enabled.
 
 ## Documentation
 

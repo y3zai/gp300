@@ -1,0 +1,4 @@
+/history.json
+  Access-Control-Allow-Origin: *
+/api/history
+  Access-Control-Allow-Origin: *

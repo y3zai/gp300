@@ -1,3 +1,4 @@
+from calendar import monthrange
 from datetime import datetime, timezone, timedelta
 
 from rich.console import Console
@@ -10,24 +11,28 @@ console = Console()
 RANGES = ["1D", "1W", "1M", "3M", "YTD", "1Y", "MAX"]
 
 
-def range_to_since(range_str):
-    now = datetime.now(timezone.utc)
+def _months_ago(now, count):
+    year, month_index = divmod(now.year * 12 + now.month - 1 - count, 12)
+    month = month_index + 1
+    return now.replace(year=year, month=month, day=min(now.day, monthrange(year, month)[1]))
+
+
+def range_to_since(range_str, *, now=None):
+    if now is None:
+        now = datetime.now(timezone.utc)
     match range_str.upper():
         case "1D":
             return (now - timedelta(days=1)).isoformat()
         case "1W":
             return (now - timedelta(weeks=1)).isoformat()
         case "1M":
-            return now.replace(month=now.month - 1).isoformat() if now.month > 1 else now.replace(year=now.year - 1, month=12).isoformat()
+            return _months_ago(now, 1).isoformat()
         case "3M":
-            m = now.month - 3
-            if m <= 0:
-                return now.replace(year=now.year - 1, month=m + 12).isoformat()
-            return now.replace(month=m).isoformat()
+            return _months_ago(now, 3).isoformat()
         case "YTD":
             return now.replace(month=1, day=1, hour=0, minute=0, second=0, microsecond=0).isoformat()
         case "1Y":
-            return now.replace(year=now.year - 1).isoformat()
+            return _months_ago(now, 12).isoformat()
         case "MAX":
             return None
         case _:

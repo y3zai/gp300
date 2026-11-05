@@ -1,21 +1,7 @@
 name = "gp300"
-main = "src/worker.mjs"
 workers_dev = true
 preview_urls = true
 compatibility_date = "2026-03-03"
 
 [assets]
 directory = "./public"
-
-[[d1_databases]]
-binding = "DB"
-database_name = "gp300"
-database_id = "8cf94e95-0310-4a7a-98b6-0430c799c27d"
-
-[triggers]
-crons = ["*/5 * * * *", "1 0 * * MON-SAT", "1 0 * * SUN"]
-
-[observability]
-[observability.logs]
-enabled = true
-invocation_logs = true

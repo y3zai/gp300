@@ -13,14 +13,13 @@
   
     gtag('config', 'G-9YZVWZNQWQ');
   </script>
-  <title>GP 300: Geopolitics Uncertainty Index</title>
+  <title>GP 300: Geopolitics Uncertainty Index Archive</title>
   <script src="https://unpkg.com/lightweight-charts@4.2.3/dist/lightweight-charts.standalone.production.js"
     integrity="sha384-stKllnUqA9AD0gsKCuUtf5XlqAW7PwIgDagoNsTWkjkBmJ/GZ/uHTgEBxdLV2VSK"
     crossorigin="anonymous"></script>
   <style>
     :root {
       --bg: #0d1117;
-      --surface: #161b22;
       --border: #30363d;
       --text: #e6edf3;
       --text-muted: #8b949e;
@@ -61,6 +60,14 @@
       gap: 4px;
     }
 
+    .archive-label {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
     .header-title {
       font-size: 32px;
       font-weight: 700;
@@ -77,7 +84,8 @@
     .header-change {
       display: flex;
       align-items: baseline;
-      gap: 12px;
+      flex-wrap: wrap;
+      gap: 4px 12px;
     }
 
     .change {
@@ -141,132 +149,8 @@
       overflow: hidden;
     }
 
-    /* Stats Bar */
-    #stats-bar {
-      display: flex;
-      gap: 32px;
-      padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-      font-size: 14px;
-      flex-wrap: wrap;
-    }
-
-    .stat-item {
-      color: var(--text-muted);
-    }
-
-    .stat-item span {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    /* Table Section */
-    #table-section {
-      padding: 16px 0 32px;
-    }
-
-    .search-bar {
-      margin-bottom: 12px;
-    }
-
-    .search-bar input {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      width: 100%;
-      max-width: 320px;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    .search-bar input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .search-bar input:focus {
-      border-color: var(--blue);
-    }
-
-    .table-wrapper {
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-      min-width: 700px;
-    }
-
-    thead th {
-      background: var(--surface);
-      color: var(--text-muted);
-      font-weight: 600;
-      text-align: left;
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      user-select: none;
-      white-space: nowrap;
-      position: sticky;
-      top: 0;
-    }
-
-    thead th:hover {
-      color: var(--text);
-    }
-
-    thead th:focus-visible {
-      outline: 2px solid var(--blue);
-      outline-offset: -2px;
-    }
-
-    thead th .sort-arrow {
-      display: inline-block;
-      width: 14px;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 11px;
-    }
-
-    thead th.sort-active .sort-arrow {
-      color: var(--blue);
-    }
-
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.1s;
-    }
-
-    tbody tr:last-child {
-      border-bottom: none;
-    }
-
-    tbody tr:hover {
-      background: var(--surface);
-    }
-
-    tbody td {
-      padding: 8px 12px;
-      white-space: nowrap;
-    }
-
-    td.num, th.num {
-      text-align: center;
-    }
-
-    td.num {
-      font-variant-numeric: tabular-nums;
-    }
-
     /* Footer */
     footer {
-      border-top: 1px solid var(--border);
       padding: 16px 0;
       text-align: center;
       color: var(--text-muted);
@@ -304,38 +188,10 @@
       animation: pulse 1.5s ease-in-out infinite;
     }
 
-    /* Toast */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--surface);
-      border: 1px solid var(--red);
-      color: var(--text);
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      z-index: 100;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .toast.visible {
-      opacity: 1;
-    }
-
     /* Responsive */
     @media (max-width: 768px) {
       #chart-container {
         height: 300px;
-      }
-
-      #stats-bar {
-        gap: 16px;
-      }
-
-      .col-volume {
-        display: none;
       }
     }
   </style>
@@ -346,168 +202,65 @@
   <div class="container">
     <header>
       <div class="header-inner">
-        <div class="header-title">GP 300: Geopolitics Uncertainty Index</div>
+        <p class="archive-label">Historical archive</p>
+        <h1 class="header-title">GP 300: Geopolitics Uncertainty Index</h1>
         <div class="header-value" id="index-value">—</div>
         <div class="header-change">
           <span class="change" id="index-change"></span>
-          <span class="timestamp" id="index-timestamp"></span>
+          <time class="timestamp" id="index-timestamp"></time>
         </div>
       </div>
     </header>
 
     <section id="chart-section">
-      <div class="period-selector" id="period-selector">
-        <button class="period-btn" data-range="PERIOD">Period</button>
-        <button class="period-btn active" data-range="1D">1D</button>
-        <button class="period-btn" data-range="1W">1W</button>
-        <button class="period-btn" data-range="1M">1M</button>
-        <button class="period-btn" data-range="3M">3M</button>
-        <button class="period-btn" data-range="YTD">YTD</button>
-        <button class="period-btn" data-range="1Y">1Y</button>
-        <button class="period-btn" data-range="5Y">5Y</button>
-        <button class="period-btn" data-range="MAX">MAX</button>
+      <div class="period-selector" id="period-selector" role="group" aria-label="Chart range">
+        <button class="period-btn" data-range="1D" aria-pressed="false">1D</button>
+        <button class="period-btn" data-range="1W" aria-pressed="false">1W</button>
+        <button class="period-btn" data-range="1M" aria-pressed="false">1M</button>
+        <button class="period-btn" data-range="3M" aria-pressed="false">3M</button>
+        <button class="period-btn" data-range="YTD" aria-pressed="false">YTD</button>
+        <button class="period-btn" data-range="1Y" aria-pressed="false">1Y</button>
+        <button class="period-btn" data-range="5Y" aria-pressed="false">5Y</button>
+        <button class="period-btn active" data-range="MAX" aria-pressed="true">MAX</button>
       </div>
       <div id="chart-container">
         <div class="loading-overlay" id="chart-loading"><span>Loading chart data...</span></div>
       </div>
     </section>
 
-    <section id="table-section">
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search constituents...">
-      </div>
-      <div class="table-wrapper">
-        <table id="constituent-table">
-          <thead>
-            <tr>
-              <th data-key="label">Name <span class="sort-arrow"></span></th>
-              <th data-key="weight" class="num">Weight <span class="sort-arrow"></span></th>
-              <th data-key="probability" class="num">Probability <span class="sort-arrow"></span></th>
-              <th data-key="normalized_entropy" class="num">Entropy <span class="sort-arrow"></span></th>
-              <th data-key="volume_1mo" class="num col-volume">Volume <span class="sort-arrow"></span></th>
-            </tr>
-          </thead>
-          <tbody id="table-body"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <section id="stats-bar">
-      <div class="stat-item">Constituents: <span id="stat-constituents">—</span></div>
-      <div class="stat-item">Weighted Entropy: <span id="stat-entropy">—</span></div>
-    </section>
-
     <footer>
-      CLI: <a href="https://pypi.org/project/gp300/" target="_blank" rel="noopener"><code>pip install gp300</code></a> &middot;
+      CLI: <a href="https://github.com/y3zai/gp300/blob/main/CLI_README.md" target="_blank" rel="noopener">Usage instructions</a> &middot;
       Source Code at <a href="https://github.com/y3zai/gp300" target="_blank" rel="noopener">GitHub</a> &middot;
-      Data from <a href="https://polymarket.com" target="_blank" rel="noopener">Polymarket</a> &middot; Updated every 5 min
+      Data from <a href="https://polymarket.com" target="_blank" rel="noopener">Polymarket</a> &middot;
+      <a href="/history.json" download>Download history (JSON)</a>
     </footer>
   </div>
 
-  <div class="toast" id="toast"></div>
-
   <script>
-    // --- State ---
-    let currentData = null;
     let historyData = [];
-    let constituentsData = [];
+    let finalObservation;
     let chart = null;
     let areaSeries = null;
-    let activeRange = '1D';
-    let sortKey = 'weight';
-    let sortAsc = false;
-    let searchQuery = '';
 
-    // --- Config ---
-    const API_BASE = '/api';
-
-    // --- Data Fetching ---
-    async function fetchJSON(path) {
-      const res = await fetch(path + (path.includes('?') ? '&' : '?') + 't=' + Date.now());
-      if (!res.ok) throw new Error(`Failed to fetch ${path}: ${res.status}`);
-      return res.json();
-    }
-
-    async function loadAllData() {
-      const [current, history, constituents] = await Promise.all([
-        fetchJSON(API_BASE + '/current'),
-        fetchJSON(API_BASE + '/history'),
-        fetchJSON(API_BASE + '/constituents'),
-      ]);
-      currentData = current;
-      historyData = history;
-      constituentsData = constituents;
-    }
-
-    function showToast(msg) {
-      const el = document.getElementById('toast');
-      el.textContent = msg;
-      el.classList.add('visible');
-      setTimeout(() => el.classList.remove('visible'), 4000);
-    }
-
-    // --- Formatting ---
     function formatNumber(n) {
       return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     }
 
-    function formatWeight(w) {
-      return (w * 100).toFixed(2) + '%';
-    }
-
-    function formatProbability(c) {
-      if (!c.probabilities || c.probabilities.length === 0) return '—';
-      if (c.num_outcomes === 2) {
-        return (c.probabilities[0] * 100).toFixed(2) + '%';
-      }
-      const max = Math.max(...c.probabilities);
-      return (max * 100).toFixed(2) + '% (top of ' + c.num_outcomes + ')';
-    }
-
-    function getProbabilityValue(c) {
-      if (!c.probabilities || c.probabilities.length === 0) return 0;
-      if (c.num_outcomes === 2) return c.probabilities[0];
-      return Math.max(...c.probabilities);
-    }
-
-    function formatVolume(v) {
-      if (v >= 1e9) return '$' + (v / 1e9).toFixed(1) + 'B';
-      if (v >= 1e6) return '$' + (v / 1e6).toFixed(1) + 'M';
-      if (v >= 1e3) return '$' + (v / 1e3).toFixed(1) + 'K';
-      return '$' + v.toFixed(0);
-    }
-
-
-
-    function formatTimestamp(iso) {
-      const d = new Date(iso);
-      return 'As of ' + d.toLocaleString('en-US', {
-        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short'
-      });
-    }
-
-    // --- Time Range ---
     function getRangeCutoff(range) {
-      const now = new Date();
+      const end = new Date(finalObservation.time);
+      const year = end.getUTCFullYear();
+      const month = end.getUTCMonth();
+      const day = end.getUTCDate();
       switch (range) {
-        case '1D': return new Date(now - 24 * 60 * 60 * 1000);
-        case '1W': return new Date(now - 7 * 24 * 60 * 60 * 1000);
-        case '1M': return new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
-        case '3M': return new Date(now.getFullYear(), now.getMonth() - 3, now.getDate());
-        case 'YTD': return new Date(now.getFullYear(), 0, 1);
-        case '1Y': return new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-        case '5Y': return new Date(now.getFullYear() - 5, now.getMonth(), now.getDate());
-        case 'MAX': return new Date(0);
-        case 'PERIOD':
-          if (currentData && currentData.last_rebase) return new Date(currentData.last_rebase);
-          return new Date(0);
-        default: return new Date(0);
+        case '1D': return end.getTime() - 86400000;
+        case '1W': return end.getTime() - 7 * 86400000;
+        case '1M': return Date.UTC(year, month - 1, day);
+        case '3M': return Date.UTC(year, month - 3, day);
+        case 'YTD': return Date.UTC(year, 0, 1);
+        case '1Y': return Date.UTC(year - 1, month, day);
+        case '5Y': return Date.UTC(year - 5, month, day);
+        default: return -Infinity;
       }
-    }
-
-    function filterHistory(range) {
-      const cutoff = getRangeCutoff(range);
-      return historyData.filter(d => new Date(d.timestamp) >= cutoff);
     }
 
     // --- Chart ---
@@ -556,260 +309,102 @@
       ro.observe(container);
     }
 
-    function getDownsampleInterval(data) {
-      const count = data.length;
-      if (count <= 2000) return 0;
-      if (count <= 6000) return 1800;
-      if (count <= 20000) return 3600;
-      return 86400;
+    function getDownsampleInterval(count) {
+      if (count <= 2500) return 0;
+      if (count <= 12000) return 1800;
+      return 3600;
     }
 
-    // Bucket data by intervalSec, keeping the last (most recent) value per bucket
-    function downsample(data, intervalSec) {
-      if (!intervalSec) return data;
+    // Keep the last observation in each bucket, using its actual timestamp.
+    function chartPoints(data) {
+      const interval = getDownsampleInterval(data.length);
       const buckets = new Map();
-      for (const pt of data) {
-        const key = Math.floor(pt.time / intervalSec) * intervalSec;
-        buckets.set(key, pt.value);
+      for (const { time, value } of data) {
+        const seconds = Math.floor(time / 1000);
+        const key = interval ? Math.floor(seconds / interval) : seconds;
+        buckets.set(key, { time: seconds, value });
       }
-      return Array.from(buckets, ([time, value]) => ({ time, value }))
-        .sort((a, b) => a.time - b.time);
+      const points = Array.from(buckets.values());
+      const first = Math.floor(data[0].time / 1000);
+      if (first !== points[0].time) {
+        points.unshift({ time: first, value: data[0].value });
+      }
+      return points;
     }
 
     function findRebaseTimestamps() {
-      // Detect rebase points: index jumps back to the configured base (1000)
-      // from a materially lower value. Tight bounds avoid false positives.
-      const REBASE_BASE = 1000;
-      const REBASE_EPSILON = 25;
-      const MIN_PRE_REBASE_GAP = 100;
+      // Detect jumps back near the configured base (1000) from below 900.
       const rebases = [];
       for (let i = 1; i < historyData.length; i++) {
         const prev = historyData[i - 1].value;
-        const curr = historyData[i].value;
-        const landsNearBase = Math.abs(curr - REBASE_BASE) <= REBASE_EPSILON;
-        const prevMateriallyBelowBase = prev <= REBASE_BASE - MIN_PRE_REBASE_GAP;
-        if (curr > prev && landsNearBase && prevMateriallyBelowBase) {
-          rebases.push(historyData[i].timestamp);
+        const { time, value } = historyData[i];
+        if (prev <= 900 && value > prev && Math.abs(value - 1000) <= 25) {
+          rebases.push(Math.floor(time / 1000));
         }
       }
       return rebases;
     }
 
-    function updateChart(range) {
-      const filtered = filterHistory(range);
-      const chartData = filtered.map(d => ({
-        time: Math.floor(new Date(d.timestamp).getTime() / 1000) - new Date().getTimezoneOffset() * 60,
-        value: d.value,
-      }));
-
-      // Deduplicate by time (keep last)
-      const seen = new Map();
-      for (const pt of chartData) seen.set(pt.time, pt.value);
-      const deduped = Array.from(seen, ([time, value]) => ({ time, value }))
-        .sort((a, b) => a.time - b.time);
-
-      const interval = getDownsampleInterval(deduped);
-      const sampled = downsample(deduped, interval);
+    function renderRange(range) {
+      const cutoff = getRangeCutoff(range);
+      const filtered = historyData.filter(d => d.time >= cutoff);
+      const sampled = chartPoints(filtered);
       areaSeries.setData(sampled);
 
-      // Add rebase markers
-      const rebaseTimes = findRebaseTimestamps();
-      const tzOffset = new Date().getTimezoneOffset() * 60;
-      const markers = rebaseTimes
-        .map(ts => {
-          const t = Math.floor(new Date(ts).getTime() / 1000) - tzOffset;
-          // Only show marker if it falls within the current chart range
-          if (sampled.length > 0 && t >= sampled[0].time && t <= sampled[sampled.length - 1].time) {
-            return { time: t, position: 'aboveBar', color: '#f0883e', shape: 'arrowDown', text: 'Rebase' };
-          }
-          return null;
-        })
-        .filter(Boolean);
+      const markers = findRebaseTimestamps()
+        .filter(time => time >= sampled[0].time && time <= sampled.at(-1).time)
+        .map(time => ({ time, position: 'aboveBar', color: '#f0883e', shape: 'arrowDown', text: 'Rebase' }));
       areaSeries.setMarkers(markers);
-
       requestAnimationFrame(() => chart.timeScale().fitContent());
-    }
 
-    // --- Header & Stats ---
-    function renderHeader(range) {
-      const valueEl = document.getElementById('index-value');
+      const startValue = filtered[0].value;
+      const change = finalObservation.value - startValue;
+      const percent = startValue === 0 ? 0 : change / startValue * 100;
+      const sign = change >= 0 ? '+' : '';
       const changeEl = document.getElementById('index-change');
-      const tsEl = document.getElementById('index-timestamp');
-
-      if (!currentData) return;
-
-      const val = currentData.index_value;
-      valueEl.textContent = formatNumber(val);
-      tsEl.textContent = formatTimestamp(currentData.timestamp);
-
-      // Change relative to range start
-      const filtered = filterHistory(range);
-      if (filtered.length > 0) {
-        const startVal = filtered[0].value;
-        const absChange = val - startVal;
-        const pctChange = startVal !== 0 ? (absChange / startVal) * 100 : 0;
-        const sign = absChange >= 0 ? '+' : '';
-        changeEl.textContent = `${sign}${formatNumber(absChange)} (${sign}${pctChange.toFixed(2)}%)`;
-        changeEl.className = 'change ' + (absChange >= 0 ? 'positive' : 'negative');
-      } else {
-        changeEl.textContent = '';
-      }
-
-      document.getElementById('stat-constituents').textContent = currentData.num_constituents;
-      document.getElementById('stat-entropy').textContent = currentData.weighted_entropy.toFixed(6);
+      changeEl.textContent = `${sign}${formatNumber(change)} (${sign}${percent.toFixed(2)}%)`;
+      changeEl.className = 'change ' + (change >= 0 ? 'positive' : 'negative');
     }
 
-    // --- Table ---
-    const columns = [
-      { key: 'label', label: 'Name', numeric: false },
-      { key: 'weight', label: 'Weight', numeric: true },
-      { key: 'probability', label: 'Probability', numeric: true },
-      { key: 'normalized_entropy', label: 'Entropy', numeric: true },
-      { key: 'volume_1mo', label: 'Volume', numeric: true },
-    ];
-
-    function sortConstituents(data) {
-      return [...data].sort((a, b) => {
-        let aVal = sortKey === 'probability' ? getProbabilityValue(a) : a[sortKey];
-        let bVal = sortKey === 'probability' ? getProbabilityValue(b) : b[sortKey];
-
-        // Nulls sort to bottom
-        if (aVal == null && bVal == null) return 0;
-        if (aVal == null) return 1;
-        if (bVal == null) return -1;
-
-        const col = columns.find(c => c.key === sortKey);
-        if (col && !col.numeric) {
-          aVal = String(aVal).toLowerCase();
-          bVal = String(bVal).toLowerCase();
-        }
-
-        if (aVal < bVal) return sortAsc ? -1 : 1;
-        if (aVal > bVal) return sortAsc ? 1 : -1;
-        return 0;
+    function renderFinalObservation() {
+      document.getElementById('index-value').textContent = formatNumber(finalObservation.value);
+      const timestamp = document.getElementById('index-timestamp');
+      const date = new Date(finalObservation.time);
+      timestamp.dateTime = finalObservation.timestamp;
+      timestamp.textContent = 'Final observation · ' + date.toLocaleString('en-US', {
+        year: 'numeric', month: 'short', day: 'numeric',
+        hour: '2-digit', minute: '2-digit', timeZoneName: 'short',
       });
     }
 
-    function renderTable() {
-      const tbody = document.getElementById('table-body');
-      let data = constituentsData;
-
-      // Filter by search
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        data = data.filter(c => c.label.toLowerCase().includes(q));
-      }
-
-      data = sortConstituents(data);
-
-      tbody.innerHTML = data.map(c => `<tr>
-    <td>${escapeHtml(c.label)}</td>
-    <td class="num">${formatWeight(c.weight)}</td>
-    <td class="num">${formatProbability(c)}</td>
-    <td class="num">${c.normalized_entropy.toFixed(4)}</td>
-    <td class="num col-volume">${formatVolume(c.volume_1mo)}</td>
-  </tr>`).join('');
-    }
-
-    function escapeHtml(s) {
-      const d = document.createElement('div');
-      d.textContent = s;
-      return d.innerHTML;
-    }
-
-    function updateSortUI() {
-      document.querySelectorAll('#constituent-table thead th').forEach(th => {
-        const key = th.dataset.key;
-        const arrow = th.querySelector('.sort-arrow');
-        if (key === sortKey) {
-          th.classList.add('sort-active');
-          arrow.textContent = sortAsc ? '\u25B2' : '\u25BC';
-        } else {
-          th.classList.remove('sort-active');
-          arrow.textContent = '';
-        }
-      });
-    }
-
-    // --- Events ---
     document.getElementById('period-selector').addEventListener('click', e => {
-      if (!e.target.classList.contains('period-btn')) return;
-      document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      activeRange = e.target.dataset.range;
-      updateChart(activeRange);
-      renderHeader(activeRange);
-    });
-
-    document.querySelectorAll('#constituent-table thead th').forEach(th => {
-      th.setAttribute('tabindex', '0');
-      th.setAttribute('role', 'button');
-      const handler = () => {
-        const key = th.dataset.key;
-        if (sortKey === key) {
-          sortAsc = !sortAsc;
-        } else {
-          sortKey = key;
-          sortAsc = key === 'label';
-        }
-        updateSortUI();
-        renderTable();
-      };
-      th.addEventListener('click', handler);
-      th.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handler(); }
+      if (!areaSeries || !e.target.classList.contains('period-btn')) return;
+      document.querySelectorAll('.period-btn').forEach(button => {
+        const active = button === e.target;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', String(active));
       });
+      renderRange(e.target.dataset.range);
     });
 
-    document.getElementById('search-input').addEventListener('input', e => {
-      searchQuery = e.target.value;
-      renderTable();
-    });
-
-    // --- Init & Polling ---
     async function init() {
       try {
-        await loadAllData();
-      } catch (e) {
-        showToast('Failed to load data: ' + e.message);
-        document.getElementById('chart-loading').querySelector('span').textContent = 'Failed to load data';
+        const response = await fetch('/history.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const observations = await response.json();
+        historyData = observations.map(({ timestamp, value }) => ({ timestamp, value, time: Date.parse(timestamp) }));
+        finalObservation = historyData.at(-1);
+        if (!finalObservation || !Number.isFinite(finalObservation.time) || !Number.isFinite(finalObservation.value)) {
+          throw new Error('Missing final observation');
+        }
+      } catch {
+        document.getElementById('chart-loading').querySelector('span').textContent = 'Could not load the history archive';
         return;
       }
 
       initChart();
-      // Default to current rebase period if available, else keep the HTML default (1D)
-      if (currentData && currentData.last_rebase) {
-        activeRange = 'PERIOD';
-        document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
-        const periodBtn = document.querySelector('.period-btn[data-range="PERIOD"]');
-        if (periodBtn) periodBtn.classList.add('active');
-      }
-      updateChart(activeRange);
-      renderHeader(activeRange);
-      updateSortUI();
-      renderTable();
-
-      // Poll current every 5 min
-      setInterval(async () => {
-        try {
-          currentData = await fetchJSON(API_BASE + '/current');
-          renderHeader(activeRange);
-        } catch (e) { showToast('Refresh failed'); }
-      }, 5 * 60 * 1000);
-
-      // Full refresh every 30 min
-      setInterval(async () => {
-        try {
-          const [history, constituents] = await Promise.all([
-            fetchJSON(API_BASE + '/history'),
-            fetchJSON(API_BASE + '/constituents'),
-          ]);
-          historyData = history;
-          constituentsData = constituents;
-          updateChart(activeRange);
-          renderTable();
-        } catch (e) { showToast('Full refresh failed'); }
-      }, 30 * 60 * 1000);
+      renderFinalObservation();
+      renderRange('MAX');
     }
 
     document.addEventListener('DOMContentLoaded', init);

@@ -2,7 +2,7 @@ import json
 
 import click
 
-from cli.api import GP300Client, DEFAULT_BASE_URL
+from cli.api import DEFAULT_BASE_URL, GP300Client, filter_history_since, parse_timestamp
 from cli.formatting import (
     RANGES,
     print_current,
@@ -18,7 +18,7 @@ def _use_json(ctx):
 
 @click.group(invoke_without_command=True, context_settings={"help_option_names": ["-h", "--help"]})
 @click.option("--json", "use_json", is_flag=True, help="Output raw JSON")
-@click.option("--url", envvar="GP300_API_URL", default=DEFAULT_BASE_URL, help="API base URL")
+@click.option("--url", envvar="GP300_API_URL", default=DEFAULT_BASE_URL, help="Archive or API base URL")
 @click.pass_context
 def cli(ctx, use_json, url):
     """GP 300: Geopolitics Uncertainty Index CLI"""
@@ -50,14 +50,21 @@ def current(ctx, use_json):
 def history(ctx, range_str, limit, use_json):
     """Show historical index data. RANGE: 1D, 1W, 1M, 3M, YTD, 1Y, MAX"""
     client = ctx.obj["client"]
-    since = range_to_since(range_str.upper())
-    data = client.get_history(since=since)
+    range_label = range_str.upper()
+    if client.is_archive:
+        data = client.get_history()
+        if data and range_label != "MAX":
+            # The frozen history is ordered by UTC observation time.
+            latest = parse_timestamp(data[-1]["timestamp"])
+            data = filter_history_since(data, range_to_since(range_label, now=latest))
+    else:
+        data = client.get_history(since=range_to_since(range_label))
     if limit > 0:
         data = data[-limit:]
     if _use_json(ctx):
         click.echo(json.dumps(data, indent=2))
     else:
-        print_history(data, range_str.upper())
+        print_history(data, range_label)
 
 
 @cli.command()
