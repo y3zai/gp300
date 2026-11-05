@@ -1,13 +1,10 @@
-"""Serialization and transactional publication shared by the index writers."""
+"""Serialization and transactional publication for the index runner."""
 
 import json
 from dataclasses import dataclass
 from datetime import datetime, time
 
-try:
-    from .engine import Constituent, IndexState
-except ImportError:
-    from engine import Constituent, IndexState
+from .engine import Constituent, IndexState
 
 
 STATE_QUERY = "SELECT data FROM state WHERE id = 1"

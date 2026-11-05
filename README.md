@@ -23,7 +23,7 @@ The GP 300 Index aggregates prediction market data to measure geopolitical uncer
 - **Volume-Weighted**: Constituents ranked by 30-day trading volume with 5% concentration cap
 - **Entropy-Based**: Measures uncertainty using normalized information entropy
 - **Multi-Outcome Support**: Handles both binary contracts and mutually-exclusive multi-outcome events
-- **Fully Automated**: Updates via scheduled Cloudflare Workers every 5 minutes, with additional daily and weekly jobs
+- **Fully Automated**: Cloudflare Cron dispatches updates to GitHub Actions every five minutes, with additional daily and weekly jobs
 - **Python CLI**: Query index data from the command line
 - **Web Dashboard**: Live visualization with historical charts and constituent breakdown
 
@@ -110,7 +110,8 @@ gp300/
 ├── src/                    # Core index engine
 │   ├── api.py             # Polymarket API client
 │   ├── engine.py          # Index computation logic
-│   └── worker.py          # Cloudflare Workers entry point
+│   ├── update_index.py    # Scheduled Python runner on GitHub Actions
+│   └── worker.mjs         # Cloudflare API and Cron dispatch
 ├── cli/                    # CLI tool (published to PyPI)
 │   ├── main.py            # CLI commands (Click framework)
 │   ├── api.py             # CLI-specific API wrapper
@@ -160,13 +161,10 @@ The project uses SQLite for local development and Cloudflare D1 for production. 
 
 ### Deployment
 
-Production deployment uses Cloudflare Workers with:
-- Python Workers for serverless execution
-- D1 database for persistent storage
-- KV storage for caching
-- Cron triggers for scheduled updates
-
-See `wrangler.toml` for configuration details.
+Cloudflare serves the API from D1 and dispatches the five-minute and midnight
+UTC jobs in `wrangler.toml` to the `Update GP300 index` GitHub Actions workflow.
+The workflow fetches Polymarket data, runs the Python engine, and publishes an
+atomic D1 update. The same scheduled slot can be retried safely.
 
 For a new D1 database, initialize it with `schema.sql`. Apply the D1 migrations
 before deploying the Worker so the history endpoint can use precomputed daily
@@ -176,6 +174,13 @@ quota in proportion to the number of observations.
 ```bash
 wrangler d1 migrations apply gp300 --remote
 ```
+
+Configure the Worker secret `GITHUB_DISPATCH_TOKEN` with a GitHub token scoped
+to this repository with Actions write access. Configure the GitHub Actions
+secret `CLOUDFLARE_GP300_SCHEDULER_TOKEN` with a Cloudflare account token with
+D1 write access. Rotate either secret before its token expires. To test the
+runner without publishing, manually dispatch the workflow with a recent UTC
+slot and leave `dry_run` enabled.
 
 ## Documentation
 

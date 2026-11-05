@@ -1,4 +1,5 @@
 name: Update GP300 index
+run-name: GP300 ${{ inputs.scheduled_at }}${{ inputs.dry_run && ' (dry run)' || '' }}
 
 on:
   workflow_dispatch:
